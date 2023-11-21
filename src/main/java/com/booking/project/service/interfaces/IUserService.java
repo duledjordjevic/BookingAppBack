@@ -8,7 +8,7 @@ public interface IUserService {
 
     Collection<User> findAll();
 
-    User findOne(Long id);
+    User find(Long id);
 
     User create(User greeting) throws Exception;
 
