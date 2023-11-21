@@ -28,4 +28,10 @@ public class Accomodation {
     private double raiting;
     private ReservationMethod reservationMethod;
 
+    public void copyValues(Accomodation accomodation){
+        this.title = accomodation.title;
+        this.description = accomodation.description;
+        this.minGuests = accomodation.minGuests;
+        this.maxGuests = accomodation.maxGuests;
+    }
 }
