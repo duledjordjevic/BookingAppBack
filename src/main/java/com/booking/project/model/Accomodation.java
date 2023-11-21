@@ -8,6 +8,7 @@ import com.booking.project.model.enums.ReservationMethod;
 import java.util.List;
 
 public class Accomodation {
+    private Long id;
     private String title;
     private String description;
     private Address location;
