@@ -18,7 +18,7 @@ public class User {
     private UserType userType;
 
     public void copyValues(User user){
-        this.email = email;
-        this.password = password;
+        this.email = user.email;
+        this.password = user.password;
     }
 }
