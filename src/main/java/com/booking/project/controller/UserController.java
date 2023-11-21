@@ -8,6 +8,7 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.Collection;
 
 @RestController
@@ -25,7 +26,7 @@ public class UserController {
 
     @GetMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<User> getUser(@PathVariable("id") Long id){
-        User user = userService.findOne(id);
+        User user = userService.find(id);
         if(user == null){
             return new ResponseEntity<User>(HttpStatus.NOT_FOUND);
         }
@@ -40,7 +41,7 @@ public class UserController {
 
     @PutMapping(value = "/{id}", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<User> updateUser(@RequestBody User user, @PathVariable Long id) throws Exception{
-        User userForUpdate = userService.findOne(id);
+        User userForUpdate = userService.find(id);
         userForUpdate.copyValues(user);
 
         User updatedUser = userService.update(userForUpdate);
