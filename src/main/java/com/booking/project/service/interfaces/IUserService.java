@@ -10,9 +10,9 @@ public interface IUserService {
 
     User find(Long id);
 
-    User create(User greeting) throws Exception;
+    User create(User user) throws Exception;
 
-    User update(User greeting) throws Exception;
+    User update(User user) throws Exception;
 
     void delete(Long id);
 }

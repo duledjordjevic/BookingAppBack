@@ -44,13 +44,13 @@ public class UserRepository implements IUserRepository {
     }
 
     @Override
-    public User create(User greeting) throws Exception {
-        return greeting;
+    public User create(User user) throws Exception {
+        return user;
     }
 
     @Override
-    public User update(User greeting) throws Exception {
-        return greeting;
+    public User update(User user) throws Exception {
+        return user;
     }
 
     @Override

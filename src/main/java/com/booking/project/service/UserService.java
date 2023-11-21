@@ -27,13 +27,13 @@ public class UserService implements IUserService {
     }
 
     @Override
-    public User create(User greeting) throws Exception {
-        return userRepository.create(greeting);
+    public User create(User user) throws Exception {
+        return userRepository.create(user);
     }
 
     @Override
-    public User update(User greeting) throws Exception {
-        return userRepository.update(greeting);
+    public User update(User user) throws Exception {
+        return userRepository.update(user);
     }
 
     @Override
