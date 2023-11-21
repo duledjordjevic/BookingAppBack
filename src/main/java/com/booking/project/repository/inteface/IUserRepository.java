@@ -1,10 +1,10 @@
-package com.booking.project.service.interfaces;
+package com.booking.project.repository.inteface;
 
 import com.booking.project.model.User;
 
 import java.util.Collection;
 
-public interface IUserService {
+public interface IUserRepository {
 
     Collection<User> findAll();
 
