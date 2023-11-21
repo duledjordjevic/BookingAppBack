@@ -14,6 +14,6 @@ public class Person {
     private String lastName;
     private Address address;
     private String phoneNumber;
-    private User account;
+    private User user;
 
 }
