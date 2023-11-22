@@ -9,6 +9,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.awt.*;
 import java.util.List;
 @Getter
 @Setter
@@ -18,15 +19,19 @@ public class Accomodation {
     private Long id;
     private String title;
     private String description;
-    private Address location;
+    private Address address;
+    private Point location;
     private List<Amenities> amenities;
     private Long minGuests;
     private Long maxGuests;
     private AccomodationType type;
     private CancellationPolicy cancellationPolicy;
     private boolean isAvailableForReservation;
-    private double raiting;
     private ReservationMethod reservationMethod;
+    private Host host;
+    private boolean priceForEntireAcc;
+    private List<PriceList> prices;
+
 
     public void copyValues(Accomodation accomodation){
         this.title = accomodation.title;
