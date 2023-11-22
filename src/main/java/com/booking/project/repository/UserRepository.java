@@ -45,11 +45,13 @@ public class UserRepository implements IUserRepository {
 
     @Override
     public User create(User user) throws Exception {
+        users.add(user);
         return user;
     }
 
     @Override
     public User update(User user) throws Exception {
+        users.stream().filter(userToUpdate -> userToUpdate.getId().equals(user.getId())).forEach(userToUpdate -> userToUpdate.copyValues(user));
         return user;
     }
 
