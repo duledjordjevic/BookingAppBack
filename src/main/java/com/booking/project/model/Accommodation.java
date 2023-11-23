@@ -23,23 +23,49 @@ import java.util.Set;
 @Table(name = "accommodations")
 public class Accommodation {
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
+    @Column(nullable = false)
     private String title;
+
+    @Column(nullable = false)
     private String description;
-    @OneToOne(cascade = { CascadeType.ALL })
+
+    @OneToOne(cascade = { CascadeType.ALL }, fetch = FetchType.EAGER)
     private Address address;
-    private Point location;
+
+    @Enumerated(EnumType.STRING)
     private List<Amenities> amenities;
+
+    @Column(nullable = false)
     private Long minGuests;
+
+    @Column(nullable = false)
     private Long maxGuests;
+
+    @Column(nullable = false)
+    @Enumerated(EnumType.STRING)
     private AccomodationType type;
+
+    @Column(nullable = false)
+    @Enumerated(EnumType.STRING)
     private CancellationPolicy cancellationPolicy;
+
+    @Column(nullable = false)
     private boolean isAvailableForReservation;
+
+    @Column(nullable = false)
+    @Enumerated(EnumType.STRING)
     private ReservationMethod reservationMethod;
-    @ManyToOne
+
+    @ManyToOne(fetch = FetchType.LAZY)
     private Host host;
-    private boolean Accommodation;
-    @OneToMany
+
+    @Column(nullable = false)
+    private boolean priceForEntireAcc;
+
+    @OneToMany(fetch = FetchType.LAZY, cascade = {CascadeType.ALL})
     private Set<PriceList> prices = new HashSet<PriceList>();
 
 
