@@ -1,9 +1,6 @@
 package com.booking.project.service.interfaces;
 
 import com.booking.project.model.Accommodation;
-import com.booking.project.model.Accomodation;
-
-
 import java.util.Collection;
 import java.util.Optional;
 

@@ -1,7 +1,7 @@
 package com.booking.project.controller;
 
-import com.booking.project.model.Accomodation;
-import com.booking.project.service.interfaces.IAccomodationService;
+import com.booking.project.model.Accommodation;
+import com.booking.project.service.interfaces.IAccommodationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -12,49 +12,49 @@ import java.util.Collection;
 import java.util.Optional;
 
 @RestController
-@RequestMapping("/api/accomodations")
-public class AccomodationController {
+@RequestMapping("/api/accommodations")
+public class AccommodationController {
 
     @Autowired
-    private IAccomodationService accomodationService;
+    private IAccommodationService accommodationService;
 
     @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Collection<Accomodation>> getAccomodations(){
-        Collection<Accomodation> accomodations = accomodationService.findAll();
-        return new ResponseEntity<Collection<Accomodation>>(accomodations, HttpStatus.OK);
+    public ResponseEntity<Collection<Accommodation>> getAccommodations(){
+        Collection<Accommodation> accommodations = accommodationService.findAll();
+        return new ResponseEntity<Collection<Accommodation>>(accommodations, HttpStatus.OK);
     }
 
     @GetMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Optional<Accomodation>> getAccomodation(@PathVariable("id") Long id){
-        Optional<Accomodation> accomodation = accomodationService.findById(id);
-        if(accomodation == null){
-            return new ResponseEntity<Optional<Accomodation>>(HttpStatus.NOT_FOUND);
+    public ResponseEntity<Optional<Accommodation>> getAccommodation(@PathVariable("id") Long id){
+        Optional<Accommodation> accommodation = accommodationService.findById(id);
+        if(accommodation.isEmpty()){
+            return new ResponseEntity<Optional<Accommodation>>(HttpStatus.NOT_FOUND);
         }
-        return new ResponseEntity<Optional<Accomodation>>(accomodation, HttpStatus.OK);
+        return new ResponseEntity<Optional<Accommodation>>(accommodation, HttpStatus.OK);
     }
 
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Accomodation> createAccomodation(@RequestBody Accomodation accomodation) throws Exception {
-        Accomodation savedAccomodation = accomodationService.save(accomodation);
-        return new ResponseEntity<Accomodation>(savedAccomodation, HttpStatus.CREATED);
+    public ResponseEntity<Accommodation> createAccommodation(@RequestBody Accommodation accommodation) throws Exception {
+        Accommodation savedAccommodation = accommodationService.save(accommodation);
+        return new ResponseEntity<Accommodation>(savedAccommodation, HttpStatus.CREATED);
     }
 
     @PutMapping(value = "/{id}", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Accomodation> updateAccomodation(@RequestBody Accomodation accomodation, @PathVariable Long id) throws Exception{
-        Optional<Accomodation> accomodationForUpdate = accomodationService.findById(id);
+    public ResponseEntity<Accommodation> updateAccommodation(@RequestBody Accommodation accommodation, @PathVariable Long id) throws Exception{
+        Optional<Accommodation> accommodationForUpdate = accommodationService.findById(id);
 
-        if (accomodationForUpdate.isEmpty()){
-            return new ResponseEntity<Accomodation>(HttpStatus.INTERNAL_SERVER_ERROR);
+        if (accommodationForUpdate.isEmpty()){
+            return new ResponseEntity<Accommodation>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
-        accomodationForUpdate.get().copyValues(accomodation);
+        accommodationForUpdate.get().copyValues(accommodation);
 
 
-        return new ResponseEntity<Accomodation>(accomodationService.save(accomodationForUpdate.get()), HttpStatus.CREATED);
+        return new ResponseEntity<Accommodation>(accommodationService.save(accommodationForUpdate.get()), HttpStatus.CREATED);
     }
 
     @DeleteMapping(value = "/{id}")
-    public ResponseEntity<Accomodation> deleteAccomodation(@PathVariable("id") Long id){
-        accomodationService.deleteById(id);
-        return new ResponseEntity<Accomodation>(HttpStatus.NO_CONTENT);
+    public ResponseEntity<Accommodation> deleteAccommodation(@PathVariable("id") Long id){
+        accommodationService.deleteById(id);
+        return new ResponseEntity<Accommodation>(HttpStatus.NO_CONTENT);
     }
 }

@@ -1,10 +1,7 @@
 package com.booking.project.repository.inteface;
 
-import com.booking.project.model.Accomodation;
-import com.booking.project.model.Guest;
+import com.booking.project.model.Accommodation;
 import org.springframework.data.jpa.repository.JpaRepository;
 
-import java.util.Collection;
-
-public interface IAccomodationRepository extends JpaRepository<Accomodation, Long> {
+public interface IAccommodationRepository extends JpaRepository<Accommodation, Long> {
 }
