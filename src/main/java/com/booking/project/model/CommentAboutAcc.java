@@ -8,6 +8,6 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 public class CommentAboutAcc extends Comment {
-    private Accomodation accomodation;
+    private Accommodation accommodation;
     private Guest guest;
 }

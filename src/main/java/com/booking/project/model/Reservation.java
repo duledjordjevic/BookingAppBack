@@ -18,7 +18,7 @@ public class Reservation {
     private Guest guest;
     private double price;
     private int numberOfGuests;
-    private Accomodation accomodation;
+    private Accommodation accommodation;
     private ReservationStatus status;
 
 }
