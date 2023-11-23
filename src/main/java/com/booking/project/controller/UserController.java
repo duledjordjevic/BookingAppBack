@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/users")
@@ -25,37 +26,36 @@ public class UserController {
     }
 
     @GetMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<User> getUser(@PathVariable("id") Long id){
-        User user = userService.find(id);
-        if(user == null){
-            return new ResponseEntity<User>(HttpStatus.NOT_FOUND);
+    public ResponseEntity<Optional<User>> getUser(@PathVariable("id") Long id){
+        Optional<User> user = userService.findById(id);
+        if(user.isEmpty()){
+            return new ResponseEntity<Optional<User>>(HttpStatus.NOT_FOUND);
         }
-        return new ResponseEntity<User>(user, HttpStatus.OK);
+        return new ResponseEntity<Optional<User>>(user, HttpStatus.OK);
     }
 
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<User> createUser(@RequestBody User user) throws Exception {
-        User savedUser = userService.create(user);
+        User savedUser = userService.save(user);
         return new ResponseEntity<User>(savedUser, HttpStatus.CREATED);
     }
 
     @PutMapping(value = "/{id}", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<User> updateUser(@RequestBody User user, @PathVariable Long id) throws Exception{
-        User userForUpdate = userService.find(id);
-        userForUpdate.copyValues(user);
+        Optional<User> userForUpdate = userService.findById(id);
 
-        User updatedUser = userService.update(userForUpdate);
 
-        if (updatedUser == null){
+        if (userForUpdate.isEmpty()){
             return new ResponseEntity<User>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
+        userForUpdate.get().copyValues(user);
 
-        return new ResponseEntity<User>(updatedUser, HttpStatus.CREATED);
+        return new ResponseEntity<User>(userService.save(userForUpdate.get()), HttpStatus.CREATED);
     }
 
     @DeleteMapping(value = "/{id}")
     public ResponseEntity<User> deleteUser(@PathVariable("id") Long id){
-        userService.delete(id);
+        userService.deleteById(id);
         return new ResponseEntity<User>(HttpStatus.NO_CONTENT);
     }
 }
