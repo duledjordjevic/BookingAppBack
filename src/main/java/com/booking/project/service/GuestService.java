@@ -19,22 +19,17 @@ public class GuestService implements IGuestService {
     }
 
     @Override
-    public Optional<Guest> find(Long id) {
+    public Optional<Guest> findById(Long id) {
         return repository.findById(id);
     }
 
     @Override
-    public Guest create(Guest guest) throws Exception {
+    public Guest save(Guest guest) throws Exception {
         return repository.save(guest);
     }
 
     @Override
-    public Guest update(Guest guest) throws Exception {
-        return repository.save(guest);
-    }
-
-    @Override
-    public void delete(Long id) {
+    public void deleteById(Long id) {
         repository.deleteById(id);
     }
 }
