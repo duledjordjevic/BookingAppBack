@@ -1,18 +1,11 @@
 package com.booking.project.repository.inteface;
 
+import com.booking.project.model.Accommodation;
 import com.booking.project.model.User;
+import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.Collection;
 
-public interface IUserRepository {
+public interface IUserRepository extends JpaRepository<User, Long> {
 
-    Collection<User> findAll();
-
-    User find(Long id);
-
-    User create(User user) throws Exception;
-
-    User update(User user) throws Exception;
-
-    void delete(Long id);
 }
