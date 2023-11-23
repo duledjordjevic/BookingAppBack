@@ -8,11 +8,9 @@ import java.util.Optional;
 public interface IGuestService {
     Collection<Guest> findAll();
 
-    Optional<Guest> find(Long id);
+    Optional<Guest> findById(Long id);
 
-    Guest create(Guest guest) throws Exception;
+    Guest save(Guest guest) throws Exception;
 
-    Guest update(Guest guest) throws Exception;
-
-    void delete(Long id);
+    void deleteById(Long id);
 }
