@@ -48,10 +48,7 @@ public class GuestController {
             return new ResponseEntity<Guest>(HttpStatus.BAD_REQUEST);
         }
 
-        guestForUpdate.get().setName(guest.getName());
-        guestForUpdate.get().setLastName(guest.getLastName());
-        guestForUpdate.get().setUser(guest.getUser());
-        guestForUpdate.get().setAddress(guest.getAddress());
+        guestForUpdate.get().copyValues(guest);
 
         return new ResponseEntity<Guest>(guestService.save(guestForUpdate.get()), HttpStatus.OK);
     }
