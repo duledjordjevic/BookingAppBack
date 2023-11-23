@@ -7,33 +7,30 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.Collection;
+import java.util.Optional;
+
 @Service
 public class AccomodationService implements IAccomodationService {
     @Autowired
     private IAccomodationRepository accomodationRepository;
-
     @Override
     public Collection<Accomodation> findAll() {
         return accomodationRepository.findAll();
     }
 
     @Override
-    public Accomodation find(Long id) {
-        return accomodationRepository.find(id);
+    public Optional<Accomodation> findById(Long id) {
+        return accomodationRepository.findById(id);
     }
 
     @Override
-    public Accomodation create(Accomodation accomodation) throws Exception {
-        return accomodationRepository.create(accomodation);
+    public Accomodation save(Accomodation accomodation) throws Exception {
+        return accomodationRepository.save(accomodation);
     }
 
     @Override
-    public Accomodation update(Accomodation accomodation) throws Exception {
-        return accomodationRepository.update(accomodation);
-    }
-
-    @Override
-    public void delete(Long id) {
-        accomodationRepository.delete(id);
+    public void deleteById(Long id) {
+        accomodationRepository.deleteById(id);
     }
 }
+
