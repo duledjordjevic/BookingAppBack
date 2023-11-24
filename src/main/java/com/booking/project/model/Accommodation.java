@@ -1,5 +1,6 @@
 package com.booking.project.model;
 
+import com.booking.project.dto.AccommodationDTO;
 import com.booking.project.model.enums.AccomodationType;
 import com.booking.project.model.enums.Amenities;
 import com.booking.project.model.enums.CancellationPolicy;
@@ -35,11 +36,14 @@ public class Accommodation {
     @Enumerated(EnumType.STRING)
     private List<Amenities> amenities;
 
-    @Column(nullable = false)
-    private Long minGuests;
+    @OneToMany(fetch = FetchType.LAZY)
+    private Set<Photo> photos = new HashSet<Photo>();
 
     @Column(nullable = false)
-    private Long maxGuests;
+    private int minGuests;
+
+    @Column(nullable = false)
+    private int maxGuests;
 
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)
@@ -59,13 +63,13 @@ public class Accommodation {
     @Column(nullable = false)
     private boolean priceForEntireAcc;
 
-    @OneToMany(fetch = FetchType.LAZY, cascade = {CascadeType.ALL})
+    @OneToMany(fetch = FetchType.LAZY)
     private Set<PriceList> prices = new HashSet<PriceList>();
 
     @ManyToOne(fetch = FetchType.LAZY)
     private Host host;
 
-    @OneToOne(cascade = { CascadeType.ALL }, fetch = FetchType.EAGER)
+    @OneToOne(cascade = { CascadeType.ALL })
     private Address address;
 
 
@@ -74,5 +78,18 @@ public class Accommodation {
         this.description = accommodation.description;
         this.minGuests = accommodation.minGuests;
         this.maxGuests = accommodation.maxGuests;
+    }
+
+    public Accommodation(AccommodationDTO accommodationDTO){
+        this.title = accommodationDTO.getTitle();
+        this.description = accommodationDTO.getDescription();
+        this.address = accommodationDTO.getAddress();
+        this.amenities=  accommodationDTO.getAmenities();
+        this.photos = accommodationDTO.getPhotos();
+        this.minGuests = accommodationDTO.getMinGuest();
+        this.maxGuests = accommodationDTO.getMaxGuest();
+        this.type = accommodationDTO.getType();
+        this.prices = accommodationDTO.getPrices();
+
     }
 }
