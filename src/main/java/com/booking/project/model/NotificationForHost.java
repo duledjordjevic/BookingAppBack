@@ -1,5 +1,6 @@
 package com.booking.project.model;
 
+import com.booking.project.model.enums.NotificationType;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -9,23 +10,15 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @Entity
-@Table(name="addresses")
-public class Address {
-
+@Table(name="notifications_for_host")
+public class NotificationForHost {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @Column(nullable = false)
-    private String street;
+    private NotificationType type;
 
     @Column(nullable = false)
-    private String city;
-
-    @Column(nullable = false)
-    private String state;
-
-    @Column(nullable = false)
-    private int postalCode;
-
+    private String description;
 }

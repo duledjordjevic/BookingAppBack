@@ -11,6 +11,4 @@ import java.util.List;
 @Table(name = "hosts")
 public class Host extends Person{
 
-    @OneToMany(fetch = FetchType.LAZY)
-    private List<Accommodation> accommodations;
 }

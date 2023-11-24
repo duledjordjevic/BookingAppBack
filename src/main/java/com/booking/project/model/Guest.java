@@ -1,5 +1,6 @@
 package com.booking.project.model;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
@@ -16,10 +17,11 @@ import java.util.List;
 @Entity
 @Table(name = "guests")
 public class Guest extends Person {
+    @Column(nullable = false)
     private int numberOfCancellation;
-    private boolean notificationEnabled;
-//    private List<Accomodation> favourites;
 
+    @Column(nullable = false)
+    private boolean notificationEnabled;
     public void copyValues(Guest guest){
         this.setName(guest.getName());
         this.setLastName(guest.getLastName());

@@ -32,9 +32,6 @@ public class Accommodation {
     @Column(nullable = false)
     private String description;
 
-    @OneToOne(cascade = { CascadeType.ALL }, fetch = FetchType.EAGER)
-    private Address address;
-
     @Enumerated(EnumType.STRING)
     private List<Amenities> amenities;
 
@@ -59,14 +56,17 @@ public class Accommodation {
     @Enumerated(EnumType.STRING)
     private ReservationMethod reservationMethod;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    private Host host;
-
     @Column(nullable = false)
     private boolean priceForEntireAcc;
 
     @OneToMany(fetch = FetchType.LAZY, cascade = {CascadeType.ALL})
     private Set<PriceList> prices = new HashSet<PriceList>();
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    private Host host;
+
+    @OneToOne(cascade = { CascadeType.ALL }, fetch = FetchType.EAGER)
+    private Address address;
 
 
     public void copyValues(Accommodation accommodation){
