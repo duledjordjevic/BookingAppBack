@@ -15,4 +15,6 @@ public interface IUserService {
     User save(User user) throws Exception;
 
     void deleteById(Long id);
+    void block(Long id);
+    void unblock(Long id);
 }

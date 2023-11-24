@@ -58,4 +58,9 @@ public class UserController {
         userService.deleteById(id);
         return new ResponseEntity<User>(HttpStatus.NO_CONTENT);
     }
+    @PutMapping(value = "/{id}/blocked", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<?> blockUser(@PathVariable Long id){
+        userService.block(id);
+        return new ResponseEntity<User>(HttpStatus.OK);
+    }
 }

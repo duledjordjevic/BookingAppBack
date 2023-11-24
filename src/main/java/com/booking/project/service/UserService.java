@@ -1,6 +1,7 @@
 package com.booking.project.service;
 
 import com.booking.project.model.User;
+import com.booking.project.model.enums.UserStatus;
 import com.booking.project.repository.inteface.IUserRepository;
 import com.booking.project.service.interfaces.IUserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,5 +32,16 @@ public class UserService implements IUserService {
     @Override
     public void deleteById(Long id) {
         repository.deleteById(id);
+    }
+
+    public void block(Long id){
+        User user = findById(id).get();
+        user.setStatus(UserStatus.BLOCKED);
+        repository.save(user);
+    }
+    public void unblock(Long id){
+        User user = findById(id).get();
+        user.setStatus(UserStatus.ACTIVE);
+        repository.save(user);
     }
 }
