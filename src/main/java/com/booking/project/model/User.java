@@ -1,5 +1,6 @@
 package com.booking.project.model;
 
+import com.booking.project.model.enums.UserStatus;
 import com.booking.project.model.enums.UserType;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -19,7 +20,7 @@ public class User {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false)
+    @Column(nullable = false, unique = true)
     private String email;
 
     @Column(nullable = false)
@@ -28,6 +29,13 @@ public class User {
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)
     private UserType userType;
+
+    @Column(nullable = false)
+    private boolean isReported;
+
+    @Column(nullable = false)
+    @Enumerated(EnumType.STRING)
+    private UserStatus status;
 
     public void copyValues(User user){
         this.email = user.email;

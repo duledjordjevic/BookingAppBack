@@ -1,5 +1,6 @@
 package com.booking.project.controller;
 
+import com.booking.project.dto.AccommodationDTO;
 import com.booking.project.model.Accommodation;
 import com.booking.project.service.interfaces.IAccommodationService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,8 +35,12 @@ public class AccommodationController {
     }
 
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Accommodation> createAccommodation(@RequestBody Accommodation accommodation) throws Exception {
-        Accommodation savedAccommodation = accommodationService.save(accommodation);
+    public ResponseEntity<?> createAccommodation(@RequestBody AccommodationDTO accommodationDTO) throws Exception {
+        Accommodation accommodationNew = new Accommodation(accommodationDTO);
+
+        Accommodation savedAccommodation = accommodationService.save(accommodationNew);
+
+
         return new ResponseEntity<Accommodation>(savedAccommodation, HttpStatus.CREATED);
     }
 
