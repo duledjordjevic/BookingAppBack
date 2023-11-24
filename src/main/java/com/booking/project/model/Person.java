@@ -14,12 +14,19 @@ public abstract class Person {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    @Column
+
+    @Column(nullable = false)
     private String name;
+
+    @Column(nullable = false)
     private String lastName;
+
     @OneToOne(cascade = { CascadeType.ALL })
     private Address address;
+
+    @Column(nullable = false)
     private String phoneNumber;
+
     @OneToOne(cascade = { CascadeType.ALL })
     private User user;
 
