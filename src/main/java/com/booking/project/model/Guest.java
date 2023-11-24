@@ -22,8 +22,6 @@ public class Guest extends Person {
 
     @Column(nullable = false)
     private boolean notificationEnabled;
-//    private List<Accomodation> favourites;
-
     public void copyValues(Guest guest){
         this.setName(guest.getName());
         this.setLastName(guest.getLastName());

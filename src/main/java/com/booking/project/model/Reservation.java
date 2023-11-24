@@ -27,21 +27,21 @@ public class Reservation {
     @Column(nullable = false, columnDefinition = "DATE")
     private LocalDate endDate;
 
-    @ManyToOne(fetch = FetchType.LAZY, cascade = {CascadeType.ALL})
-    private Guest guest;
-
     @Column(nullable = false)
     private double price;
 
     @Column(nullable = false)
     private int numberOfGuests;
 
-    @ManyToOne(fetch = FetchType.LAZY, cascade = {CascadeType.ALL})
-    private Accommodation accommodation;
-
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)
     private ReservationStatus status;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    private Guest guest;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    private Accommodation accommodation;
 
     public void copyValues(Reservation reservation){
         this.startDate = reservation.startDate;
