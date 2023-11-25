@@ -1,7 +1,10 @@
 package com.booking.project.controller;
 
+import com.booking.project.dto.CreateReservationDTO;
 import com.booking.project.model.Accommodation;
 import com.booking.project.model.Reservation;
+import com.booking.project.model.enums.ReservationMethod;
+import com.booking.project.service.interfaces.IAccommodationService;
 import com.booking.project.service.interfaces.IReservationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -10,6 +13,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Collection;
+import java.util.List;
 import java.util.Optional;
 
 @RestController
@@ -19,11 +23,14 @@ public class ReservationController {
     @Autowired
     private IReservationService reservationService;
 
-    @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Collection<Reservation>> getReservations(){
-        Collection<Reservation> reservations = reservationService.findAll();
-        return new ResponseEntity<Collection<Reservation>>(reservations, HttpStatus.OK);
-    }
+    @Autowired
+    private IAccommodationService accommodationService;
+
+//    @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
+//    public ResponseEntity<Collection<Reservation>> getReservations(){
+//        Collection<Reservation> reservations = reservationService.findAll();
+//        return new ResponseEntity<Collection<Reservation>>(reservations, HttpStatus.OK);
+//    }
 
     @GetMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Optional<Reservation>> getReservation(@PathVariable("id") Long id){
@@ -35,9 +42,15 @@ public class ReservationController {
     }
 
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Reservation> createReservation(@RequestBody Reservation reservation) throws Exception {
-        Reservation savedReservation = reservationService.save(reservation);
-        return new ResponseEntity<Reservation>(savedReservation, HttpStatus.CREATED);
+    public ResponseEntity<Reservation> createReservation(@RequestBody CreateReservationDTO createReservationDTO) throws Exception {
+        List<Object> reservationResponse = accommodationService.reservate(createReservationDTO.getAccommodationId(), createReservationDTO.getStartDate(), createReservationDTO.getEndDate(), createReservationDTO.getNumberOfGuests());
+
+        if(reservationResponse.size() == 1) return new ResponseEntity<Reservation>(HttpStatus.INTERNAL_SERVER_ERROR);
+
+        double price = (double) reservationResponse.get(1);
+        ReservationMethod reservationMethod = (ReservationMethod) reservationResponse.get(2);
+        Reservation createdReservation = reservationService.create(createReservationDTO, price, reservationMethod);
+        return new ResponseEntity<Reservation>(createdReservation, HttpStatus.CREATED);
     }
 
     @PutMapping(value = "/{id}", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
@@ -49,7 +62,6 @@ public class ReservationController {
         }
         reservationForUpdate.get().copyValues(reservation);
 
-
         return new ResponseEntity<Reservation>(reservationService.save(reservationForUpdate.get()), HttpStatus.CREATED);
     }
 
@@ -58,4 +70,6 @@ public class ReservationController {
         reservationService.deleteById(id);
         return new ResponseEntity<Reservation>(HttpStatus.NO_CONTENT);
     }
+
+
 }
