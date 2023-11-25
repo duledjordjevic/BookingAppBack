@@ -26,7 +26,7 @@ public class GuestDTO {
     private String phoneNumber;
     private boolean isNotificationEnabled;
     private UserCredentialsDTO userCredentialsDTO;
-    private GuestDTO(Guest guest){
+    public GuestDTO(Guest guest){
         this.id = guest.getId();
         this.name = guest.getName();
         this.lastName = guest.getLastName();
