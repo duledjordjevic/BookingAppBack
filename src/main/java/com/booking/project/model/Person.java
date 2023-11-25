@@ -31,4 +31,6 @@ public abstract class Person {
     @OneToOne(cascade = { CascadeType.ALL })
     private User user;
 
+    @Column(nullable = false)
+    private boolean isNotificationEnabled;
 }

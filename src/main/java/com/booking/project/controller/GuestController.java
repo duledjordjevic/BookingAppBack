@@ -40,18 +40,18 @@ public class GuestController {
         return new ResponseEntity<Guest>(savedGuest, HttpStatus.CREATED);
     }
 
-    @PutMapping(value = "/{id}", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Guest> updateGuest(@RequestBody Guest guest, @PathVariable Long id) throws Exception{
-        Optional<Guest> guestForUpdate = guestService.findById(id);
-
-        if (guestForUpdate.isEmpty()) {
-            return new ResponseEntity<Guest>(HttpStatus.BAD_REQUEST);
-        }
-
-        guestForUpdate.get().copyValues(guest);
-
-        return new ResponseEntity<Guest>(guestService.save(guestForUpdate.get()), HttpStatus.OK);
-    }
+//    @PutMapping(value = "/{id}", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+//    public ResponseEntity<Guest> updateGuest(@RequestBody Guest guest, @PathVariable Long id) throws Exception{
+//        Optional<Guest> guestForUpdate = guestService.findById(id);
+//
+//        if (guestForUpdate.isEmpty()) {
+//            return new ResponseEntity<Guest>(HttpStatus.BAD_REQUEST);
+//        }
+//
+//        guestForUpdate.get().copyValues(guest);
+//
+//        return new ResponseEntity<Guest>(guestService.save(guestForUpdate.get()), HttpStatus.OK);
+//    }
 
     @DeleteMapping(value = "/{id}")
     public ResponseEntity<Guest> deleteGuest(@PathVariable("id") Long id){

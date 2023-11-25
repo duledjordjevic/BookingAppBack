@@ -1,5 +1,6 @@
 package com.booking.project.service.interfaces;
 
+import com.booking.project.dto.UserCredentialsDTO;
 import com.booking.project.model.Guest;
 import com.booking.project.model.User;
 
@@ -17,4 +18,6 @@ public interface IUserService {
     void deleteById(Long id);
     void block(Long id);
     void unblock(Long id);
+
+    User update(UserCredentialsDTO userCredentialsDTO, Long id) throws Exception;
 }

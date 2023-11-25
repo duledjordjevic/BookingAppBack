@@ -1,5 +1,7 @@
 package com.booking.project.service;
 
+import com.booking.project.dto.UserCredentialsDTO;
+import com.booking.project.model.Guest;
 import com.booking.project.model.User;
 import com.booking.project.model.enums.UserStatus;
 import com.booking.project.repository.inteface.IUserRepository;
@@ -29,6 +31,18 @@ public class UserService implements IUserService {
         return repository.save(user);
     }
 
+    @Override
+    public User update(UserCredentialsDTO userCredentialsDTO, Long id) throws Exception{
+        Optional<User> userForUpdate = findById(id);
+
+        if(userForUpdate.isEmpty()) return null;
+
+        userForUpdate.get().setEmail(userCredentialsDTO.getEmail());
+        userForUpdate.get().setPassword(userCredentialsDTO.getPassword());
+
+        save(userForUpdate.get());
+        return userForUpdate.get();
+    }
     @Override
     public void deleteById(Long id) {
         repository.deleteById(id);
