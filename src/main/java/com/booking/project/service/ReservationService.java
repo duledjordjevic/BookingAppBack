@@ -10,10 +10,14 @@ import com.booking.project.repository.inteface.IAccommodationRepository;
 import com.booking.project.repository.inteface.IGuestRepository;
 import com.booking.project.repository.inteface.IReservationRepository;
 import com.booking.project.service.interfaces.IReservationService;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.Query;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.util.Collection;
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -27,6 +31,9 @@ public class ReservationService implements IReservationService {
 
     @Autowired
     private IGuestRepository guestRepository;
+
+    @Autowired
+    EntityManager em;
     @Override
     public Collection<Reservation> findAll() {
         return reservationRepository.findAll();
@@ -70,4 +77,20 @@ public class ReservationService implements IReservationService {
     public void deleteById(Long id) {
         reservationRepository.deleteById(id);
     }
+
+    public List<Reservation> filter(String title, LocalDate startDate, LocalDate endDate, ReservationStatus reservationStatus){
+        Query q = em.createQuery("SELECT r FROM Reservation r JOIN FETCH r.accommodation a JOIN FETCH r.guest WHERE (a.title LIKE :pattern OR :pattern is Null)" +
+                " AND ((r.startDate >= :startDate AND r.endDate <= :endDate) OR :startDate is Null) AND (r.status = :reservationStatus OR :reservationStatus is Null)");
+        if(title == null){
+            q.setParameter("pattern", null);
+        }else{
+            q.setParameter("pattern", "%" + title + "%");
+        }
+        q.setParameter("startDate" , startDate);
+        q.setParameter("endDate", endDate);
+        q.setParameter("reservationStatus", reservationStatus);
+
+        return q.getResultList();
+    }
+
 }

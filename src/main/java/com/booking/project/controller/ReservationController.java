@@ -4,14 +4,18 @@ import com.booking.project.dto.CreateReservationDTO;
 import com.booking.project.model.Accommodation;
 import com.booking.project.model.Reservation;
 import com.booking.project.model.enums.ReservationMethod;
+import com.booking.project.model.enums.ReservationStatus;
 import com.booking.project.service.interfaces.IAccommodationService;
 import com.booking.project.service.interfaces.IReservationService;
+import jakarta.websocket.server.PathParam;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.util.MultiValueMap;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDate;
 import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
@@ -32,13 +36,25 @@ public class ReservationController {
 //        return new ResponseEntity<Collection<Reservation>>(reservations, HttpStatus.OK);
 //    }
 
-    @GetMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Optional<Reservation>> getReservation(@PathVariable("id") Long id){
-        Optional<Reservation> reservation = reservationService.findById(id);
-        if(reservation.isEmpty()){
-            return new ResponseEntity<Optional<Reservation>>(HttpStatus.NOT_FOUND);
+//    @GetMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
+//    public ResponseEntity<Optional<Reservation>> getReservation(@PathVariable("id") Long id){
+//        Optional<Reservation> reservation = reservationService.findById(id);
+//        if(reservation.isEmpty()){
+//            return new ResponseEntity<Optional<Reservation>>(HttpStatus.NOT_FOUND);
+//        }
+//        return new ResponseEntity<Optional<Reservation>>(reservation, HttpStatus.OK);
+//    }
+
+    @GetMapping( produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<?> filterReservations(@PathParam("title") String title,
+                                                                    @PathParam("startDate") LocalDate startDate,
+                                                                    @PathParam("endDate") LocalDate endDate,
+                                                                    @PathParam("status") ReservationStatus status){
+        List<Reservation> reservations = reservationService.filter(title, startDate, endDate, status);
+        if(reservations.isEmpty()){
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
-        return new ResponseEntity<Optional<Reservation>>(reservation, HttpStatus.OK);
+        return new ResponseEntity<Collection<Reservation>>(reservations, HttpStatus.OK);
     }
 
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)

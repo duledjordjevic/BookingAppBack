@@ -5,7 +5,9 @@ import com.booking.project.model.Reservation;
 import com.booking.project.model.enums.ReservationMethod;
 import com.booking.project.model.enums.ReservationStatus;
 
+import java.time.LocalDate;
 import java.util.Collection;
+import java.util.List;
 import java.util.Optional;
 
 public interface IReservationService {
@@ -18,4 +20,6 @@ public interface IReservationService {
     void deleteById(Long id);
 
     Reservation create(CreateReservationDTO createReservationDTO, double price, ReservationMethod reservationMethod) throws Exception;
+
+    List<Reservation> filter(String title, LocalDate startDate, LocalDate endDate, ReservationStatus reservationStatus);
 }
