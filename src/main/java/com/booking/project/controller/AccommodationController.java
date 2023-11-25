@@ -44,7 +44,6 @@ public class AccommodationController {
         Host host = hostService.findById(accommodationDTO.getHostId()).get();
         accommodationNew.setHost(host);
         Accommodation savedAccommodation = accommodationService.save(accommodationNew);
-
         return new ResponseEntity<Accommodation>(savedAccommodation, HttpStatus.CREATED);
     }
 

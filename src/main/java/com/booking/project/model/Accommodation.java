@@ -61,7 +61,7 @@ public class Accommodation {
     private ReservationMethod reservationMethod;
 
     @Column(nullable = false)
-    private boolean priceForEntireAcc;
+    private boolean isPriceForEntireAcc;
 
     @OneToMany(fetch = FetchType.LAZY)
     private Set<PriceList> prices = new HashSet<PriceList>();
@@ -90,6 +90,10 @@ public class Accommodation {
         this.maxGuests = accommodationDTO.getMaxGuest();
         this.type = accommodationDTO.getType();
         this.prices = accommodationDTO.getPrices();
+        this.cancellationPolicy = accommodationDTO.getCancellationPolicy();
+        this.isAvailableForReservation = accommodationDTO.isAvailableForReservation();
+        this.reservationMethod = accommodationDTO.getReservationMethod();
+        this.isPriceForEntireAcc = accommodationDTO.isPriceForEntireAcc();
 
     }
 }

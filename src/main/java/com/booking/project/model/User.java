@@ -1,5 +1,7 @@
 package com.booking.project.model;
 
+import com.booking.project.dto.UserCredentialsDTO;
+import com.booking.project.dto.UserDTO;
 import com.booking.project.model.enums.UserStatus;
 import com.booking.project.model.enums.UserType;
 import jakarta.persistence.*;
@@ -37,8 +39,23 @@ public class User {
     @Enumerated(EnumType.STRING)
     private UserStatus status;
 
-    public void copyValues(User user){
-        this.email = user.email;
-        this.password = user.password;
+    public User(UserDTO userDTO){
+        this.id = userDTO.getId();
+        this.email = userDTO.getEmail();
+        this.password = userDTO.getPassword();
+        this.userType = userDTO.getUserType();
+        this.isReported = userDTO.isReported();
+        this.status = userDTO.getStatus();
+    }
+
+    public User(UserCredentialsDTO userCredentialsDTO){
+        this.id = userCredentialsDTO.getId();
+        this.email = userCredentialsDTO.getEmail();
+        this.password = userCredentialsDTO.getPassword();
+    }
+
+    public void copyValues(UserCredentialsDTO userCredentialsDTO){
+        this.email = userCredentialsDTO.getEmail();
+        this.password = userCredentialsDTO.getPassword();
     }
 }
