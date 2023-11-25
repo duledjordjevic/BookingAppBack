@@ -1,6 +1,6 @@
 package com.booking.project.model.enums;
 
-public enum AccomodationStatus {
+public enum AccommodationStatus {
     AVAILABLE,
     NOT_AVAILABLE,
     RESERVED
