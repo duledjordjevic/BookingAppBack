@@ -22,9 +22,6 @@ public class Guest extends Person {
     @Column(nullable = false)
     private int numberOfCancellation;
 
-    @Column(nullable = false)
-    private boolean isNotificationEnabled;
-
     @OneToMany(fetch = FetchType.LAZY)
     private Set<Accommodation> favourites = new HashSet<>();
 
@@ -34,18 +31,9 @@ public class Guest extends Person {
         this.setLastName(guestDTO.getLastName());
         this.setAddress(guestDTO.getAddress());
         this.setPhoneNumber(guestDTO.getPhoneNumber());
-        this.isNotificationEnabled = guestDTO.isNotificationEnabled();
+        this.setNotificationEnabled(guestDTO.isNotificationEnabled());
         User user = new User(guestDTO.getUserCredentialsDTO());
         this.setUser(user);
     }
 
-    public void copyValues(GuestDTO guestDTO) {
-        this.setId(guestDTO.getId());
-        this.setName(guestDTO.getName());
-        this.setLastName(guestDTO.getLastName());
-        this.setAddress(guestDTO.getAddress());
-        this.setPhoneNumber(guestDTO.getPhoneNumber());
-        this.isNotificationEnabled = guestDTO.isNotificationEnabled();
-        this.getUser().copyValues(guestDTO.getUserCredentialsDTO());
-    }
 }

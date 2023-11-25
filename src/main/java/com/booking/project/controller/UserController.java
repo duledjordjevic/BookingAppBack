@@ -1,7 +1,10 @@
 package com.booking.project.controller;
 
 import com.booking.project.dto.GuestDTO;
+import com.booking.project.dto.HostDTO;
+import com.booking.project.dto.UserCredentialsDTO;
 import com.booking.project.model.Guest;
+import com.booking.project.model.Host;
 import com.booking.project.model.User;
 import com.booking.project.service.interfaces.IGuestService;
 import com.booking.project.service.interfaces.IHostService;
@@ -50,29 +53,31 @@ public class UserController {
         return new ResponseEntity<User>(savedUser, HttpStatus.CREATED);
     }
 
-//    @PutMapping(value = "/{id}", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-//    public ResponseEntity<User> updateUser(@RequestBody User user, @PathVariable Long id) throws Exception{
-//        Optional<User> userForUpdate = userService.findById(id);
-//
-//
-//        if (userForUpdate.isEmpty()){
-//            return new ResponseEntity<User>(HttpStatus.INTERNAL_SERVER_ERROR);
-//        }
-//        userForUpdate.get().copyValues(user);
-//
-//        return new ResponseEntity<User>(userService.save(userForUpdate.get()), HttpStatus.CREATED);
-//    }
+    @PutMapping(value = "/{id}", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<?> updateUser(@RequestBody UserCredentialsDTO userCredentialsDTO, @PathVariable Long id) throws Exception{
+        User userForUpdate = userService.update(userCredentialsDTO, id);
 
-    @PutMapping(value = "/guest/{id_guest}", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<?> updateGuest(@RequestBody GuestDTO guestDTO, @PathVariable Long id_guest) throws Exception{
-        Optional<Guest> guestForUpdate = guestService.findById(id_guest);
+        if(userForUpdate == null) return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
 
-        if (guestForUpdate.isEmpty()){
-            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
-        }
-        guestForUpdate.get().copyValues(guestDTO);
+        return new ResponseEntity<User>(userForUpdate, HttpStatus.CREATED);
+    }
 
-        return new ResponseEntity<>(guestService.save(guestForUpdate.get()), HttpStatus.CREATED);
+    @PutMapping(value = "/guest/{id}", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<?> updateGuest(@RequestBody GuestDTO guestDTO, @PathVariable Long id) throws Exception{
+        Guest guestForUpdate = guestService.update(guestDTO, id);
+
+        if(guestForUpdate == null) return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+
+        return new ResponseEntity<>(guestForUpdate, HttpStatus.CREATED);
+    }
+
+    @PutMapping(value = "/host/{id}", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<?> updateHost(@RequestBody HostDTO hostDTO, @PathVariable Long id) throws Exception{
+        Host hostForUpdate = hostService.update(hostDTO, id);
+
+        if(hostForUpdate == null) return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+
+        return new ResponseEntity<>(hostForUpdate, HttpStatus.CREATED);
     }
 
     @DeleteMapping(value = "/{id}")
