@@ -1,5 +1,6 @@
 package com.booking.project.service.interfaces;
 
+import com.booking.project.dto.CommentAboutHostDTO;
 import com.booking.project.model.CommentAboutHost;
 
 import java.util.Collection;
@@ -14,4 +15,5 @@ public interface ICommentAboutHostService {
     CommentAboutHost save(CommentAboutHost commentAboutHost) throws Exception;
 
     void deleteById(Long id);
+    CommentAboutHost update(CommentAboutHostDTO commentAboutHostDTO, Long id) throws Exception;
 }
