@@ -55,4 +55,9 @@ public class CommentAboutHostService implements ICommentAboutHostService {
         save(commentAboutHostForUpdate.get());
         return commentAboutHostForUpdate.get();
     }
+
+    @Override
+    public CommentAboutHost create(CommentAboutHostDTO commentAboutHostDTO) throws Exception {
+        return null;
+    }
 }
