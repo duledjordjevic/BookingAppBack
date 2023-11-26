@@ -96,4 +96,11 @@ public class Accommodation {
         this.isPriceForEntireAcc = accommodationDTO.isPriceForEntireAcc();
 
     }
+
+    public void copyValues(AccommodationDTO accommodationDTO){
+        this.title = accommodationDTO.getTitle();
+        this.description = accommodationDTO.getDescription();
+        this.minGuests = accommodationDTO.getMinGuest();
+        this.maxGuests = accommodationDTO.getMaxGuest();
+    }
 }
