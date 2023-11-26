@@ -1,9 +1,13 @@
 package com.booking.project.service;
 
+import com.booking.project.dto.CreateNotificationForGuestDTO;
 import com.booking.project.dto.NotificationForGuestDTO;
 import com.booking.project.model.Guest;
+import com.booking.project.model.Host;
 import com.booking.project.model.NotificationForGuest;
+import com.booking.project.model.NotificationForHost;
 import com.booking.project.repository.inteface.IGuestRepository;
+import com.booking.project.repository.inteface.IHostRepository;
 import com.booking.project.repository.inteface.INotificationForGuestRepository;
 import com.booking.project.service.interfaces.INotificationForGuestService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -48,7 +52,9 @@ public class NotificationForGuestService implements INotificationForGuestService
 
         notificationForGuestForUpdate.get().setId(notificationForGuestDTO.getId());
         notificationForGuestForUpdate.get().setDescription(notificationForGuestDTO.getDescription());
-        notificationForGuestForUpdate.get().getGuest().copyValues(notificationForGuestDTO.getGuestDTO());
+
+        Optional<Guest> guest = guestRepository.findById(notificationForGuestDTO.getGuestId());
+        guest.ifPresent(value -> notificationForGuestForUpdate.get().setGuest(value));
 
         save(notificationForGuestForUpdate.get());
         return notificationForGuestForUpdate.get();
@@ -58,5 +64,19 @@ public class NotificationForGuestService implements INotificationForGuestService
     public Collection<NotificationForGuest> findByGuest(Long id) {
         Optional<Guest> guest = guestRepository.findById(id);
         return notificationForGuestRepository.findAllByGuest(guest);
+    }
+
+    @Override
+    public NotificationForGuest create(CreateNotificationForGuestDTO createNotificationForGuestDTO) throws Exception {
+
+        NotificationForGuest notificationForGuest = new NotificationForGuest();
+        notificationForGuest.setDescription(createNotificationForGuestDTO.getDescription());
+
+        Optional<Guest> guest = guestRepository.findById(createNotificationForGuestDTO.getGuestId());
+        if (guest.isEmpty()) return null;
+        notificationForGuest.setGuest(guest.get());
+
+        save(notificationForGuest);
+        return notificationForGuest;
     }
 }

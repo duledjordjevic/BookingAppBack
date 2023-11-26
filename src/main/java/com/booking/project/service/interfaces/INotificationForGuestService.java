@@ -1,5 +1,6 @@
 package com.booking.project.service.interfaces;
 
+import com.booking.project.dto.CreateNotificationForGuestDTO;
 import com.booking.project.dto.NotificationForGuestDTO;
 import com.booking.project.model.NotificationForGuest;
 
@@ -19,4 +20,6 @@ public interface INotificationForGuestService {
     NotificationForGuest update(NotificationForGuestDTO notificationForGuestDTO, Long id) throws Exception;
 
     Collection<NotificationForGuest> findByGuest(Long id);
+
+    NotificationForGuest create(CreateNotificationForGuestDTO createNotificationForGuestDTO) throws Exception;
 }
