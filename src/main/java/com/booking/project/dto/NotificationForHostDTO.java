@@ -16,12 +16,12 @@ public class NotificationForHostDTO {
     private Long id;
     private NotificationType type;
     private String description;
-    private HostDTO hostDTO;
+    private Long hostId;
 
     public NotificationForHostDTO(NotificationForHost notificationForHost){
         this.id = notificationForHost.getId();
         this.type = notificationForHost.getType();
         this.description = notificationForHost.getDescription();
-        this.hostDTO = new HostDTO(notificationForHost.getHost());
+        this.hostId = notificationForHost.getHost().getId();
     }
 }
