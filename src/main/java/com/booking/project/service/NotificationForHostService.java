@@ -1,5 +1,6 @@
 package com.booking.project.service;
 
+import com.booking.project.dto.CreateNotificationForHostDTO;
 import com.booking.project.dto.NotificationForHostDTO;
 import com.booking.project.model.Host;
 import com.booking.project.model.NotificationForHost;
@@ -49,7 +50,9 @@ public class NotificationForHostService implements INotificationForHostService {
         notificationForHostForUpdate.get().setId(notificationForHostDTO.getId());
         notificationForHostForUpdate.get().setDescription(notificationForHostDTO.getDescription());
         notificationForHostForUpdate.get().setType(notificationForHostDTO.getType());
-        notificationForHostForUpdate.get().getHost().copyValues(notificationForHostDTO.getHostDTO());
+
+        Optional<Host> host = hostRepository.findById(notificationForHostDTO.getHostId());
+        host.ifPresent(value -> notificationForHostForUpdate.get().setHost(value));
 
         save(notificationForHostForUpdate.get());
         return notificationForHostForUpdate.get();
@@ -59,5 +62,20 @@ public class NotificationForHostService implements INotificationForHostService {
     public Collection<NotificationForHost> findByHost(Long id) {
         Optional<Host> host = hostRepository.findById(id);
         return notificationForHostRepository.findAllByHost(host);
+    }
+
+    @Override
+    public NotificationForHost create(CreateNotificationForHostDTO createNotificationForHostDTO) throws Exception {
+
+        NotificationForHost notificationForHost = new NotificationForHost();
+        notificationForHost.setType(createNotificationForHostDTO.getType());
+        notificationForHost.setDescription(createNotificationForHostDTO.getDescription());
+
+        Optional<Host> host = hostRepository.findById(createNotificationForHostDTO.getHostId());
+        if (host.isEmpty()) return null;
+        notificationForHost.setHost(host.get());
+
+        save(notificationForHost);
+        return notificationForHost;
     }
 }
