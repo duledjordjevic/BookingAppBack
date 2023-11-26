@@ -1,6 +1,6 @@
 package com.booking.project.controller;
 
-import com.booking.project.model.NotificationForGuest;
+import com.booking.project.dto.CreateNotificationForHostDTO;
 import com.booking.project.model.NotificationForHost;
 import com.booking.project.service.NotificationForHostService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,8 +20,8 @@ public class NotificationForHostController {
 
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<NotificationForHost> createNotificationForHost
-            (@RequestBody NotificationForHost notificationForHost) throws Exception {
-        NotificationForHost savedNotificationForHost = notificationForHostService.save(notificationForHost);
+            (@RequestBody CreateNotificationForHostDTO createNotificationForHostDTO) throws Exception {
+        NotificationForHost savedNotificationForHost = notificationForHostService.create(createNotificationForHostDTO);
         return new ResponseEntity<NotificationForHost>(savedNotificationForHost, HttpStatus.CREATED);
     }
 
