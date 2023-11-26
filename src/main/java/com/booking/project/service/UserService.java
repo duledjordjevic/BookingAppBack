@@ -47,15 +47,15 @@ public class UserService implements IUserService {
     public void deleteById(Long id) {
         repository.deleteById(id);
     }
+    @Override
+    public User changeStatus(Long id, UserStatus status) throws Exception {
+        Optional<User> user = findById(id);
+        if(user.isEmpty()) return null;
 
-    public void block(Long id){
-        User user = findById(id).get();
-        user.setStatus(UserStatus.BLOCKED);
-        repository.save(user);
+        user.get().setStatus(status);
+        save(user.get());
+        return user.get();
+
     }
-    public void unblock(Long id){
-        User user = findById(id).get();
-        user.setStatus(UserStatus.ACTIVE);
-        repository.save(user);
-    }
+
 }

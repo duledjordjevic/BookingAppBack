@@ -1,14 +1,12 @@
 package com.booking.project.model;
 
-import com.booking.project.model.enums.AccomodationStatus;
+import com.booking.project.model.enums.AccommodationStatus;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-
 import java.time.LocalDate;
-
 @Getter
 @Setter
 @NoArgsConstructor
@@ -27,5 +25,5 @@ public class PriceList {
     @Column(nullable = false)
     private double price;
     @Enumerated(EnumType.STRING)
-    private AccomodationStatus status;
+    private AccommodationStatus status;
 }

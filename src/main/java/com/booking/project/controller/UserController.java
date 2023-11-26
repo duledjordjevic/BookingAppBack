@@ -6,6 +6,7 @@ import com.booking.project.dto.UserCredentialsDTO;
 import com.booking.project.model.Guest;
 import com.booking.project.model.Host;
 import com.booking.project.model.User;
+import com.booking.project.model.enums.UserStatus;
 import com.booking.project.service.interfaces.IGuestService;
 import com.booking.project.service.interfaces.IHostService;
 import com.booking.project.service.interfaces.IUserService;
@@ -85,10 +86,21 @@ public class UserController {
         userService.deleteById(id);
         return new ResponseEntity<User>(HttpStatus.NO_CONTENT);
     }
+    @PutMapping(value = "/host/{id}/userStatus/{status}", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<?> changeHostStatus(@PathVariable Long id,@PathVariable UserStatus status) throws Exception {
+        User user = userService.changeStatus(id,status);
 
-    @PutMapping(value = "/{id}/blocked", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<?> blockUser(@PathVariable Long id){
-        userService.block(id);
-        return new ResponseEntity<User>(HttpStatus.OK);
+        if(user == null) return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+
+        return new ResponseEntity<>(user, HttpStatus.OK);
     }
+    @PutMapping(value = "/guest/{id}/userStatus/{status}", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<?> changeGuestStatus(@PathVariable Long id,@PathVariable UserStatus status) throws Exception {
+        User user = userService.changeStatus(id,status);
+
+        if(user == null) return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+
+        return new ResponseEntity<>(user, HttpStatus.OK);
+    }
+
 }

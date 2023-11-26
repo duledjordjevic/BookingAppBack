@@ -28,7 +28,7 @@ public abstract class Person {
     @Column(nullable = false)
     private String phoneNumber;
 
-    @OneToOne(cascade = { CascadeType.ALL })
+    @OneToOne(cascade = { CascadeType.ALL }, fetch = FetchType.EAGER)
     private User user;
 
     @Column(nullable = false)

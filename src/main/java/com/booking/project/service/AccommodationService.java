@@ -1,24 +1,70 @@
 package com.booking.project.service;
 
+import com.booking.project.dto.AccommodationDTO;
+import com.booking.project.dto.AccommodationCardDTO;
 import com.booking.project.model.Accommodation;
 import com.booking.project.model.PriceList;
 import com.booking.project.model.enums.AccomodationStatus;
 import com.booking.project.model.enums.ReservationMethod;
 import com.booking.project.repository.inteface.IAccommodationRepository;
 import com.booking.project.service.interfaces.IAccommodationService;
+import jakarta.persistence.EntityManager;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Optional;
 import java.util.*;
 
 @Service
 public class AccommodationService implements IAccommodationService {
     @Autowired
     private IAccommodationRepository accommodationRepository;
+    @Autowired
+    private EntityManager em;
     @Override
-    public Collection<Accommodation> findAll() {
-        return accommodationRepository.findAll();
+    public Collection<AccommodationDTO> findAll() {
+
+        Collection<Accommodation> accommodations = accommodationRepository.findAll();
+        Collection<AccommodationDTO> accommodationDTOS = new ArrayList<>();
+        for(Accommodation acc: accommodations){
+            AccommodationDTO accomodationDTO = new AccommodationDTO(acc);
+            accommodationDTOS.add(accomodationDTO);
+        }
+        return accommodationDTOS;
+    }
+    public Collection<AccommodationCardDTO> findAllCards(){
+        Collection<Accommodation> accommodations = accommodationRepository.findAll();
+        Collection<AccommodationCardDTO> accommodationDTOS = new ArrayList<>();
+        for(Accommodation acc : accommodations){
+            AccommodationCardDTO accomodationDTO = new AccommodationCardDTO(acc);
+            accommodationDTOS.add(accomodationDTO);
+        }
+        return accommodationDTOS;
+    }
+    public Optional<AccommodationDTO> changeAccommodations(AccommodationDTO accommodationDTO,Long id) throws Exception {
+        Optional<Accommodation> accommodation = findById(id);
+
+        if(accommodation.isEmpty()) return null;
+
+        accommodation.get().setTitle(accommodationDTO.getTitle());
+        accommodation.get().setDescription(accommodationDTO.getDescription());
+        accommodation.get().setAddress(accommodationDTO.getAddress());
+        accommodation.get().setAmenities(accommodationDTO.getAmenities());
+        accommodation.get().setPhotos(accommodationDTO.getPhotos());
+        accommodation.get().setMinGuests(accommodationDTO.getMinGuest());
+        accommodation.get().setMaxGuests(accommodationDTO.getMaxGuest());
+        accommodation.get().setType(accommodationDTO.getType());
+        accommodation.get().setCancellationPolicy(accommodationDTO.getCancellationPolicy());
+        accommodation.get().setReservationMethod(accommodationDTO.getReservationMethod());
+        accommodation.get().setAvailableForReservation(accommodationDTO.isAvailableForReservation());
+        accommodation.get().setPriceForEntireAcc(accommodationDTO.isPriceForEntireAcc());
+        accommodation.get().setPrices(accommodationDTO.getPrices());
+
+        save(accommodation.get());
+
+        return Optional.of(accommodationDTO);
     }
 
     @Override
@@ -89,6 +135,59 @@ public class AccommodationService implements IAccommodationService {
     public void deleteById(Long id) {
         accommodationRepository.deleteById(id);
     }
+
+    @Override
+    public AccommodationDTO changeAvailableStatus(Long id, Boolean isAvailable) throws Exception {
+        Optional<Accommodation> accommodation = findById(id);
+
+        if(accommodation.isEmpty()) return null;
+
+        accommodation.get().setAvailableForReservation(isAvailable);
+        save(accommodation.get());
+
+        AccommodationDTO accommodationDTO = new AccommodationDTO(accommodation.get());
+
+        return accommodationDTO;
+    }
+    public Collection<Accommodation> findAccomodationsByHostId(Long id){
+        return accommodationRepository.findAccommodationsByHostId(id);
+    }
+    public Collection<AccommodationDTO> filterAccommodations(LocalDate startDate,LocalDate endDate,Integer numOfGuests,String city){
+        Collection<Accommodation> accommodations = accommodationRepository.filterAccommodations(startDate,endDate,city,numOfGuests);
+
+        Collection<AccommodationDTO> accommodationDTOS = new ArrayList<>();
+        for(Accommodation acc: accommodations){
+            AccommodationDTO accomodationDTO = new AccommodationDTO(acc);
+            accommodationDTOS.add(accomodationDTO);
+        }
+
+        return accommodationDTOS;
+    }
+    public AccommodationDTO findAccommodationsDetails(Long id){
+        Optional<Accommodation> accommodation = findById(id);
+
+        if(accommodation.isEmpty()) return null;
+
+        AccommodationDTO accommodationDTO = new AccommodationDTO(accommodation.get());
+        return accommodationDTO;
+    }
+
+    @Override
+    public AccommodationDTO changeAccommodationReservationMethod(Long id, ReservationMethod reservationMethod) throws Exception {
+        Optional<Accommodation> accommodation = findById(id);
+
+        if(accommodation.isEmpty()) return null;
+
+        accommodation.get().setReservationMethod(reservationMethod);
+        save(accommodation.get());
+
+        AccommodationDTO accommodationDTO = new AccommodationDTO(accommodation.get());
+
+        return accommodationDTO;
+    }
+
+
+
 }
 
 
