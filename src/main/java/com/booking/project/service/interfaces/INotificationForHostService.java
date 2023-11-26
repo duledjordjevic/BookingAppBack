@@ -1,6 +1,6 @@
 package com.booking.project.service.interfaces;
 
-import com.booking.project.model.NotificationForGuest;
+import com.booking.project.dto.NotificationForHostDTO;
 import com.booking.project.model.NotificationForHost;
 
 import java.util.Collection;
@@ -15,4 +15,6 @@ public interface INotificationForHostService {
     NotificationForHost save(NotificationForHost notificationForHost) throws Exception;
 
     void deleteById(Long id);
+
+    NotificationForHost update(NotificationForHostDTO notificationForHostDTO, Long id) throws Exception;
 }
