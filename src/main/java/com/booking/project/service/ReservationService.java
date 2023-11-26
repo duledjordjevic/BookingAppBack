@@ -1,10 +1,11 @@
 package com.booking.project.service;
 
 import com.booking.project.dto.CreateReservationDTO;
+import com.booking.project.dto.ReservationDTO;
 import com.booking.project.model.Accommodation;
 import com.booking.project.model.Guest;
 import com.booking.project.model.Reservation;
-import com.booking.project.model.enums.AccomodationStatus;
+import com.booking.project.model.enums.AccommodationStatus;
 import com.booking.project.model.enums.CancellationPolicy;
 import com.booking.project.model.enums.ReservationMethod;
 import com.booking.project.model.enums.ReservationStatus;
@@ -15,6 +16,7 @@ import com.booking.project.service.interfaces.IReservationService;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.Query;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cglib.core.Local;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
@@ -88,9 +90,9 @@ public class ReservationService implements IReservationService {
     }
 
     @Override
-    public List<Reservation> filter(String title, Date startDate, Date endDate, ReservationStatus reservationStatus){
+    public List<ReservationDTO> filter(String title, LocalDate startDate, LocalDate endDate, ReservationStatus reservationStatus){
         Query q = em.createQuery("SELECT r FROM Reservation r JOIN FETCH r.accommodation a JOIN FETCH r.guest WHERE (a.title LIKE :pattern OR :pattern is Null)" +
-                " AND ((r.startDate >= :startDate AND r.endDate <= :endDate) OR :startDate is Null) AND (r.status = :reservationStatus OR :reservationStatus is Null)");
+                " AND ((r.startDate >= :startDate AND r.endDate <= :endDate) OR cast(:startDate as date) is null) AND (r.status = :reservationStatus OR :reservationStatus is Null)");
         if(title == null){
             q.setParameter("pattern", null);
         }else{
@@ -100,7 +102,12 @@ public class ReservationService implements IReservationService {
         q.setParameter("endDate", endDate);
         q.setParameter("reservationStatus", reservationStatus);
 
-        return q.getResultList();
+        List<ReservationDTO> reservationDTOs = new ArrayList<ReservationDTO>();
+        List<Reservation> reservations = q.getResultList();
+        for(Reservation reservation : reservations){
+            reservationDTOs.add(new ReservationDTO(reservation));
+        }
+        return reservationDTOs;
     }
 
     @Override
@@ -115,7 +122,7 @@ public class ReservationService implements IReservationService {
                 reservationToDecline.setStatus(ReservationStatus.DECLINED);
                 reservationRepository.save(reservationToDecline);
             }
-            accommodationService.changePriceList(reservation.get().getStartDate(),reservation.get().getEndDate(), reservation.get().getAccommodation().getId(), AccomodationStatus.RESERVED);
+            accommodationService.changePriceList(reservation.get().getStartDate(),reservation.get().getEndDate(), reservation.get().getAccommodation().getId(), AccommodationStatus.RESERVED);
         }
 
         reservation.get().setStatus(reservationStatus);

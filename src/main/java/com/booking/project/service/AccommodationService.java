@@ -4,7 +4,7 @@ import com.booking.project.dto.AccommodationDTO;
 import com.booking.project.dto.AccommodationCardDTO;
 import com.booking.project.model.Accommodation;
 import com.booking.project.model.PriceList;
-import com.booking.project.model.enums.AccomodationStatus;
+import com.booking.project.model.enums.AccommodationStatus;
 import com.booking.project.model.enums.ReservationMethod;
 import com.booking.project.repository.inteface.IAccommodationRepository;
 import com.booking.project.service.interfaces.IAccommodationService;
@@ -87,7 +87,7 @@ public class AccommodationService implements IAccommodationService {
             List<PriceList> priceLists = new ArrayList<PriceList>();
             for(PriceList priceList : accommodation.get().getPrices()){
                 if((priceList.getDate().isAfter(startDate) || priceList.getDate().isEqual(startDate))  && (priceList.getDate().isBefore(endDate) || priceList.getDate().isEqual(endDate))){
-                    if (priceList.getStatus() == AccomodationStatus.AVAILABLE && accommodation.get().getReservationMethod() == ReservationMethod.AUTOMATIC){
+                    if (priceList.getStatus() == AccommodationStatus.AVAILABLE && accommodation.get().getReservationMethod() == ReservationMethod.AUTOMATIC){
                         if(accommodation.get().getReservationMethod().equals(ReservationMethod.AUTOMATIC)){
                             priceLists.add(priceList);
                         }
@@ -97,7 +97,7 @@ public class AccommodationService implements IAccommodationService {
                 }
             }
             for(PriceList priceList : priceLists){
-                priceList.setStatus(AccomodationStatus.RESERVED);
+                priceList.setStatus(AccommodationStatus.RESERVED);
                     price += priceList.getPrice();
             }
             if(!accommodation.get().isPriceForEntireAcc()){
@@ -111,21 +111,21 @@ public class AccommodationService implements IAccommodationService {
     }
 
     @Override
-    public Boolean changePriceList(LocalDate startDate, LocalDate endDate, Long id, AccomodationStatus accomodationStatus) throws Exception {
+    public Boolean changePriceList(LocalDate startDate, LocalDate endDate, Long id, AccommodationStatus accommodationStatus) throws Exception {
         Optional<Accommodation> accommodation = accommodationRepository.findById(id);
 
         if(accommodation.isEmpty()) return false;
 
-        changeAccommodationStatus(accommodation.get(), startDate, endDate, accomodationStatus);
+        changeAccommodationStatus(accommodation.get(), startDate, endDate, accommodationStatus);
         save(accommodation.get());
 
         return true;
     }
 
-    private void changeAccommodationStatus(Accommodation accommodation, LocalDate startDate, LocalDate endDate, AccomodationStatus accomodationStatus){
+    private void changeAccommodationStatus(Accommodation accommodation, LocalDate startDate, LocalDate endDate, AccommodationStatus accommodationStatus){
         for(PriceList priceList : accommodation.getPrices()){
             if ((priceList.getDate().isAfter(startDate) || priceList.getDate().isEqual(startDate) ) && (priceList.getDate().isBefore(endDate) || priceList.getDate().isEqual(endDate))){
-                priceList.setStatus(accomodationStatus);
+                priceList.setStatus(accommodationStatus);
             }
         }
     }
