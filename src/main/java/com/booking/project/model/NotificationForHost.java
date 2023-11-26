@@ -17,6 +17,7 @@ public class NotificationForHost {
     private Long id;
 
     @Column(nullable = false)
+    @Enumerated(EnumType.STRING)
     private NotificationType type;
 
     @Column(nullable = false)
