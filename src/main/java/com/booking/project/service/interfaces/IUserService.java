@@ -1,9 +1,11 @@
 package com.booking.project.service.interfaces;
 
 import com.booking.project.dto.UserCredentialsDTO;
+import com.booking.project.dto.UserDTO;
 import com.booking.project.model.Guest;
 import com.booking.project.model.User;
 import com.booking.project.model.enums.UserStatus;
+import com.booking.project.model.enums.UserType;
 
 import java.util.Collection;
 import java.util.Optional;
@@ -20,5 +22,5 @@ public interface IUserService {
 
     User update(UserCredentialsDTO userCredentialsDTO, Long id) throws Exception;
 
-    User changeStatus(Long id, UserStatus status) throws Exception;
+    UserDTO changeStatus(Long id, UserStatus status, UserType userType) throws Exception;
 }

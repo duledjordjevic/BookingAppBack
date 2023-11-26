@@ -3,10 +3,12 @@ package com.booking.project.controller;
 import com.booking.project.dto.GuestDTO;
 import com.booking.project.dto.HostDTO;
 import com.booking.project.dto.UserCredentialsDTO;
+import com.booking.project.dto.UserDTO;
 import com.booking.project.model.Guest;
 import com.booking.project.model.Host;
 import com.booking.project.model.User;
 import com.booking.project.model.enums.UserStatus;
+import com.booking.project.model.enums.UserType;
 import com.booking.project.service.interfaces.IGuestService;
 import com.booking.project.service.interfaces.IHostService;
 import com.booking.project.service.interfaces.IUserService;
@@ -88,19 +90,30 @@ public class UserController {
     }
     @PutMapping(value = "/host/{id}/userStatus/{status}", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<?> changeHostStatus(@PathVariable Long id,@PathVariable UserStatus status) throws Exception {
-        User user = userService.changeStatus(id,status);
+        UserDTO userDTO = userService.changeStatus(id,status, UserType.HOST);
 
-        if(user == null) return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        if(userDTO == null) return new ResponseEntity<>(null,HttpStatus.INTERNAL_SERVER_ERROR);
 
-        return new ResponseEntity<>(user, HttpStatus.OK);
+        return new ResponseEntity<UserDTO>(userDTO, HttpStatus.OK);
     }
     @PutMapping(value = "/guest/{id}/userStatus/{status}", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<?> changeGuestStatus(@PathVariable Long id,@PathVariable UserStatus status) throws Exception {
-        User user = userService.changeStatus(id,status);
+        UserDTO userDTO = userService.changeStatus(id,status,UserType.GUEST);
 
-        if(user == null) return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        if(userDTO == null) return new ResponseEntity<UserDTO>(userDTO,HttpStatus.INTERNAL_SERVER_ERROR);
 
-        return new ResponseEntity<>(user, HttpStatus.OK);
+        return new ResponseEntity<UserDTO>(userDTO, HttpStatus.OK);
+    }
+    @PostMapping(value = "/guest",consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<GuestDTO> createGuest(@RequestBody GuestDTO guestDTO) throws Exception {
+        GuestDTO savedGuest = guestService.addGuest(guestDTO);
+        return new ResponseEntity<GuestDTO>(savedGuest, HttpStatus.CREATED);
+    }
+
+    @PostMapping(value = "/host",consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<HostDTO> createGuest(@RequestBody HostDTO hostDTO) throws Exception {
+        HostDTO savedHost = hostService.addHost(hostDTO);
+        return new ResponseEntity<HostDTO>(savedHost, HttpStatus.CREATED);
     }
 
 }

@@ -1,9 +1,10 @@
 package com.booking.project.service;
 
 import com.booking.project.dto.UserCredentialsDTO;
-import com.booking.project.model.Guest;
+import com.booking.project.dto.UserDTO;
 import com.booking.project.model.User;
 import com.booking.project.model.enums.UserStatus;
+import com.booking.project.model.enums.UserType;
 import com.booking.project.repository.inteface.IUserRepository;
 import com.booking.project.service.interfaces.IUserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -48,14 +49,18 @@ public class UserService implements IUserService {
         repository.deleteById(id);
     }
     @Override
-    public User changeStatus(Long id, UserStatus status) throws Exception {
+    public UserDTO changeStatus(Long id, UserStatus status, UserType userType) throws Exception {
         Optional<User> user = findById(id);
+
         if(user.isEmpty()) return null;
+        if(!user.get().getUserType().equals(userType)) return null;
 
         user.get().setStatus(status);
         save(user.get());
-        return user.get();
+        UserDTO userDTO = new UserDTO(user.get());
+        return userDTO;
 
     }
+
 
 }

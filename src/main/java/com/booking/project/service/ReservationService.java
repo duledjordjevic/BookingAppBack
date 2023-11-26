@@ -9,6 +9,7 @@ import com.booking.project.model.enums.AccommodationStatus;
 import com.booking.project.model.enums.CancellationPolicy;
 import com.booking.project.model.enums.ReservationMethod;
 import com.booking.project.model.enums.ReservationStatus;
+import com.booking.project.model.enums.AccommodationStatus;
 import com.booking.project.repository.inteface.IGuestRepository;
 import com.booking.project.repository.inteface.IReservationRepository;
 import com.booking.project.service.interfaces.IAccommodationService;

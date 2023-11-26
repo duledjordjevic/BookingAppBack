@@ -11,9 +11,14 @@ public interface IHostService {
 
     Optional<Host> findById(Long id);
 
+    HostDTO findHost(Long id);
+
+    Collection<HostDTO> findHosts();
+
     Host save(Host host) throws Exception;
 
     void deleteById(Long id);
 
     Host update(HostDTO hostDTO, Long id) throws Exception;
+    HostDTO addHost(HostDTO hostDTO) throws Exception;
 }

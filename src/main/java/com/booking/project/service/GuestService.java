@@ -62,4 +62,13 @@ public class GuestService implements IGuestService {
     public void deleteById(Long id) {
         repository.deleteById(id);
     }
+
+    public GuestDTO addGuest(GuestDTO guestDTO) throws Exception {
+        Guest guest = new Guest(guestDTO);
+        Guest savedGuest = save(guest);
+
+        if(savedGuest == null) return null;
+
+        return guestDTO;
+    }
 }
