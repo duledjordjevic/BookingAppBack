@@ -112,21 +112,24 @@ public class AccommodationService implements IAccommodationService {
     }
 
     @Override
-    public Boolean changePriceList(LocalDate startDate, LocalDate endDate, Long id, AccommodationStatus accomodationStatus) throws Exception {
+    public Boolean changePriceList(LocalDate startDate, LocalDate endDate, Long id, AccommodationStatus accommodationStatus) throws Exception {
+
         Optional<Accommodation> accommodation = accommodationRepository.findById(id);
 
         if(accommodation.isEmpty()) return false;
 
-        changeAccommodationStatus(accommodation.get(), startDate, endDate, accomodationStatus);
+        changeAccommodationStatus(accommodation.get(), startDate, endDate, accommodationStatus);
         save(accommodation.get());
 
         return true;
     }
 
-    private void changeAccommodationStatus(Accommodation accommodation, LocalDate startDate, LocalDate endDate, AccommodationStatus accomodationStatus){
+
+    private void changeAccommodationStatus(Accommodation accommodation, LocalDate startDate, LocalDate endDate, AccommodationStatus accommodationStatus){
+
         for(PriceList priceList : accommodation.getPrices()){
             if ((priceList.getDate().isAfter(startDate) || priceList.getDate().isEqual(startDate) ) && (priceList.getDate().isBefore(endDate) || priceList.getDate().isEqual(endDate))){
-                priceList.setStatus(accomodationStatus);
+                priceList.setStatus(accommodationStatus);
             }
         }
     }

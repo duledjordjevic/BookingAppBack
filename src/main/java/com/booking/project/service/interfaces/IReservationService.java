@@ -1,6 +1,7 @@
 package com.booking.project.service.interfaces;
 
 import com.booking.project.dto.CreateReservationDTO;
+import com.booking.project.dto.ReservationDTO;
 import com.booking.project.model.Guest;
 import com.booking.project.model.Reservation;
 import com.booking.project.model.enums.ReservationMethod;
@@ -23,7 +24,7 @@ public interface IReservationService {
 
     Reservation create(CreateReservationDTO createReservationDTO, double price, ReservationMethod reservationMethod) throws Exception;
 
-    List<Reservation> filter(String title, Date startDate, Date endDate, ReservationStatus reservationStatus);
+    List<ReservationDTO> filter(String title, LocalDate startDate, LocalDate endDate, ReservationStatus reservationStatus);
 
     Reservation updateStatus(Long id, ReservationStatus reservationStatus) throws Exception;
 

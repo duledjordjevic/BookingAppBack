@@ -23,7 +23,8 @@ public interface IAccommodationService {
 
     List<Object> reservate(Long accommodationId, LocalDate startDate, LocalDate endDate, int numberOfGuests) throws Exception;
 
-    Boolean changePriceList(LocalDate startDate, LocalDate endDate, Long id, AccommodationStatus accomodationStatus) throws Exception;
+
+    Boolean changePriceList(LocalDate startDate, LocalDate endDate, Long id, AccommodationStatus accommodationStatus) throws Exception;
 
     void deleteById(Long id);
 
