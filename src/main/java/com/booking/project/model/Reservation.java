@@ -37,7 +37,7 @@ public class Reservation {
     @Enumerated(EnumType.STRING)
     private ReservationStatus status;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     private Guest guest;
 
     @ManyToOne(fetch = FetchType.LAZY)
