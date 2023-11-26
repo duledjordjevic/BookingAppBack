@@ -9,6 +9,7 @@ import com.booking.project.model.enums.ReservationStatus;
 import com.booking.project.repository.inteface.IAccommodationRepository;
 import com.booking.project.repository.inteface.IGuestRepository;
 import com.booking.project.repository.inteface.IReservationRepository;
+import com.booking.project.service.interfaces.IAccommodationService;
 import com.booking.project.service.interfaces.IReservationService;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.Query;
@@ -16,9 +17,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
-import java.util.Collection;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 @Service
 public class ReservationService implements IReservationService {
@@ -27,7 +26,7 @@ public class ReservationService implements IReservationService {
     private IReservationRepository reservationRepository;
 
     @Autowired
-    private IAccommodationRepository accommodationRepository;
+    private IAccommodationService accommodationService;
 
     @Autowired
     private IGuestRepository guestRepository;
@@ -52,7 +51,7 @@ public class ReservationService implements IReservationService {
     public Reservation create(CreateReservationDTO createReservationDTO, double price, ReservationMethod reservationMethod) throws Exception {
         Reservation reservation = new Reservation();
 
-        Optional<Accommodation> accommodation = accommodationRepository.findById(createReservationDTO.getAccommodationId());
+        Optional<Accommodation> accommodation = accommodationService.findById(createReservationDTO.getAccommodationId());
         if (accommodation.isEmpty()) return null;
         reservation.setAccommodation(accommodation.get());
 
@@ -74,11 +73,21 @@ public class ReservationService implements IReservationService {
         return  reservation;
     }
     @Override
-    public void deleteById(Long id) {
-        reservationRepository.deleteById(id);
+    public Boolean deleteById(Long id) {
+        Optional<Reservation> reservation = reservationRepository.findById(id);
+
+        if(reservation.isEmpty()){
+            return false;
+        }
+        if (reservation.get().getStatus().equals(ReservationStatus.PENDING)){
+            reservationRepository.deleteById(id);
+            return true;
+        }
+        return false;
     }
 
-    public List<Reservation> filter(String title, LocalDate startDate, LocalDate endDate, ReservationStatus reservationStatus){
+    @Override
+    public List<Reservation> filter(String title, Date startDate, Date endDate, ReservationStatus reservationStatus){
         Query q = em.createQuery("SELECT r FROM Reservation r JOIN FETCH r.accommodation a JOIN FETCH r.guest WHERE (a.title LIKE :pattern OR :pattern is Null)" +
                 " AND ((r.startDate >= :startDate AND r.endDate <= :endDate) OR :startDate is Null) AND (r.status = :reservationStatus OR :reservationStatus is Null)");
         if(title == null){
@@ -90,6 +99,35 @@ public class ReservationService implements IReservationService {
         q.setParameter("endDate", endDate);
         q.setParameter("reservationStatus", reservationStatus);
 
+        return q.getResultList();
+    }
+
+    @Override
+    public Reservation updateStatus(Long id, ReservationStatus reservationStatus) throws Exception {
+        Optional<Reservation> reservation = reservationRepository.findById(id);
+
+        if(reservation.isEmpty()) return null;
+
+        if(reservationStatus.equals(ReservationStatus.ACCEPTED)){
+            List<Reservation> overlapsReservations = getOverlaps(reservation.get().getStartDate(), reservation.get().getEndDate(), ReservationStatus.PENDING);
+            for(Reservation reservationToDecline : overlapsReservations){
+                reservationToDecline.setStatus(ReservationStatus.DECLINED);
+                reservationRepository.save(reservationToDecline);
+            }
+            accommodationService.reservateDates(reservation.get().getStartDate(),reservation.get().getEndDate(), reservation.get().getAccommodation().getId());
+        }
+
+        reservation.get().setStatus(reservationStatus);
+        reservationRepository.save(reservation.get());
+
+        return reservation.get();
+    }
+
+    private List<Reservation> getOverlaps(LocalDate startDate, LocalDate endDate, ReservationStatus reservationStatus){
+        Query q = em.createQuery("SELECT r FROM Reservation  r WHERE (:startDate < r.endDate AND :endDate > r.startDate) AND r.status = :reservationStatus");
+        q.setParameter("startDate", startDate);
+        q.setParameter("endDate", endDate);
+        q.setParameter("reservationStatus", reservationStatus);
         return q.getResultList();
     }
 

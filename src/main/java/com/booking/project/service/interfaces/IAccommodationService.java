@@ -15,6 +15,9 @@ public interface IAccommodationService {
     Accommodation save(Accommodation accommodation) throws Exception;
 
     List<Object> reservate(Long accommodationId, LocalDate startDate, LocalDate endDate, int numberOfGuests) throws Exception;
+
+    Boolean reservateDates(LocalDate startDate, LocalDate endDate, Long id) throws Exception;
+
     void deleteById(Long id);
 
 }

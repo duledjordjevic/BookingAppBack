@@ -63,6 +63,22 @@ public class AccommodationService implements IAccommodationService {
         save(accommodation.get());
         return new ArrayList<Object>(List.of(false, price, accommodation.get().getReservationMethod()));
     }
+
+    @Override
+    public Boolean reservateDates(LocalDate startDate, LocalDate endDate, Long id) throws Exception {
+        Optional<Accommodation> accommodation = accommodationRepository.findById(id);
+
+        if(accommodation.isEmpty()) return false;
+
+        for(PriceList priceList : accommodation.get().getPrices()){
+            if ((priceList.getDate().isAfter(startDate) || priceList.getDate().isEqual(startDate) ) && (priceList.getDate().isBefore(endDate) || priceList.getDate().isEqual(endDate))){
+                priceList.setStatus(AccomodationStatus.RESERVED);
+            }
+        }
+        save(accommodation.get());
+
+        return true;
+    }
     @Override
     public void deleteById(Long id) {
         accommodationRepository.deleteById(id);
