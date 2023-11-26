@@ -43,8 +43,9 @@ public class NotificationForHostService implements INotificationForHostService {
         if(notificationForHostForUpdate.isEmpty()) return null;
 
         notificationForHostForUpdate.get().setId(notificationForHostDTO.getId());
-        notificationForHostForUpdate.get().setDescription(notificationForHostForUpdate.get().getDescription());
+        notificationForHostForUpdate.get().setDescription(notificationForHostDTO.getDescription());
         notificationForHostForUpdate.get().setType(notificationForHostDTO.getType());
+        notificationForHostForUpdate.get().getHost().copyValues(notificationForHostDTO.getHostDTO());
 
         save(notificationForHostForUpdate.get());
         return notificationForHostForUpdate.get();
