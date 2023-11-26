@@ -17,4 +17,6 @@ public interface INotificationForGuestService {
     void deleteById(Long id);
 
     NotificationForGuest update(NotificationForGuestDTO notificationForGuestDTO, Long id) throws Exception;
+
+    Collection<NotificationForGuest> findByGuest(Long id);
 }
