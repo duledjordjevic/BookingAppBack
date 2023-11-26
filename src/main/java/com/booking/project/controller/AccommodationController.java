@@ -4,6 +4,7 @@ import com.booking.project.dto.AccommodationCardDTO;
 import com.booking.project.dto.AccommodationDTO;
 import com.booking.project.model.Accommodation;
 import com.booking.project.model.Host;
+import com.booking.project.model.enums.ReservationMethod;
 import com.booking.project.service.interfaces.IAccommodationService;
 import com.booking.project.service.interfaces.IHostService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -43,12 +44,11 @@ public class AccommodationController {
     }
 
     @GetMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Optional<Accommodation>> getAccommodation(@PathVariable("id") Long id){
-        Optional<Accommodation> accommodation = accommodationService.findById(id);
-        if(accommodation.isEmpty()){
-            return new ResponseEntity<Optional<Accommodation>>(HttpStatus.NOT_FOUND);
-        }
-        return new ResponseEntity<Optional<Accommodation>>(accommodation, HttpStatus.OK);
+    public ResponseEntity<?> getAccommodationDetails(@PathVariable("id") Long id){
+        AccommodationDTO accommodationDTO = accommodationService.findAccommodationsDetails(id);
+        if(accommodationDTO == null)    return new ResponseEntity<AccommodationDTO>(HttpStatus.NOT_FOUND);
+
+        return new ResponseEntity<AccommodationDTO>(accommodationDTO, HttpStatus.OK);
     }
 
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
@@ -68,11 +68,11 @@ public class AccommodationController {
 
     @PutMapping(value ="/{id}/isAvailable/{isAvailable}", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<?> changeAccommodationAvailableStatus(@PathVariable Long id,@PathVariable Boolean isAvailable) throws Exception {
-        Accommodation accommodation = accommodationService.changeAvailableStatus(id,isAvailable);
+        AccommodationDTO accommodationDTO = accommodationService.changeAvailableStatus(id,isAvailable);
 
-        if(accommodation == null) return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        if(accommodationDTO == null) return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
 
-        return new ResponseEntity<>(accommodation, HttpStatus.OK);
+        return new ResponseEntity<AccommodationDTO>(accommodationDTO, HttpStatus.OK);
     }
 
     @GetMapping(value = "/host/{id_host}", produces = MediaType.APPLICATION_JSON_VALUE)
@@ -100,6 +100,13 @@ public class AccommodationController {
 
         return new ResponseEntity<Collection<AccommodationDTO>>(accommodations, HttpStatus.OK);
     }
+    @PutMapping(value ="/{id}/reservationMethod/{reservationMethod}", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<?> changeAccommodationReservationMethod(@PathVariable Long id, @PathVariable ReservationMethod reservationMethod) throws Exception {
+        AccommodationDTO accommodationDTO = accommodationService.changeAccommodationReservationMethod(id,reservationMethod);
 
+        if(accommodationDTO == null) return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+
+        return new ResponseEntity<AccommodationDTO>(accommodationDTO, HttpStatus.OK);
+    }
 
 }

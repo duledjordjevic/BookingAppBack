@@ -3,6 +3,7 @@ package com.booking.project.service.interfaces;
 import com.booking.project.dto.AccommodationCardDTO;
 import com.booking.project.dto.AccommodationDTO;
 import com.booking.project.model.Accommodation;
+import com.booking.project.model.enums.ReservationMethod;
 
 import java.time.LocalDate;
 import java.util.Collection;
@@ -19,7 +20,10 @@ public interface IAccommodationService {
 
     void deleteById(Long id);
 
-    Accommodation changeAvailableStatus(Long id, Boolean isAvailable) throws Exception;
+    AccommodationDTO changeAvailableStatus(Long id, Boolean isAvailable) throws Exception;
     Collection<Accommodation> findAccomodationsByHostId(Long id);
     Collection<AccommodationDTO> filterAccommodations(LocalDate startDate, LocalDate endDate, Integer numOfGuests, String city);
+    AccommodationDTO findAccommodationsDetails(Long id);
+
+    AccommodationDTO changeAccommodationReservationMethod(Long id, ReservationMethod reservationMethod) throws Exception;
 }
