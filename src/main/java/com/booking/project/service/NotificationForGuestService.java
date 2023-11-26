@@ -41,7 +41,8 @@ public class NotificationForGuestService implements INotificationForGuestService
         if(notificationForGuestForUpdate.isEmpty()) return null;
 
         notificationForGuestForUpdate.get().setId(notificationForGuestDTO.getId());
-        notificationForGuestForUpdate.get().setDescription(notificationForGuestForUpdate.get().getDescription());
+        notificationForGuestForUpdate.get().setDescription(notificationForGuestDTO.getDescription());
+        notificationForGuestForUpdate.get().getGuest().copyValues(notificationForGuestDTO.getGuestDTO());
 
         save(notificationForGuestForUpdate.get());
         return notificationForGuestForUpdate.get();
