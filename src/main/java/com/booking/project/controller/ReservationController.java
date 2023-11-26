@@ -3,10 +3,13 @@ package com.booking.project.controller;
 import com.booking.project.dto.CreateReservationDTO;
 import com.booking.project.dto.ReservationDTO;
 import com.booking.project.model.Accommodation;
+import com.booking.project.model.Guest;
 import com.booking.project.model.Reservation;
+import com.booking.project.model.enums.AccomodationStatus;
 import com.booking.project.model.enums.ReservationMethod;
 import com.booking.project.model.enums.ReservationStatus;
 import com.booking.project.service.interfaces.IAccommodationService;
+import com.booking.project.service.interfaces.IGuestService;
 import com.booking.project.service.interfaces.IReservationService;
 import jakarta.websocket.server.PathParam;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,6 +34,9 @@ public class ReservationController {
 
     @Autowired
     private IAccommodationService accommodationService;
+
+    @Autowired
+    private IGuestService guestService;
 
 //    @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
 //    public ResponseEntity<Collection<Reservation>> getReservations(){
@@ -82,8 +88,8 @@ public class ReservationController {
         return new ResponseEntity<ReservationDTO>(new ReservationDTO(reservation), HttpStatus.CREATED);
     }
 
-    @DeleteMapping(value = "/{id}")
-    public ResponseEntity<?> deleteReservation(@PathVariable("id") Long id){
+    @DeleteMapping(value = "/pending/{id}")
+    public ResponseEntity<?> deletePendingReservation(@PathVariable("id") Long id){
         Boolean isDeleted = reservationService.deleteById(id);
 
         if(isDeleted.equals(false)){
@@ -92,6 +98,24 @@ public class ReservationController {
 
         return new ResponseEntity<Boolean>(true, HttpStatus.OK);
     }
+
+    @PutMapping(value = "/deleteAccepted/{id}")
+    public ResponseEntity<?> cancelReservation(@PathVariable("id") Long id) throws Exception {
+        Reservation reservation = reservationService.cancelReservation(id);
+
+        if(reservation == null){
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+
+        Guest guest = reservation.getGuest();
+        guestService.addNumberOfCancellation(guest.getId());
+
+        accommodationService.changePriceList(reservation.getStartDate(), reservation.getEndDate(), reservation.getAccommodation().getId(), AccomodationStatus.AVAILABLE);
+
+        return new ResponseEntity<>(new ReservationDTO(reservation), HttpStatus.OK);
+    }
+
+
 
 
 }

@@ -4,9 +4,10 @@ import com.booking.project.dto.CreateReservationDTO;
 import com.booking.project.model.Accommodation;
 import com.booking.project.model.Guest;
 import com.booking.project.model.Reservation;
+import com.booking.project.model.enums.AccomodationStatus;
+import com.booking.project.model.enums.CancellationPolicy;
 import com.booking.project.model.enums.ReservationMethod;
 import com.booking.project.model.enums.ReservationStatus;
-import com.booking.project.repository.inteface.IAccommodationRepository;
 import com.booking.project.repository.inteface.IGuestRepository;
 import com.booking.project.repository.inteface.IReservationRepository;
 import com.booking.project.service.interfaces.IAccommodationService;
@@ -114,13 +115,33 @@ public class ReservationService implements IReservationService {
                 reservationToDecline.setStatus(ReservationStatus.DECLINED);
                 reservationRepository.save(reservationToDecline);
             }
-            accommodationService.reservateDates(reservation.get().getStartDate(),reservation.get().getEndDate(), reservation.get().getAccommodation().getId());
+            accommodationService.changePriceList(reservation.get().getStartDate(),reservation.get().getEndDate(), reservation.get().getAccommodation().getId(), AccomodationStatus.RESERVED);
         }
 
         reservation.get().setStatus(reservationStatus);
         reservationRepository.save(reservation.get());
 
         return reservation.get();
+    }
+
+    @Override
+    public Reservation cancelReservation(Long id){
+        Optional<Reservation> reservation = reservationRepository.findById(id);
+
+        if(reservation.isEmpty()) return null;
+
+        if(reservation.get().getAccommodation().getCancellationPolicy().equals(CancellationPolicy.HOURS24)){
+            if (!reservation.get().getStartDate().minusDays(1).isEqual(LocalDate.now())){
+                reservation.get().setStatus(ReservationStatus.CANCELLED);
+                return reservation.get();
+            }
+        }else if(reservation.get().getAccommodation().getCancellationPolicy().equals(CancellationPolicy.HOURS48)){
+            if (!reservation.get().getStartDate().minusDays(2).isEqual(LocalDate.now())){
+                reservation.get().setStatus(ReservationStatus.CANCELLED);
+                return reservation.get();
+            }
+        }
+        return null;
     }
 
     private List<Reservation> getOverlaps(LocalDate startDate, LocalDate endDate, ReservationStatus reservationStatus){

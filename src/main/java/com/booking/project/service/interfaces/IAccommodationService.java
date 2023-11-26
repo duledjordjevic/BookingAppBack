@@ -1,6 +1,7 @@
 package com.booking.project.service.interfaces;
 
 import com.booking.project.model.Accommodation;
+import com.booking.project.model.enums.AccomodationStatus;
 
 import java.time.LocalDate;
 import java.util.Collection;
@@ -16,7 +17,7 @@ public interface IAccommodationService {
 
     List<Object> reservate(Long accommodationId, LocalDate startDate, LocalDate endDate, int numberOfGuests) throws Exception;
 
-    Boolean reservateDates(LocalDate startDate, LocalDate endDate, Long id) throws Exception;
+    Boolean changePriceList(LocalDate startDate, LocalDate endDate, Long id, AccomodationStatus accomodationStatus) throws Exception;
 
     void deleteById(Long id);
 
