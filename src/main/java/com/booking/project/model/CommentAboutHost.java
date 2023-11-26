@@ -32,4 +32,5 @@ public class CommentAboutHost {
 
     @ManyToOne(fetch = FetchType.LAZY)
     private Host host;
+
 }

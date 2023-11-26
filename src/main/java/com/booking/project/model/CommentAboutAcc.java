@@ -1,8 +1,5 @@
 package com.booking.project.model;
 
-import com.booking.project.dto.CommentAboutAccDTO;
-import com.booking.project.dto.UserCredentialsDTO;
-import com.booking.project.dto.UserDTO;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -35,4 +32,5 @@ public class CommentAboutAcc  {
 
     @ManyToOne(fetch = FetchType.LAZY)
     private Guest guest;
+
 }
