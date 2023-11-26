@@ -4,10 +4,10 @@ import com.booking.project.dto.CreateReservationDTO;
 import com.booking.project.model.Accommodation;
 import com.booking.project.model.Guest;
 import com.booking.project.model.Reservation;
-import com.booking.project.model.enums.AccomodationStatus;
 import com.booking.project.model.enums.CancellationPolicy;
 import com.booking.project.model.enums.ReservationMethod;
 import com.booking.project.model.enums.ReservationStatus;
+import com.booking.project.model.enums.AccommodationStatus;
 import com.booking.project.repository.inteface.IGuestRepository;
 import com.booking.project.repository.inteface.IReservationRepository;
 import com.booking.project.service.interfaces.IAccommodationService;
@@ -115,7 +115,7 @@ public class ReservationService implements IReservationService {
                 reservationToDecline.setStatus(ReservationStatus.DECLINED);
                 reservationRepository.save(reservationToDecline);
             }
-            accommodationService.changePriceList(reservation.get().getStartDate(),reservation.get().getEndDate(), reservation.get().getAccommodation().getId(), AccomodationStatus.RESERVED);
+            accommodationService.changePriceList(reservation.get().getStartDate(),reservation.get().getEndDate(), reservation.get().getAccommodation().getId(), AccommodationStatus.RESERVED);
         }
 
         reservation.get().setStatus(reservationStatus);

@@ -5,7 +5,7 @@ import com.booking.project.dto.ReservationDTO;
 import com.booking.project.model.Accommodation;
 import com.booking.project.model.Guest;
 import com.booking.project.model.Reservation;
-import com.booking.project.model.enums.AccomodationStatus;
+import com.booking.project.model.enums.AccommodationStatus;
 import com.booking.project.model.enums.ReservationMethod;
 import com.booking.project.model.enums.ReservationStatus;
 import com.booking.project.service.interfaces.IAccommodationService;
@@ -110,7 +110,7 @@ public class ReservationController {
         Guest guest = reservation.getGuest();
         guestService.addNumberOfCancellation(guest.getId());
 
-        accommodationService.changePriceList(reservation.getStartDate(), reservation.getEndDate(), reservation.getAccommodation().getId(), AccomodationStatus.AVAILABLE);
+        accommodationService.changePriceList(reservation.getStartDate(), reservation.getEndDate(), reservation.getAccommodation().getId(), AccommodationStatus.AVAILABLE);
 
         return new ResponseEntity<>(new ReservationDTO(reservation), HttpStatus.OK);
     }
