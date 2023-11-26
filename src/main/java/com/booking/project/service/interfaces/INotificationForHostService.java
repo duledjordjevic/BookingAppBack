@@ -17,4 +17,5 @@ public interface INotificationForHostService {
     void deleteById(Long id);
 
     NotificationForHost update(NotificationForHostDTO notificationForHostDTO, Long id) throws Exception;
+    Collection<NotificationForHost> findByHost(Long id);
 }

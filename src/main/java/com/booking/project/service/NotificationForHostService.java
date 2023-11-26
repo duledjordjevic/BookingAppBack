@@ -1,7 +1,9 @@
 package com.booking.project.service;
 
 import com.booking.project.dto.NotificationForHostDTO;
+import com.booking.project.model.Host;
 import com.booking.project.model.NotificationForHost;
+import com.booking.project.repository.inteface.IHostRepository;
 import com.booking.project.repository.inteface.INotificationForHostRepository;
 import com.booking.project.service.interfaces.INotificationForHostService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,6 +17,8 @@ public class NotificationForHostService implements INotificationForHostService {
 
     @Autowired
     private INotificationForHostRepository notificationForHostRepository;
+    @Autowired
+    private IHostRepository hostRepository;
 
     @Override
     public Collection<NotificationForHost> findAll() {
@@ -49,5 +53,11 @@ public class NotificationForHostService implements INotificationForHostService {
 
         save(notificationForHostForUpdate.get());
         return notificationForHostForUpdate.get();
+    }
+
+    @Override
+    public Collection<NotificationForHost> findByHost(Long id) {
+        Optional<Host> host = hostRepository.findById(id);
+        return notificationForHostRepository.findAllByHost(host);
     }
 }
