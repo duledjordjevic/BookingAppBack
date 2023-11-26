@@ -3,17 +3,19 @@ package com.booking.project.service;
 import com.booking.project.dto.AccommodationDTO;
 import com.booking.project.dto.AccommodationCardDTO;
 import com.booking.project.model.Accommodation;
+import com.booking.project.model.PriceList;
+import com.booking.project.model.enums.AccomodationStatus;
 import com.booking.project.model.enums.ReservationMethod;
 import com.booking.project.repository.inteface.IAccommodationRepository;
 import com.booking.project.service.interfaces.IAccommodationService;
 import jakarta.persistence.EntityManager;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Optional;
+import java.util.*;
 
 @Service
 public class AccommodationService implements IAccommodationService {
@@ -74,6 +76,60 @@ public class AccommodationService implements IAccommodationService {
     public  Accommodation save(Accommodation accommodation) throws Exception {
         return accommodationRepository.save(accommodation);
     }
+    @Override
+    public List<Object> reservate(Long accommodationId, LocalDate startDate, LocalDate endDate, int numberOfGuests) throws Exception {
+        Optional<Accommodation> accommodation = accommodationRepository.findById(accommodationId);
+
+        if(accommodation.isEmpty())  return new ArrayList<Object>(List.of(false));
+
+        double price = 0;
+        if(accommodation.get().isAvailableForReservation() && (accommodation.get().getMinGuests() <= numberOfGuests && accommodation.get().getMaxGuests() >= numberOfGuests) ){
+            List<PriceList> priceLists = new ArrayList<PriceList>();
+            for(PriceList priceList : accommodation.get().getPrices()){
+                if((priceList.getDate().isAfter(startDate) || priceList.getDate().isEqual(startDate))  && (priceList.getDate().isBefore(endDate) || priceList.getDate().isEqual(endDate))){
+                    if (priceList.getStatus() == AccomodationStatus.AVAILABLE && accommodation.get().getReservationMethod() == ReservationMethod.AUTOMATIC){
+                        if(accommodation.get().getReservationMethod().equals(ReservationMethod.AUTOMATIC)){
+                            priceLists.add(priceList);
+                        }
+                    }else{
+                        return new ArrayList<Object>(List.of(false));
+                    }
+                }
+            }
+            for(PriceList priceList : priceLists){
+                priceList.setStatus(AccomodationStatus.RESERVED);
+                    price += priceList.getPrice();
+            }
+            if(!accommodation.get().isPriceForEntireAcc()){
+                price = price * numberOfGuests;
+            }
+        }else{
+            return new ArrayList<Object>(List.of(false));
+        }
+        save(accommodation.get());
+        return new ArrayList<Object>(List.of(false, price, accommodation.get().getReservationMethod()));
+    }
+
+    @Override
+    public Boolean changePriceList(LocalDate startDate, LocalDate endDate, Long id, AccomodationStatus accomodationStatus) throws Exception {
+        Optional<Accommodation> accommodation = accommodationRepository.findById(id);
+
+        if(accommodation.isEmpty()) return false;
+
+        changeAccommodationStatus(accommodation.get(), startDate, endDate, accomodationStatus);
+        save(accommodation.get());
+
+        return true;
+    }
+
+    private void changeAccommodationStatus(Accommodation accommodation, LocalDate startDate, LocalDate endDate, AccomodationStatus accomodationStatus){
+        for(PriceList priceList : accommodation.getPrices()){
+            if ((priceList.getDate().isAfter(startDate) || priceList.getDate().isEqual(startDate) ) && (priceList.getDate().isBefore(endDate) || priceList.getDate().isEqual(endDate))){
+                priceList.setStatus(accomodationStatus);
+            }
+        }
+    }
+
 
     @Override
     public void deleteById(Long id) {

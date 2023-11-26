@@ -13,6 +13,8 @@ public interface IGuestService {
 
     Guest save(Guest guest) throws Exception;
 
+    Guest addNumberOfCancellation(Long id);
+
     void deleteById(Long id);
     Guest update(GuestDTO guestDTO, Long id) throws Exception;
 }
