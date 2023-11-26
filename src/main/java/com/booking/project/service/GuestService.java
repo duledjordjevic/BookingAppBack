@@ -47,6 +47,18 @@ public class GuestService implements IGuestService {
     }
 
     @Override
+    public Guest addNumberOfCancellation(Long id){
+        Optional<Guest> guestForUpdate = findById(id);
+
+        if(guestForUpdate.isEmpty()) return null;
+
+        guestForUpdate.get().setNumberOfCancellation(guestForUpdate.get().getNumberOfCancellation() + 1);
+        repository.save(guestForUpdate.get());
+
+        return guestForUpdate.get();
+    }
+
+    @Override
     public void deleteById(Long id) {
         repository.deleteById(id);
     }

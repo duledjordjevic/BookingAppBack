@@ -66,7 +66,7 @@ public class Accommodation {
     @OneToMany(fetch = FetchType.LAZY)
     private Set<PriceList> prices = new HashSet<PriceList>();
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     private Host host;
 
     @OneToOne(cascade = { CascadeType.ALL })
