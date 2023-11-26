@@ -17,4 +17,5 @@ public interface IGuestService {
 
     void deleteById(Long id);
     Guest update(GuestDTO guestDTO, Long id) throws Exception;
+    GuestDTO addGuest(GuestDTO guestDTO) throws Exception;
 }

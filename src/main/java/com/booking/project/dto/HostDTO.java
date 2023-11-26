@@ -21,7 +21,7 @@ public class HostDTO {
     private boolean isNotificationEnabled;
     private UserCredentialsDTO userCredentialsDTO;
 
-    private HostDTO(Host host){
+    public HostDTO(Host host){
         this.id = host.getId();
         this.name = host.getName();
         this.lastName = host.getLastName();

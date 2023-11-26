@@ -104,5 +104,16 @@ public class UserController {
 
         return new ResponseEntity<UserDTO>(userDTO, HttpStatus.OK);
     }
-    
+    @PostMapping(value = "/guest",consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<GuestDTO> createGuest(@RequestBody GuestDTO guestDTO) throws Exception {
+        GuestDTO savedGuest = guestService.addGuest(guestDTO);
+        return new ResponseEntity<GuestDTO>(savedGuest, HttpStatus.CREATED);
+    }
+
+    @PostMapping(value = "/host",consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<HostDTO> createGuest(@RequestBody HostDTO hostDTO) throws Exception {
+        HostDTO savedHost = hostService.addHost(hostDTO);
+        return new ResponseEntity<HostDTO>(savedHost, HttpStatus.CREATED);
+    }
+
 }
