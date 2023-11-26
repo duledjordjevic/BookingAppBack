@@ -92,11 +92,11 @@ public class AccommodationController {
     @GetMapping(value = "/cards/filter",produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<?> filterAccommodations(
             @RequestParam(required = false) String city,
-//            @RequestParam(required = false) Integer numberOfGuests,
+            @RequestParam(required = false) Integer numberOfGuests,
             @RequestParam(required = false) @DateTimeFormat(pattern = "dd-MM-yyyy") LocalDate startDate,
             @RequestParam(required = false) @DateTimeFormat(pattern = "dd-MM-yyyy") LocalDate endDate
     ) {
-        Collection<AccommodationDTO> accommodations = accommodationService.filterAccommodations(startDate,endDate,5,city);
+        Collection<AccommodationDTO> accommodations = accommodationService.filterAccommodations(startDate,endDate,numberOfGuests,city);
 
         return new ResponseEntity<Collection<AccommodationDTO>>(accommodations, HttpStatus.OK);
     }

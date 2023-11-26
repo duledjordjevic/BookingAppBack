@@ -21,5 +21,5 @@ public interface IAccommodationService {
 
     Accommodation changeAvailableStatus(Long id, Boolean isAvailable) throws Exception;
     Collection<Accommodation> findAccomodationsByHostId(Long id);
-    Collection<AccommodationDTO> filterAccommodations(LocalDate startDate, LocalDate endDate, int numOfGuests, String city);
+    Collection<AccommodationDTO> filterAccommodations(LocalDate startDate, LocalDate endDate, Integer numOfGuests, String city);
 }

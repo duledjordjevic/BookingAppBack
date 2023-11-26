@@ -5,6 +5,8 @@ import com.booking.project.dto.AccommodationCardDTO;
 import com.booking.project.model.Accommodation;
 import com.booking.project.repository.inteface.IAccommodationRepository;
 import com.booking.project.service.interfaces.IAccommodationService;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.Query;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -17,6 +19,8 @@ import java.util.Optional;
 public class AccommodationService implements IAccommodationService {
     @Autowired
     private IAccommodationRepository accommodationRepository;
+    @Autowired
+    private EntityManager em;
     @Override
     public Collection<AccommodationDTO> findAll() {
 
@@ -91,10 +95,8 @@ public class AccommodationService implements IAccommodationService {
         System.out.println("Uso");
         return accommodationRepository.findAccommodationsByHostId(id);
     }
-    public Collection<AccommodationDTO> filterAccommodations(LocalDate startDate,LocalDate endDate,int numOfGuests,String city){
-        Collection<Accommodation> accommodations = accommodationRepository.filterAccommodations(startDate,endDate);
-//        Collection<Accommodation> accommodationsByCity = accommodationRepository.findAccommodationsByCity(city);
-//        Collection<Accommodation> accommodationsByGuests = accommodationRepository.findAccommodationsByGuests(numOfGuests);
+    public Collection<AccommodationDTO> filterAccommodations(LocalDate startDate,LocalDate endDate,Integer numOfGuests,String city){
+        Collection<Accommodation> accommodations = accommodationRepository.filterAccommodations(startDate,endDate,city,numOfGuests);
 
         Collection<AccommodationDTO> accommodationDTOS = new ArrayList<>();
         for(Accommodation acc: accommodations){
