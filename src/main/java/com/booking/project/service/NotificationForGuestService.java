@@ -1,5 +1,6 @@
 package com.booking.project.service;
 
+import com.booking.project.dto.NotificationForGuestDTO;
 import com.booking.project.model.NotificationForGuest;
 import com.booking.project.repository.inteface.INotificationForGuestRepository;
 import com.booking.project.service.interfaces.INotificationForGuestService;
@@ -31,5 +32,18 @@ public class NotificationForGuestService implements INotificationForGuestService
     @Override
     public void deleteById(Long id) {
         notificationForGuestRepository.deleteById(id);
+    }
+
+    @Override
+    public NotificationForGuest update(NotificationForGuestDTO notificationForGuestDTO, Long id) throws Exception{
+        Optional<NotificationForGuest> notificationForGuestForUpdate = findById(id);
+
+        if(notificationForGuestForUpdate.isEmpty()) return null;
+
+        notificationForGuestForUpdate.get().setId(notificationForGuestDTO.getId());
+        notificationForGuestForUpdate.get().setDescription(notificationForGuestForUpdate.get().getDescription());
+
+        save(notificationForGuestForUpdate.get());
+        return notificationForGuestForUpdate.get();
     }
 }
