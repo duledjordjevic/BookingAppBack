@@ -54,4 +54,9 @@ public class CommentAboutAccService implements ICommentAboutAccService {
         save(commentAboutAccForUpdate.get());
         return commentAboutAccForUpdate.get();
     }
+
+    @Override
+    public CommentAboutAcc create(CommentAboutAccDTO commentAboutAccDTO) throws Exception {
+        return null;
+    }
 }

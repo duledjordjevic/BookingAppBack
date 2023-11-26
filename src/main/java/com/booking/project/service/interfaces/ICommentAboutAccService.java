@@ -17,4 +17,5 @@ public interface ICommentAboutAccService {
     void deleteById(Long id);
 
     CommentAboutAcc update(CommentAboutAccDTO commentAboutAccDTO, Long id) throws Exception;
+    CommentAboutAcc create(CommentAboutAccDTO commentAboutAccDTO) throws Exception;
 }
