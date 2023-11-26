@@ -35,7 +35,7 @@ public class HostController {
     }
 
     @DeleteMapping(value = "/{id}")
-    public ResponseEntity<HostDTO> deleteGuest(@PathVariable("id") Long id){
+    public ResponseEntity<HostDTO> deleteHost(@PathVariable("id") Long id){
         hostService.deleteById(id);
         return new ResponseEntity<HostDTO>(HttpStatus.NO_CONTENT);
     }

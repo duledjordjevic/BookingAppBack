@@ -5,6 +5,7 @@ import com.booking.project.dto.AccommodationCardDTO;
 import com.booking.project.model.Accommodation;
 import com.booking.project.model.PriceList;
 import com.booking.project.model.enums.AccommodationStatus;
+import com.booking.project.model.enums.Amenities;
 import com.booking.project.model.enums.ReservationMethod;
 import com.booking.project.repository.inteface.IAccommodationRepository;
 import com.booking.project.service.interfaces.IAccommodationService;
@@ -152,8 +153,8 @@ public class AccommodationService implements IAccommodationService {
     public Collection<Accommodation> findAccomodationsByHostId(Long id){
         return accommodationRepository.findAccommodationsByHostId(id);
     }
-    public Collection<AccommodationDTO> filterAccommodations(LocalDate startDate,LocalDate endDate,Integer numOfGuests,String city){
-        Collection<Accommodation> accommodations = accommodationRepository.filterAccommodations(startDate,endDate,city,numOfGuests);
+    public Collection<AccommodationDTO> filterAccommodations(LocalDate startDate, LocalDate endDate, Integer numOfGuests, String city, Integer startPrice, Integer endPrice, EnumSet<Amenities> amenities){
+        Collection<Accommodation> accommodations = accommodationRepository.filterAccommodations(startDate,endDate,city,numOfGuests,startPrice,endPrice,amenities);
 
         Collection<AccommodationDTO> accommodationDTOS = new ArrayList<>();
         for(Accommodation acc: accommodations){

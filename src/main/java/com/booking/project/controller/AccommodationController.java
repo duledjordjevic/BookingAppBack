@@ -4,6 +4,7 @@ import com.booking.project.dto.AccommodationCardDTO;
 import com.booking.project.dto.AccommodationDTO;
 import com.booking.project.model.Accommodation;
 import com.booking.project.model.Host;
+import com.booking.project.model.enums.Amenities;
 import com.booking.project.model.enums.ReservationMethod;
 import com.booking.project.service.interfaces.IAccommodationService;
 import com.booking.project.service.interfaces.IHostService;
@@ -16,6 +17,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
 import java.util.Collection;
+import java.util.EnumSet;
 import java.util.Optional;
 
 @RestController
@@ -29,11 +31,6 @@ public class AccommodationController {
 
     @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<?> getAccommodations(){
-        LocalDate specificDate = LocalDate.of(2023, 11, 17);
-        LocalDate specificDate2 = LocalDate.of(2023, 11, 27);
-        String loc = "Beograd";
-        int num = 5;
-        Collection<AccommodationDTO> accommodations1 = accommodationService.filterAccommodations(specificDate,specificDate2,num, loc);
         Collection<AccommodationDTO> accommodations = accommodationService.findAll();
         return new ResponseEntity<Collection<AccommodationDTO>>(accommodations, HttpStatus.OK);
     }
@@ -94,9 +91,12 @@ public class AccommodationController {
             @RequestParam(required = false) String city,
             @RequestParam(required = false) Integer numberOfGuests,
             @RequestParam(required = false) @DateTimeFormat(pattern = "dd-MM-yyyy") LocalDate startDate,
-            @RequestParam(required = false) @DateTimeFormat(pattern = "dd-MM-yyyy") LocalDate endDate
+            @RequestParam(required = false) @DateTimeFormat(pattern = "dd-MM-yyyy") LocalDate endDate,
+            @RequestParam(required = false) Integer startPrice,
+            @RequestParam(required = false) Integer endPrice,
+            @RequestParam(required = false) EnumSet<Amenities> amenities
     ) {
-        Collection<AccommodationDTO> accommodations = accommodationService.filterAccommodations(startDate,endDate,numberOfGuests,city);
+        Collection<AccommodationDTO> accommodations = accommodationService.filterAccommodations(startDate,endDate,numberOfGuests,city,startPrice,endPrice,amenities);
 
         return new ResponseEntity<Collection<AccommodationDTO>>(accommodations, HttpStatus.OK);
     }
