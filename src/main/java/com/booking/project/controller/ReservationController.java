@@ -5,7 +5,7 @@ import com.booking.project.dto.ReservationDTO;
 import com.booking.project.model.Accommodation;
 import com.booking.project.model.Guest;
 import com.booking.project.model.Reservation;
-import com.booking.project.model.enums.AccomodationStatus;
+import com.booking.project.model.enums.AccommodationStatus;
 import com.booking.project.model.enums.ReservationMethod;
 import com.booking.project.model.enums.ReservationStatus;
 import com.booking.project.service.interfaces.IAccommodationService;
@@ -53,16 +53,16 @@ public class ReservationController {
 //        return new ResponseEntity<Optional<Reservation>>(reservation, HttpStatus.OK);
 //    }
 
-    @GetMapping( produces = MediaType.APPLICATION_JSON_VALUE)
+    @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<?> filterReservations(@PathParam("title") String title,
-                                                                    @PathParam("startDate") Date startDate,
-                                                                    @PathParam("endDate") Date endDate,
+                                                                    @PathParam("startDate") LocalDate startDate,
+                                                                    @PathParam("endDate") LocalDate endDate,
                                                                     @PathParam("status") ReservationStatus status){
-        List<Reservation> reservations = reservationService.filter(title, startDate, endDate, status);
+        List<ReservationDTO> reservations = reservationService.filter(title, startDate, endDate, status);
         if(reservations.isEmpty()){
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
-        return new ResponseEntity<Collection<Reservation>>(reservations, HttpStatus.OK);
+        return new ResponseEntity<Collection<ReservationDTO>>(reservations, HttpStatus.OK);
     }
 
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
@@ -110,7 +110,7 @@ public class ReservationController {
         Guest guest = reservation.getGuest();
         guestService.addNumberOfCancellation(guest.getId());
 
-        accommodationService.changePriceList(reservation.getStartDate(), reservation.getEndDate(), reservation.getAccommodation().getId(), AccomodationStatus.AVAILABLE);
+        accommodationService.changePriceList(reservation.getStartDate(), reservation.getEndDate(), reservation.getAccommodation().getId(), AccommodationStatus.AVAILABLE);
 
         return new ResponseEntity<>(new ReservationDTO(reservation), HttpStatus.OK);
     }

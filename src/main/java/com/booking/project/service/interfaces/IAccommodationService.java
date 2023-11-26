@@ -3,8 +3,8 @@ package com.booking.project.service.interfaces;
 import com.booking.project.dto.AccommodationCardDTO;
 import com.booking.project.dto.AccommodationDTO;
 import com.booking.project.model.Accommodation;
+import com.booking.project.model.enums.AccommodationStatus;
 import com.booking.project.model.enums.ReservationMethod;
-import com.booking.project.model.enums.AccomodationStatus;
 import java.time.LocalDate;
 import java.util.Collection;
 import java.util.List;
@@ -21,7 +21,7 @@ public interface IAccommodationService {
 
     List<Object> reservate(Long accommodationId, LocalDate startDate, LocalDate endDate, int numberOfGuests) throws Exception;
 
-    Boolean changePriceList(LocalDate startDate, LocalDate endDate, Long id, AccomodationStatus accomodationStatus) throws Exception;
+    Boolean changePriceList(LocalDate startDate, LocalDate endDate, Long id, AccommodationStatus accommodationStatus) throws Exception;
 
     void deleteById(Long id);
 
