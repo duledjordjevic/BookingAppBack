@@ -1,10 +1,12 @@
 package com.booking.project.service;
 
 import com.booking.project.dto.CommentAboutAccDTO;
+import com.booking.project.dto.CreateCommentAboutAccDTO;
 import com.booking.project.dto.NotificationForGuestDTO;
-import com.booking.project.model.CommentAboutAcc;
-import com.booking.project.model.NotificationForGuest;
+import com.booking.project.model.*;
+import com.booking.project.repository.inteface.IAccommodationRepository;
 import com.booking.project.repository.inteface.ICommentAboutAccRepository;
+import com.booking.project.repository.inteface.IGuestRepository;
 import com.booking.project.service.interfaces.ICommentAboutAccService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -17,6 +19,10 @@ public class CommentAboutAccService implements ICommentAboutAccService {
 
     @Autowired
     private ICommentAboutAccRepository commentAboutAccRepository;
+    @Autowired
+    private IGuestRepository guestRepository;
+    @Autowired
+    private IAccommodationRepository accommodationRepository;
     @Override
     public Collection<CommentAboutAcc> findAll() {
         return commentAboutAccRepository.findAll();
@@ -38,25 +44,49 @@ public class CommentAboutAccService implements ICommentAboutAccService {
     }
 
     @Override
-    public CommentAboutAcc update(CommentAboutAccDTO commentAboutAccDTO, Long id) throws Exception{
-        Optional<CommentAboutAcc> commentAboutAccForUpdate = findById(id);
+    public CommentAboutAcc create(CreateCommentAboutAccDTO createCommentAboutAccDTO) throws Exception {
+        CommentAboutAcc commentAboutAcc = new CommentAboutAcc();
+        commentAboutAcc.setRating(createCommentAboutAccDTO.getRating());
+        commentAboutAcc.setContent(createCommentAboutAccDTO.getContent());
+        commentAboutAcc.setApproved(true);
+        commentAboutAcc.setReported(false);
 
-        if(commentAboutAccForUpdate.isEmpty()) return null;
+        Optional<Guest> guest = guestRepository.findById(createCommentAboutAccDTO.getGuestId());
+        if (guest.isEmpty()) return null;
+        commentAboutAcc.setGuest(guest.get());
 
-        commentAboutAccForUpdate.get().setId(commentAboutAccDTO.getId());
-        commentAboutAccForUpdate.get().setRating(commentAboutAccDTO.getRating());
-        commentAboutAccForUpdate.get().setReported(commentAboutAccDTO.isReported());
-        commentAboutAccForUpdate.get().setContent(commentAboutAccDTO.getContent());
-        commentAboutAccForUpdate.get().setApproved(commentAboutAccDTO.isApproved());
-        commentAboutAccForUpdate.get().getAccommodation().copyValues(commentAboutAccDTO.getAccommodationDTO());
-        commentAboutAccForUpdate.get().getGuest().copyValues(commentAboutAccDTO.getGuestDTO());
+        Optional<Accommodation> accommodation = accommodationRepository.findById(createCommentAboutAccDTO.getAccommodationId());
+        if (accommodation.isEmpty()) return null;
+        commentAboutAcc.setAccommodation(accommodation.get());
 
-        save(commentAboutAccForUpdate.get());
-        return commentAboutAccForUpdate.get();
+        save(commentAboutAcc);
+        return commentAboutAcc;
     }
 
     @Override
-    public CommentAboutAcc create(CommentAboutAccDTO commentAboutAccDTO) throws Exception {
-        return null;
+    public Collection<CommentAboutAcc> findByAcc(Long id) {
+        Optional<Accommodation> accommodation = accommodationRepository.findById(id);
+        return commentAboutAccRepository.findAllByAccommodation(accommodation);
     }
+
+    @Override
+    public CommentAboutAcc approve(Long id, boolean approved) throws Exception {
+        Optional<CommentAboutAcc> commentAboutAcc = commentAboutAccRepository.findById(id);
+        if (commentAboutAcc.isEmpty()) return null;
+
+        commentAboutAcc.get().setApproved(approved);
+        save(commentAboutAcc.get());
+        return commentAboutAcc.get();
+    }
+
+    @Override
+    public CommentAboutAcc report(Long id, boolean reported) throws Exception {
+        Optional<CommentAboutAcc> commentAboutAcc = commentAboutAccRepository.findById(id);
+        if (commentAboutAcc.isEmpty()) return null;
+
+        commentAboutAcc.get().setReported(reported);
+        save(commentAboutAcc.get());
+        return commentAboutAcc.get();
+    }
+
 }
