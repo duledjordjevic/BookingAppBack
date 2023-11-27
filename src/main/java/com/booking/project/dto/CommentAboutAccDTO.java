@@ -17,8 +17,6 @@ public class CommentAboutAccDTO {
     private boolean isReported;
     private String content;
     private boolean isApproved;
-    private AccommodationDTO accommodationDTO;
-    private GuestDTO guestDTO;
 
     public CommentAboutAccDTO(CommentAboutAcc commentAboutAcc){
         this.id = commentAboutAcc.getId();
@@ -26,7 +24,5 @@ public class CommentAboutAccDTO {
         this.isReported = commentAboutAcc.isReported();
         this.content = commentAboutAcc.getContent();
         this.isApproved = commentAboutAcc.isApproved();
-        this.accommodationDTO = new AccommodationDTO(commentAboutAcc.getAccommodation());
-        this.guestDTO = new GuestDTO(commentAboutAcc.getGuest());
     }
 }
