@@ -42,23 +42,6 @@ public class NotificationForHostService implements INotificationForHostService {
     }
 
     @Override
-    public NotificationForHost update(NotificationForHostDTO notificationForHostDTO, Long id) throws Exception{
-        Optional<NotificationForHost> notificationForHostForUpdate = findById(id);
-
-        if(notificationForHostForUpdate.isEmpty()) return null;
-
-        notificationForHostForUpdate.get().setId(notificationForHostDTO.getId());
-        notificationForHostForUpdate.get().setDescription(notificationForHostDTO.getDescription());
-        notificationForHostForUpdate.get().setType(notificationForHostDTO.getType());
-
-        Optional<Host> host = hostRepository.findById(notificationForHostDTO.getHostId());
-        host.ifPresent(value -> notificationForHostForUpdate.get().setHost(value));
-
-        save(notificationForHostForUpdate.get());
-        return notificationForHostForUpdate.get();
-    }
-
-    @Override
     public Collection<NotificationForHost> findByHost(Long id) {
         Optional<Host> host = hostRepository.findById(id);
         return notificationForHostRepository.findAllByHost(host);

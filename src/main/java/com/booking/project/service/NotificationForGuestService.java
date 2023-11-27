@@ -45,22 +45,6 @@ public class NotificationForGuestService implements INotificationForGuestService
     }
 
     @Override
-    public NotificationForGuest update(NotificationForGuestDTO notificationForGuestDTO, Long id) throws Exception{
-        Optional<NotificationForGuest> notificationForGuestForUpdate = findById(id);
-
-        if(notificationForGuestForUpdate.isEmpty()) return null;
-
-        notificationForGuestForUpdate.get().setId(notificationForGuestDTO.getId());
-        notificationForGuestForUpdate.get().setDescription(notificationForGuestDTO.getDescription());
-
-        Optional<Guest> guest = guestRepository.findById(notificationForGuestDTO.getGuestId());
-        guest.ifPresent(value -> notificationForGuestForUpdate.get().setGuest(value));
-
-        save(notificationForGuestForUpdate.get());
-        return notificationForGuestForUpdate.get();
-    }
-
-    @Override
     public Collection<NotificationForGuest> findByGuest(Long id) {
         Optional<Guest> guest = guestRepository.findById(id);
         return notificationForGuestRepository.findAllByGuest(guest);
