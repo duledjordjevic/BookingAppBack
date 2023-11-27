@@ -1,6 +1,8 @@
 package com.booking.project.dto;
 
 import com.booking.project.model.CommentAboutHost;
+import com.booking.project.model.Guest;
+import com.booking.project.model.Host;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -17,8 +19,6 @@ public class CommentAboutHostDTO {
     private boolean isReported;
     private String content;
     private boolean isApproved;
-    private GuestDTO guestDTO;
-    private HostDTO hostDTO;
 
     public CommentAboutHostDTO(CommentAboutHost commentAboutHost){
         this.id = commentAboutHost.getId();
@@ -26,7 +26,5 @@ public class CommentAboutHostDTO {
         this.isReported = commentAboutHost.isReported();
         this.content = commentAboutHost.getContent();
         this.isApproved = commentAboutHost.isApproved();
-        this.guestDTO = new GuestDTO(commentAboutHost.getGuest());
-        this.hostDTO = new HostDTO(commentAboutHost.getHost());
     }
 }
