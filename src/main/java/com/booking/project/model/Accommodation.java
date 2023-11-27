@@ -33,6 +33,8 @@ public class Accommodation {
     @Column(nullable = false)
     private String description;
 
+    @ElementCollection(targetClass = Amenities.class)
+    @JoinTable(name = "amenities", joinColumns = @JoinColumn(name = "accommodationID"))
     @Enumerated(EnumType.STRING)
     private List<Amenities> amenities;
 
