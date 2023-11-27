@@ -13,5 +13,5 @@ public class CreateCommentAboutAccDTO {
     private int rating;
     private String content;
     private Long guestId;
-    private Long hostId;
+    private Long accommodationId;
 }
