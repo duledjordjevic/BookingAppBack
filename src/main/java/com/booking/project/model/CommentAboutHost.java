@@ -27,9 +27,10 @@ public class CommentAboutHost {
     @Column(nullable = false)
     private boolean isApproved;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     private Guest guest;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     private Host host;
+
 }

@@ -24,4 +24,17 @@ public class Host extends Person{
         User user = new User(hostDTO.getUserCredentialsDTO());
         this.setUser(user);
     }
+
+    public void copyValues(HostDTO hostDTO){
+
+        this.setId(hostDTO.getId());
+        this.setName(hostDTO.getName());
+        this.setLastName(hostDTO.getLastName());
+        this.setAddress(hostDTO.getAddress());
+        this.setPhoneNumber(hostDTO.getPhoneNumber());
+        this.setNotificationEnabled(hostDTO.isNotificationEnabled());
+        User user = new User(hostDTO.getUserCredentialsDTO());
+        this.setUser(user);
+    }
 }
+
