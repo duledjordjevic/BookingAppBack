@@ -21,7 +21,7 @@ public class Guest extends Person {
     @Column(nullable = false)
     private int numberOfCancellation;
 
-    @OneToMany(fetch = FetchType.LAZY)
+    @ManyToMany(fetch = FetchType.LAZY)
     private Set<Accommodation> favourites = new HashSet<>();
 
     public Guest(GuestDTO guestDTO){

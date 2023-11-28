@@ -30,7 +30,7 @@ public interface IAccommodationService {
 
     AccommodationDTO changeAvailableStatus(Long id, Boolean isAvailable) throws Exception;
     Collection<Accommodation> findAccomodationsByHostId(Long id);
-    Collection<AccommodationDTO> filterAccommodations(LocalDate startDate, LocalDate endDate, Integer numOfGuests, String city, Integer startPrice, Integer endPrice, EnumSet<Amenities> amenities);
+    Collection<AccommodationCardDTO> filterAccommodations(LocalDate startDate, LocalDate endDate, Integer numOfGuests, String city, Integer startPrice, Integer endPrice);
     AccommodationDTO findAccommodationsDetails(Long id);
 
     AccommodationDTO changeAccommodationReservationMethod(Long id, ReservationMethod reservationMethod) throws Exception;

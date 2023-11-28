@@ -1,5 +1,6 @@
 package com.booking.project.service.interfaces;
 
+import com.booking.project.dto.AccommodationCardDTO;
 import com.booking.project.dto.GuestDTO;
 import com.booking.project.model.Guest;
 
@@ -18,4 +19,5 @@ public interface IGuestService {
     void deleteById(Long id);
     Guest update(GuestDTO guestDTO, Long id) throws Exception;
     GuestDTO addGuest(GuestDTO guestDTO) throws Exception;
+    Collection<AccommodationCardDTO> findFavourites(Long id);
 }
