@@ -156,12 +156,12 @@ public class AccommodationService implements IAccommodationService {
     public Collection<Accommodation> findAccomodationsByHostId(Long id){
         return accommodationRepository.findAccommodationsByHostId(id);
     }
-    public Collection<AccommodationDTO> filterAccommodations(LocalDate startDate, LocalDate endDate, Integer numOfGuests, String city, Integer startPrice, Integer endPrice, EnumSet<Amenities> amenities){
-        Collection<Accommodation> accommodations = accommodationRepository.filterAccommodations(startDate,endDate,city,numOfGuests,startPrice,endPrice,amenities);
+    public Collection<AccommodationCardDTO> filterAccommodations(LocalDate startDate, LocalDate endDate, Integer numOfGuests, String city, Integer startPrice, Integer endPrice){
+        Collection<Accommodation> accommodations = accommodationRepository.filterAccommodations(startDate,endDate,city,numOfGuests,startPrice,endPrice);
 
-        Collection<AccommodationDTO> accommodationDTOS = new ArrayList<>();
+        Collection<AccommodationCardDTO> accommodationDTOS = new ArrayList<>();
         for(Accommodation acc: accommodations){
-            AccommodationDTO accomodationDTO = new AccommodationDTO(acc);
+            AccommodationCardDTO accomodationDTO = new AccommodationCardDTO(acc);
             accommodationDTOS.add(accomodationDTO);
         }
 

@@ -93,12 +93,11 @@ public class AccommodationController {
             @RequestParam(required = false) @DateTimeFormat(pattern = "dd-MM-yyyy") LocalDate startDate,
             @RequestParam(required = false) @DateTimeFormat(pattern = "dd-MM-yyyy") LocalDate endDate,
             @RequestParam(required = false) Integer startPrice,
-            @RequestParam(required = false) Integer endPrice,
-            @RequestParam(required = false) EnumSet<Amenities> amenities
+            @RequestParam(required = false) Integer endPrice
     ) {
-        Collection<AccommodationDTO> accommodations = accommodationService.filterAccommodations(startDate,endDate,numberOfGuests,city,startPrice,endPrice,amenities);
+        Collection<AccommodationCardDTO> accommodations = accommodationService.filterAccommodations(startDate,endDate,numberOfGuests,city,startPrice,endPrice);
 
-        return new ResponseEntity<Collection<AccommodationDTO>>(accommodations, HttpStatus.OK);
+        return new ResponseEntity<Collection<AccommodationCardDTO>>(accommodations, HttpStatus.OK);
     }
     @PutMapping(value ="/{id}/reservationMethod/{reservationMethod}", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<?> changeAccommodationReservationMethod(@PathVariable Long id, @PathVariable ReservationMethod reservationMethod) throws Exception {

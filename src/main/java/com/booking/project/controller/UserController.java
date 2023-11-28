@@ -36,13 +36,13 @@ public class UserController {
     private IHostService hostService;
 
     @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Collection<User>> getUsers(){
+    public ResponseEntity<?> getUsers(){
         Collection<User> users = userService.findAll();
         return new ResponseEntity<Collection<User>>(users, HttpStatus.OK);
     }
 
     @GetMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Optional<User>> getUser(@PathVariable("id") Long id){
+    public ResponseEntity<?> getUser(@PathVariable("id") Long id){
         Optional<User> user = userService.findById(id);
         if(user.isEmpty()){
             return new ResponseEntity<Optional<User>>(HttpStatus.NOT_FOUND);
@@ -51,7 +51,7 @@ public class UserController {
     }
 
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<User> createUser(@RequestBody User user) throws Exception {
+    public ResponseEntity<?> createUser(@RequestBody User user) throws Exception {
         User savedUser = userService.save(user);
         return new ResponseEntity<User>(savedUser, HttpStatus.CREATED);
     }
@@ -84,7 +84,7 @@ public class UserController {
     }
 
     @DeleteMapping(value = "/{id}")
-    public ResponseEntity<User> deleteUser(@PathVariable("id") Long id){
+    public ResponseEntity<?> deleteUser(@PathVariable("id") Long id){
         userService.deleteById(id);
         return new ResponseEntity<User>(HttpStatus.NO_CONTENT);
     }
@@ -105,13 +105,13 @@ public class UserController {
         return new ResponseEntity<UserDTO>(userDTO, HttpStatus.OK);
     }
     @PostMapping(value = "/guest",consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<GuestDTO> createGuest(@RequestBody GuestDTO guestDTO) throws Exception {
+    public ResponseEntity<?> createGuest(@RequestBody GuestDTO guestDTO) throws Exception {
         GuestDTO savedGuest = guestService.addGuest(guestDTO);
         return new ResponseEntity<GuestDTO>(savedGuest, HttpStatus.CREATED);
     }
 
     @PostMapping(value = "/host",consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<HostDTO> createHost(@RequestBody HostDTO hostDTO) throws Exception {
+    public ResponseEntity<?> createHost(@RequestBody HostDTO hostDTO) throws Exception {
         HostDTO savedHost = hostService.addHost(hostDTO);
         return new ResponseEntity<HostDTO>(savedHost, HttpStatus.CREATED);
     }
