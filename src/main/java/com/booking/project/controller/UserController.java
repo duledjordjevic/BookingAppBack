@@ -111,7 +111,7 @@ public class UserController {
     }
 
     @PostMapping(value = "/host",consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<HostDTO> createGuest(@RequestBody HostDTO hostDTO) throws Exception {
+    public ResponseEntity<HostDTO> createHost(@RequestBody HostDTO hostDTO) throws Exception {
         HostDTO savedHost = hostService.addHost(hostDTO);
         return new ResponseEntity<HostDTO>(savedHost, HttpStatus.CREATED);
     }

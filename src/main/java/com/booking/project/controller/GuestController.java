@@ -1,5 +1,6 @@
 package com.booking.project.controller;
 
+import com.booking.project.dto.AccommodationCardDTO;
 import com.booking.project.model.Guest;
 import com.booking.project.model.User;
 import com.booking.project.service.interfaces.IGuestService;
@@ -21,6 +22,7 @@ public class GuestController {
 
     @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Collection<Guest>> getGuests(){
+
         Collection<Guest> guests = guestService.findAll();
         return new ResponseEntity<Collection<Guest>>(guests, HttpStatus.OK);
     }
@@ -58,5 +60,12 @@ public class GuestController {
         guestService.deleteById(id);
         return new ResponseEntity<Guest>(HttpStatus.NO_CONTENT);
     }
+    @GetMapping(value = "/{id}/favourites", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<Collection<AccommodationCardDTO>> getFavouritesAccommodations(@PathVariable("id") Long id){
+        Collection<AccommodationCardDTO> accommodationCardDTOS = guestService.findFavourites(id);
+
+        return new ResponseEntity<Collection<AccommodationCardDTO>>(accommodationCardDTOS, HttpStatus.OK);
+    }
+
 
 }
