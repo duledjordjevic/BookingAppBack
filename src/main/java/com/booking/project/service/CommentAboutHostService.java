@@ -91,4 +91,8 @@ public class CommentAboutHostService implements ICommentAboutHostService {
         return commentAboutHost.get();
     }
 
+    @Override
+    public Collection<CommentAboutHost> findAllReported() {
+        return commentAboutHostRepository.findByReportedTrue();
+    }
 }

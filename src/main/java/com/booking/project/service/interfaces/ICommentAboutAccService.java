@@ -18,6 +18,7 @@ public interface ICommentAboutAccService {
     void deleteById(Long id);
     CommentAboutAcc create(CreateCommentAboutAccDTO createCommentAboutAccDTO) throws Exception;
     Collection<CommentAboutAcc> findByAcc(Long id);
+    Collection<CommentAboutAcc> findAllReported();
     CommentAboutAcc approve(Long id, boolean approved) throws  Exception;
     CommentAboutAcc report(Long id, boolean reported) throws  Exception;
 }

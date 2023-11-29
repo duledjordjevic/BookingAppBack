@@ -1,8 +1,6 @@
 package com.booking.project.service;
 
-import com.booking.project.dto.CommentAboutAccDTO;
 import com.booking.project.dto.CreateCommentAboutAccDTO;
-import com.booking.project.dto.NotificationForGuestDTO;
 import com.booking.project.model.*;
 import com.booking.project.repository.inteface.IAccommodationRepository;
 import com.booking.project.repository.inteface.ICommentAboutAccRepository;
@@ -89,4 +87,8 @@ public class CommentAboutAccService implements ICommentAboutAccService {
         return commentAboutAcc.get();
     }
 
+    @Override
+    public Collection<CommentAboutAcc> findAllReported() {
+        return commentAboutAccRepository.findByReportedTrue();
+    }
 }
