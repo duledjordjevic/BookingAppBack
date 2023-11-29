@@ -52,6 +52,8 @@ public class User {
         this.id = userCredentialsDTO.getId();
         this.email = userCredentialsDTO.getEmail();
         this.password = userCredentialsDTO.getPassword();
+        this.userType = userCredentialsDTO.getUserType();
+        this.status = UserStatus.ACTIVE;
     }
 
     public void copyValues(UserCredentialsDTO userCredentialsDTO){

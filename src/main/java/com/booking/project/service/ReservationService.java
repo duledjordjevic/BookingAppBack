@@ -92,7 +92,7 @@ public class ReservationService implements IReservationService {
 
     @Override
     public List<ReservationDTO> filter(String title, LocalDate startDate, LocalDate endDate, ReservationStatus reservationStatus){
-        Query q = em.createQuery("SELECT r FROM Reservation r JOIN FETCH r.accommodation a JOIN FETCH r.guest WHERE (a.title LIKE :pattern OR :pattern is Null)" +
+        Query q = em.createQuery("SELECT r FROM Reservation r JOIN FETCH r.accommodation a JOIN FETCH r.guest WHERE (LOWER(a.title) LIKE LOWER(:pattern) OR :pattern is Null)" +
                 " AND ((r.startDate >= :startDate AND r.endDate <= :endDate) OR cast(:startDate as date) is null) AND (r.status = :reservationStatus OR :reservationStatus is Null)");
         if(title == null){
             q.setParameter("pattern", null);
