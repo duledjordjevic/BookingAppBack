@@ -10,6 +10,7 @@ import com.booking.project.service.interfaces.IUserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Optional;
 
@@ -60,6 +61,27 @@ public class UserService implements IUserService {
         UserDTO userDTO = new UserDTO(user.get());
         return userDTO;
 
+    }
+    @Override
+    public UserDTO report(Long id) throws Exception {
+        Optional<User> user = findById(id);
+
+        if(user.isEmpty()) return null;
+
+        user.get().setReported(true);
+        save(user.get());
+        UserDTO userDTO = new UserDTO(user.get());
+        return userDTO;
+    }
+    @Override
+    public Collection<UserDTO> findReportedUsers(){
+        Collection<User> users = findAll();
+
+        Collection<UserDTO> userDTOS = new ArrayList<>();
+        for(User user : users){
+            if(user.isReported()) userDTOS.add(new UserDTO(user));
+        }
+        return userDTOS;
     }
 
 

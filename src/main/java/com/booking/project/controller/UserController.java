@@ -115,5 +115,18 @@ public class UserController {
         HostDTO savedHost = hostService.addHost(hostDTO);
         return new ResponseEntity<HostDTO>(savedHost, HttpStatus.CREATED);
     }
+    @PutMapping(value = "/report/{id}", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<?> reportUser(@PathVariable Long id) throws Exception {
+        UserDTO userDTO = userService.report(id);
 
-}
+        if(userDTO == null) return new ResponseEntity<>(null,HttpStatus.INTERNAL_SERVER_ERROR);
+
+        return new ResponseEntity<UserDTO>(userDTO, HttpStatus.OK);
+    }
+    @GetMapping(value = "/reported", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<?> getReportedUsers() throws Exception{
+        Collection<UserDTO> reportedUsersDTOs = userService.findReportedUsers();
+
+        return new ResponseEntity<Collection<UserDTO>>(reportedUsersDTOs, HttpStatus.OK);
+    }
+ }
