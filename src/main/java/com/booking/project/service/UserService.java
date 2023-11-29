@@ -75,11 +75,11 @@ public class UserService implements IUserService {
     }
     @Override
     public Collection<UserDTO> findReportedUsers(){
-        Collection<User> users = findAll();
+        Collection<User> users = repository.findByIsReportedTrue();
 
         Collection<UserDTO> userDTOS = new ArrayList<>();
         for(User user : users){
-            if(user.isReported()) userDTOS.add(new UserDTO(user));
+            userDTOS.add(new UserDTO(user));
         }
         return userDTOS;
     }
