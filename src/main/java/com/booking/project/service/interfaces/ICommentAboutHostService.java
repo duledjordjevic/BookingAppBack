@@ -18,6 +18,7 @@ public interface ICommentAboutHostService {
     void deleteById(Long id);
     CommentAboutHost create(CreateCommentAboutHostDTO createCommentAboutHostDTO) throws Exception;
     Collection<CommentAboutHost> findByHost(Long id);
+    Collection<CommentAboutHost> findAllReported();
     CommentAboutHost approve(Long id, boolean approved) throws  Exception;
     CommentAboutHost report(Long id, boolean reported) throws  Exception;
 

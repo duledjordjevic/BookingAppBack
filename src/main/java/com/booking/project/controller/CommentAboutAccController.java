@@ -71,4 +71,13 @@ public class CommentAboutAccController {
 
         return new ResponseEntity<CommentAboutAccDTO>(new CommentAboutAccDTO(commentAboutAcc), HttpStatus.CREATED);
     }
+
+    @GetMapping(value = "/reported",produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<Collection<CommentAboutAcc>> getReported(){
+        Collection<CommentAboutAcc> comments = commentAboutAccService.findAllReported();
+        if (comments == null){
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+        return new ResponseEntity<Collection<CommentAboutAcc>>(comments, HttpStatus.OK);
+    }
 }
