@@ -22,10 +22,10 @@ public class CommentAboutHostController {
     private ICommentAboutHostService commentAboutHostService;
 
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<CommentAboutHost> createCommentAboutHost
+    public ResponseEntity<?> createCommentAboutHost
             (@RequestBody CreateCommentAboutHostDTO createCommentAboutHostDTO) throws Exception {
         CommentAboutHost savedCommentAboutHost = commentAboutHostService.create(createCommentAboutHostDTO);
-        return new ResponseEntity<CommentAboutHost>(savedCommentAboutHost, HttpStatus.CREATED);
+        return new ResponseEntity<>( HttpStatus.CREATED);
     }
 
     @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)

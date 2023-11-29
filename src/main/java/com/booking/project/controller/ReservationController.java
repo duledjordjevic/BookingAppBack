@@ -66,15 +66,15 @@ public class ReservationController {
     }
 
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Reservation> createReservation(@RequestBody CreateReservationDTO createReservationDTO) throws Exception {
+    public ResponseEntity<?> createReservation(@RequestBody CreateReservationDTO createReservationDTO) throws Exception {
         List<Object> reservationResponse = accommodationService.reservate(createReservationDTO.getAccommodationId(), createReservationDTO.getStartDate(), createReservationDTO.getEndDate(), createReservationDTO.getNumberOfGuests());
 
-        if(reservationResponse.size() == 1) return new ResponseEntity<Reservation>(HttpStatus.INTERNAL_SERVER_ERROR);
+        if(reservationResponse.size() == 1) return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
 
         double price = (double) reservationResponse.get(1);
         ReservationMethod reservationMethod = (ReservationMethod) reservationResponse.get(2);
         Reservation createdReservation = reservationService.create(createReservationDTO, price, reservationMethod);
-        return new ResponseEntity<Reservation>(createdReservation, HttpStatus.CREATED);
+        return new ResponseEntity<>(HttpStatus.CREATED);
     }
 
     @PutMapping(value = "/{id}/{reservationStatus}", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)

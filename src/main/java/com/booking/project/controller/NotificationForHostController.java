@@ -25,8 +25,8 @@ public class NotificationForHostController {
         return new ResponseEntity<NotificationForHost>(savedNotificationForHost, HttpStatus.CREATED);
     }
 
-    @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Collection<NotificationForHost>> getNotificationsForHost(@RequestBody Long id){
+    @GetMapping(value = "/host/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<Collection<NotificationForHost>> getNotificationsForHost(@PathVariable Long id){
         Collection<NotificationForHost> notificationForHost = notificationForHostService.findByHost(id);
         return new ResponseEntity<Collection<NotificationForHost>>(notificationForHost, HttpStatus.OK);
     }
