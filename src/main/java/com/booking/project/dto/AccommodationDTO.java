@@ -25,7 +25,7 @@ public class AccommodationDTO {
     private String description;
     private Address address;
     private List<Amenities> amenities;
-    private Set<Photo> photos;
+    private String images;
     private int minGuest;
     private int maxGuest;
     private AccomodationType type;
@@ -42,7 +42,7 @@ public class AccommodationDTO {
         this.description = accommodation.getDescription();
         this.address = accommodation.getAddress();
         this.amenities = accommodation.getAmenities();
-        this.photos = accommodation.getPhotos();
+        this.images = accommodation.getImages();
         this.minGuest = accommodation.getMinGuests();
         this.maxGuest = accommodation.getMaxGuests();
         this.type = accommodation.getType();

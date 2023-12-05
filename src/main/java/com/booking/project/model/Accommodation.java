@@ -38,8 +38,7 @@ public class Accommodation {
     @Enumerated(EnumType.STRING)
     private List<Amenities> amenities;
 
-    @OneToMany(fetch = FetchType.LAZY)
-    private Set<Photo> photos = new HashSet<Photo>();
+    private String  images;
 
     @Column(nullable = false)
     private int minGuests;
@@ -87,7 +86,7 @@ public class Accommodation {
         this.description = accommodationDTO.getDescription();
         this.address = accommodationDTO.getAddress();
         this.amenities=  accommodationDTO.getAmenities();
-        this.photos = accommodationDTO.getPhotos();
+        this.images = accommodationDTO.getImages();
         this.minGuests = accommodationDTO.getMinGuest();
         this.maxGuests = accommodationDTO.getMaxGuest();
         this.type = accommodationDTO.getType();
