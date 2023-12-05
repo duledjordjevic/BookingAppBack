@@ -2,6 +2,7 @@ package com.booking.project.model;
 
 
 import com.booking.project.dto.GuestDTO;
+import com.booking.project.dto.UserRegisterDTO;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -45,5 +46,12 @@ public class Guest extends Person {
         User user = new User(guestDTO.getUserCredentialsDTO());
         this.setUser(user);
     }
-
+    public Guest(UserRegisterDTO userRegisterDTO){
+        this.setName(userRegisterDTO.getName());
+        this.setLastName(userRegisterDTO.getLastname());
+        this.setAddress(userRegisterDTO.getAddress());
+        this.setPhoneNumber(userRegisterDTO.getPhoneNumber());
+        this.numberOfCancellation = 0;
+        this.setNotificationEnabled(true);
+    }
 }

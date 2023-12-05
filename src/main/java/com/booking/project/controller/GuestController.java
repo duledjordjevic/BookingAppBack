@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Collection;
@@ -54,12 +55,13 @@ public class GuestController {
 //
 //        return new ResponseEntity<Guest>(guestService.save(guestForUpdate.get()), HttpStatus.OK);
 //    }
-
+    @PreAuthorize("hasRole('ADMIN')")
     @DeleteMapping(value = "/{id}")
     public ResponseEntity<Guest> deleteGuest(@PathVariable("id") Long id){
         guestService.deleteById(id);
         return new ResponseEntity<Guest>(HttpStatus.NO_CONTENT);
     }
+    @PreAuthorize("hasRole('GUEST')")
     @GetMapping(value = "/{id}/favourites", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Collection<AccommodationCardDTO>> getFavouritesAccommodations(@PathVariable("id") Long id){
         Collection<AccommodationCardDTO> accommodationCardDTOS = guestService.findFavourites(id);

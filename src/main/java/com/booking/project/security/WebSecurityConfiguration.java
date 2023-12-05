@@ -26,8 +26,9 @@ public class WebSecurityConfiguration {
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-        http.csrf().disable().authorizeRequests() // csrf->disabled, pošto nam JWT odrađuje zaštitu od CSRF napada
-                .requestMatchers("/*").permitAll().requestMatchers("/api/login/*").permitAll() // statički html i login mogu svi da pozovu
+        http.csrf().disable().authorizeRequests() // csrf->disabled, pošto nam JWT odrađuje zaštitu od CSRF napada          statički html i login mogu svi da pozovu
+                .requestMatchers("/*").permitAll().requestMatchers("/api/login/*").permitAll()
+                .requestMatchers("/api/register/*").permitAll()
                 .requestMatchers("/api/accommodation**").authenticated() // sav pristup API-ju mora da bude autentikovan
                 .and()
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS); // ne koristimo HttpSession i kukije

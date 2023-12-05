@@ -27,6 +27,10 @@ public class UserService implements IUserService {
     public Optional<User> findById(Long id) {
         return repository.findById(id);
     }
+    @Override
+    public User findByEmail(String email){
+        return repository.findByEmail(email).get();
+    }
 
     @Override
     public User save(User user) throws Exception {

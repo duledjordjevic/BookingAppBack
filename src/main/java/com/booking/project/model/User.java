@@ -2,6 +2,7 @@ package com.booking.project.model;
 
 import com.booking.project.dto.UserCredentialsDTO;
 import com.booking.project.dto.UserDTO;
+import com.booking.project.dto.UserRegisterDTO;
 import com.booking.project.model.enums.UserStatus;
 import com.booking.project.model.enums.UserType;
 import jakarta.persistence.*;
@@ -62,5 +63,12 @@ public class User {
     public void copyValues(UserCredentialsDTO userCredentialsDTO){
         this.email = userCredentialsDTO.getEmail();
         this.password = userCredentialsDTO.getPassword();
+    }
+    public User(UserRegisterDTO userRegisterDTO){
+        this.email = userRegisterDTO.getEmail();
+        this.password = userRegisterDTO.getPassword();
+        this.userType = userRegisterDTO.getUserType();
+        this.isReported = false;
+        this.setStatus(UserStatus.PENDING);
     }
 }

@@ -15,6 +15,7 @@ public interface IUserService {
     Collection<User> findAll();
 
     Optional<User> findById(Long id);
+    User findByEmail(String email);
 
     User save(User user) throws Exception;
 
