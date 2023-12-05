@@ -34,4 +34,8 @@ public interface IAccommodationService {
     AccommodationDTO findAccommodationsDetails(Long id);
 
     AccommodationDTO changeAccommodationReservationMethod(Long id, ReservationMethod reservationMethod) throws Exception;
+
+    AccommodationDTO saveImages(String images, Long accommodationId) throws Exception;
+
+    String getImages(Long accommodationId);
 }

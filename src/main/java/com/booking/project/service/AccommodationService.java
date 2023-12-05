@@ -5,7 +5,6 @@ import com.booking.project.dto.AccommodationCardDTO;
 import com.booking.project.model.Accommodation;
 import com.booking.project.model.PriceList;
 import com.booking.project.model.enums.AccommodationStatus;
-import com.booking.project.model.enums.Amenities;
 import com.booking.project.model.enums.ReservationMethod;
 import com.booking.project.repository.inteface.IAccommodationRepository;
 import com.booking.project.service.interfaces.IAccommodationService;
@@ -53,7 +52,7 @@ public class AccommodationService implements IAccommodationService {
         accommodation.get().setDescription(accommodationDTO.getDescription());
         accommodation.get().setAddress(accommodationDTO.getAddress());
         accommodation.get().setAmenities(accommodationDTO.getAmenities());
-        accommodation.get().setPhotos(accommodationDTO.getPhotos());
+        accommodation.get().setImages(accommodationDTO.getImages());
         accommodation.get().setMinGuests(accommodationDTO.getMinGuest());
         accommodation.get().setMaxGuests(accommodationDTO.getMaxGuest());
         accommodation.get().setType(accommodationDTO.getType());
@@ -190,8 +189,28 @@ public class AccommodationService implements IAccommodationService {
         return accommodationDTO;
     }
 
+    @Override
+    public AccommodationDTO saveImages(String images, Long accommodationId) throws Exception {
+        Optional<Accommodation> accommodation = findById(accommodationId);
 
+        if(accommodation.isEmpty()) return null;
 
+        accommodation.get().setImages(images);
+        save(accommodation.get());
+
+        AccommodationDTO accommodationDTO = new AccommodationDTO(accommodation.get());
+
+        return accommodationDTO;
+    }
+
+    @Override
+    public String getImages(Long accommodationId){
+        Optional<Accommodation> accommodation = findById(accommodationId);
+
+        if(accommodation.isEmpty()) return null;
+
+        return accommodation.get().getImages();
+    }
 }
 
 

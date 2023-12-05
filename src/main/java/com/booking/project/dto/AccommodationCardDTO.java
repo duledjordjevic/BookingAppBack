@@ -16,12 +16,12 @@ public class AccommodationCardDTO {
     private Long id;
     private String title;
     private Address address;
-    private Photo image;
+    private String image;
 
     public AccommodationCardDTO(Accommodation accommodation){
         this.id = accommodation.getId();
         this.title = accommodation.getTitle();
         this.address = accommodation.getAddress();
-        this.image = accommodation.getPhotos().stream().findFirst().orElse(null);
+        this.image = accommodation.getImages();
     }
 }
