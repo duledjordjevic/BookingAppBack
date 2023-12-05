@@ -14,11 +14,9 @@ public class NotificationForGuestDTO {
 
     private Long id;
     private String description;
-    private Long guestId;
 
     public NotificationForGuestDTO(NotificationForGuest notificationForGuest){
         this.id = notificationForGuest.getId();
         this.description = notificationForGuest.getDescription();
-        this.guestId = notificationForGuest.getGuest().getId();
     }
 }
