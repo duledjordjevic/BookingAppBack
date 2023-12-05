@@ -8,7 +8,9 @@ import org.springframework.data.repository.query.Param;
 
 import java.time.LocalDate;
 import java.util.Collection;
+import java.util.Optional;
 
 public interface IUserRepository extends JpaRepository<User, Long> {
     Collection<User> findByIsReportedTrue();
+    public Optional<User> findByEmail(String email);
 }

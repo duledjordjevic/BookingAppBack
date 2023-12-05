@@ -39,6 +39,9 @@ public class User {
     @Enumerated(EnumType.STRING)
     private UserStatus status;
 
+    @Transient
+    private String jwt;
+
     public User(UserDTO userDTO){
         this.id = userDTO.getId();
         this.email = userDTO.getEmail();
