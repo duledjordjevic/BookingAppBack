@@ -13,15 +13,15 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
+
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/register")
 public class RegisterController {
+
     @Autowired
     private UserDetailsService userDetailsService;
     @Autowired
@@ -31,28 +31,31 @@ public class RegisterController {
     @Autowired
     private HostService hostService;
 
-    @PostMapping("/signup")
+    @PostMapping()
     public ResponseEntity<User> addUser(@RequestBody UserRegisterDTO userRegisterDTO, UriComponentsBuilder ucBuilder) throws Exception {
-        User existUser = this.userService.findByEmail(userRegisterDTO.getEmail());
+        User savedUser = userService.registerUser(userRegisterDTO);
 
-        if (existUser != null) {
-            throw new ResourceConflictException(userRegisterDTO.getId(), "Username already exists");
+        if(savedUser == null){
+            throw new ResourceConflictException(userRegisterDTO.getId(),"Username already exists");
         }
-        User user = new User(userRegisterDTO);
-
-        if(user.getUserType().equals(UserType.GUEST)){
+        if(savedUser.getUserType().equals(UserType.GUEST)){
             Guest guest = new Guest(userRegisterDTO);
-            guest.setUser(user);
+            guest.setUser(savedUser);
             guestService.save(guest);
 
-        }else if(user.getUserType().equals(UserType.HOST)){
+        }else if(savedUser.getUserType().equals(UserType.HOST)){
             Host host = new Host(userRegisterDTO);
-            host.setUser(user);
+            host.setUser(savedUser);
             hostService.save(host);
         }
 
-        User savedUser = this.userService.save(user);
 
-        return new ResponseEntity<>(user, HttpStatus.CREATED);
+
+        return new ResponseEntity<>(savedUser, HttpStatus.CREATED);
+    }
+
+    @GetMapping(path = "confirm")
+    public String confirm(@RequestParam("token") String token){
+        return userService.confirmToken(token);
     }
 }

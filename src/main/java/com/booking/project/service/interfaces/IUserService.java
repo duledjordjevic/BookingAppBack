@@ -2,6 +2,7 @@ package com.booking.project.service.interfaces;
 
 import com.booking.project.dto.UserCredentialsDTO;
 import com.booking.project.dto.UserDTO;
+import com.booking.project.dto.UserRegisterDTO;
 import com.booking.project.model.Guest;
 import com.booking.project.model.User;
 import com.booking.project.model.enums.UserStatus;
@@ -15,7 +16,8 @@ public interface IUserService {
     Collection<User> findAll();
 
     Optional<User> findById(Long id);
-    User findByEmail(String email);
+    Optional<User> findByEmail(String email);
+    User registerUser(UserRegisterDTO userRegisterDTO);
 
     User save(User user) throws Exception;
 
