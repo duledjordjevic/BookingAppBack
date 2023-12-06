@@ -1,6 +1,6 @@
-package com.booking.project.security;
+package com.booking.project.config.security;
 
-import com.booking.project.security.jwt.JwtRequestFilter;
+import com.booking.project.config.security.jwt.JwtRequestFilter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
