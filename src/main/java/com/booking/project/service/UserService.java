@@ -2,7 +2,7 @@ package com.booking.project.service;
 
 import com.booking.project.dto.UserCredentialsDTO;
 import com.booking.project.dto.UserDTO;
-import com.booking.project.dto.UserRegisterDTO;
+import com.booking.project.dto.UserInfoDTO;
 import com.booking.project.utils.email.IEmailSender;
 import com.booking.project.model.ConfirmationToken;
 import com.booking.project.model.User;
@@ -44,14 +44,14 @@ public class UserService implements IUserService {
     public Optional<User> findByEmail(String email){
         return repository.findByEmail(email);
     }
-    public User registerUser(UserRegisterDTO userRegisterDTO){
-        Optional<User> userExist = repository.findByEmail(userRegisterDTO.getEmail());
+    public User registerUser(UserInfoDTO userInfoDTO){
+        Optional<User> userExist = repository.findByEmail(userInfoDTO.getEmail());
 
         if(!userExist.isEmpty()){
             return null;
         }
-        String passwordEncoded = bCryptPasswordEncoder.encode(userRegisterDTO.getPassword());
-        User user = new User(userRegisterDTO);
+        String passwordEncoded = bCryptPasswordEncoder.encode(userInfoDTO.getPassword());
+        User user = new User(userInfoDTO);
         user.setPassword(passwordEncoded);
         repository.save(user);
 
@@ -61,7 +61,7 @@ public class UserService implements IUserService {
 
         String link = "http://localhost:8080/api/register/confirm?token=" + token;
 
-        emailSender.send(user.getEmail(),buildEmail(userRegisterDTO.getName(),link));
+        emailSender.send(user.getEmail(),buildEmail(userInfoDTO.getName(),link));
 
         return user;
     }

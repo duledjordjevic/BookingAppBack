@@ -1,6 +1,6 @@
 package com.booking.project.controller;
 
-import com.booking.project.dto.UserRegisterDTO;
+import com.booking.project.dto.UserInfoDTO;
 import com.booking.project.exception.ResourceConflictException;
 import com.booking.project.model.Guest;
 import com.booking.project.model.Host;
@@ -16,8 +16,6 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
 
-import java.util.Optional;
-
 @RestController
 @RequestMapping("/api/register")
 public class RegisterController {
@@ -32,19 +30,19 @@ public class RegisterController {
     private HostService hostService;
 
     @PostMapping()
-    public ResponseEntity<User> addUser(@RequestBody UserRegisterDTO userRegisterDTO, UriComponentsBuilder ucBuilder) throws Exception {
-        User savedUser = userService.registerUser(userRegisterDTO);
+    public ResponseEntity<User> addUser(@RequestBody UserInfoDTO userInfoDTO, UriComponentsBuilder ucBuilder) throws Exception {
+        User savedUser = userService.registerUser(userInfoDTO);
 
         if(savedUser == null){
-            throw new ResourceConflictException(userRegisterDTO.getId(),"Username already exists");
+            throw new ResourceConflictException(userInfoDTO.getId(),"Username already exists");
         }
         if(savedUser.getUserType().equals(UserType.GUEST)){
-            Guest guest = new Guest(userRegisterDTO);
+            Guest guest = new Guest(userInfoDTO);
             guest.setUser(savedUser);
             guestService.save(guest);
 
         }else if(savedUser.getUserType().equals(UserType.HOST)){
-            Host host = new Host(userRegisterDTO);
+            Host host = new Host(userInfoDTO);
             host.setUser(savedUser);
             hostService.save(host);
         }

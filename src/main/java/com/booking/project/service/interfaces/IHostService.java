@@ -11,6 +11,8 @@ public interface IHostService {
 
     Optional<Host> findById(Long id);
 
+    Host findByUser(Long id);
+
     HostDTO findHost(Long id);
 
     Collection<HostDTO> findHosts();
