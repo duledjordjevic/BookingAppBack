@@ -1,11 +1,9 @@
 package com.booking.project.service;
 
+import com.booking.project.dto.CommentAboutAccDTO;
 import com.booking.project.dto.CreateNotificationForGuestDTO;
 import com.booking.project.dto.NotificationForGuestDTO;
-import com.booking.project.model.Guest;
-import com.booking.project.model.Host;
-import com.booking.project.model.NotificationForGuest;
-import com.booking.project.model.NotificationForHost;
+import com.booking.project.model.*;
 import com.booking.project.repository.inteface.IGuestRepository;
 import com.booking.project.repository.inteface.IHostRepository;
 import com.booking.project.repository.inteface.INotificationForGuestRepository;
@@ -13,6 +11,7 @@ import com.booking.project.service.interfaces.INotificationForGuestService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Optional;
 
@@ -25,13 +24,17 @@ public class NotificationForGuestService implements INotificationForGuestService
     private IGuestRepository guestRepository;
 
     @Override
-    public Collection<NotificationForGuest> findAll() {
-        return notificationForGuestRepository.findAll();
+    public Collection<NotificationForGuestDTO> findAll() {
+        Collection<NotificationForGuest> notificationsForGuest = notificationForGuestRepository.findAll();
+        return mapToDto(notificationsForGuest);
     }
 
     @Override
-    public Optional<NotificationForGuest> findById(Long id) {
-        return notificationForGuestRepository.findById(id);
+    public NotificationForGuestDTO findById(Long id) {
+        Optional<NotificationForGuest> notificationForGuest = notificationForGuestRepository.findById(id);
+        if(notificationForGuest.isEmpty()) return null;
+
+        return new NotificationForGuestDTO(notificationForGuest.get());
     }
 
     @Override
@@ -45,9 +48,10 @@ public class NotificationForGuestService implements INotificationForGuestService
     }
 
     @Override
-    public Collection<NotificationForGuest> findByGuest(Long id) {
+    public Collection<NotificationForGuestDTO> findByGuest(Long id) {
         Optional<Guest> guest = guestRepository.findById(id);
-        return notificationForGuestRepository.findAllByGuest(guest);
+        Collection<NotificationForGuest> notificationsForGuest = notificationForGuestRepository.findAllByGuest(guest);
+        return mapToDto(notificationsForGuest);
     }
 
     @Override
@@ -62,5 +66,14 @@ public class NotificationForGuestService implements INotificationForGuestService
 
         save(notificationForGuest);
         return notificationForGuest;
+    }
+
+    public Collection<NotificationForGuestDTO> mapToDto(Collection<NotificationForGuest> notificationsForGuest){
+        Collection<NotificationForGuestDTO> notificationsForGuestDTOS = new ArrayList<>();
+        for(NotificationForGuest notification: notificationsForGuest){
+            NotificationForGuestDTO notificationDTO = new NotificationForGuestDTO(notification);
+            notificationsForGuestDTOS.add(notificationDTO);
+        }
+        return notificationsForGuestDTOS;
     }
 }

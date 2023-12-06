@@ -9,10 +9,10 @@ import java.util.Optional;
 
 public interface INotificationForGuestService {
 
-    Collection<NotificationForGuest> findAll();
-    Optional<NotificationForGuest> findById(Long id);
+    Collection<NotificationForGuestDTO> findAll();
+    NotificationForGuestDTO findById(Long id);
     NotificationForGuest save(NotificationForGuest notificationForGuest) throws Exception;
     void deleteById(Long id);
-    Collection<NotificationForGuest> findByGuest(Long id);
+    Collection<NotificationForGuestDTO> findByGuest(Long id);
     NotificationForGuest create(CreateNotificationForGuestDTO createNotificationForGuestDTO) throws Exception;
 }

@@ -27,9 +27,9 @@ public class NotificationForGuestController {
     }
 
     @GetMapping(value="/guest/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Collection<NotificationForGuest>> getNotificationsForGuest(@PathVariable Long id){
-        Collection<NotificationForGuest> notificationsForGuests = notificationForGuestService.findByGuest(id);
-        return new ResponseEntity<Collection<NotificationForGuest>>(notificationsForGuests, HttpStatus.OK);
+    public ResponseEntity<Collection<NotificationForGuestDTO>> getNotificationsForGuest(@PathVariable Long id){
+        Collection<NotificationForGuestDTO> notificationsForGuests = notificationForGuestService.findByGuest(id);
+        return new ResponseEntity<Collection<NotificationForGuestDTO>>(notificationsForGuests, HttpStatus.OK);
     }
 
 }

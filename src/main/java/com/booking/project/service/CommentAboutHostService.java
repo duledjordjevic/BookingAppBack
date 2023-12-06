@@ -1,6 +1,9 @@
 package com.booking.project.service;
 
+import com.booking.project.dto.CommentAboutAccDTO;
+import com.booking.project.dto.CommentAboutHostDTO;
 import com.booking.project.dto.CreateCommentAboutHostDTO;
+import com.booking.project.model.CommentAboutAcc;
 import com.booking.project.model.CommentAboutHost;
 import com.booking.project.model.Guest;
 import com.booking.project.model.Host;
@@ -11,6 +14,7 @@ import com.booking.project.service.interfaces.ICommentAboutHostService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Optional;
 
@@ -25,11 +29,17 @@ public class CommentAboutHostService implements ICommentAboutHostService {
     private IHostRepository hostRepository;
 
     @Override
-    public Collection<CommentAboutHost> findAll() { return commentAboutHostRepository.findAll(); }
+    public Collection<CommentAboutHostDTO> findAll() {
+        Collection<CommentAboutHost> commentsAboutHost = commentAboutHostRepository.findAll();
+        return mapToDto(commentsAboutHost);
+    }
 
     @Override
-    public Optional<CommentAboutHost> findById(Long id) {
-        return commentAboutHostRepository.findById(id);
+    public CommentAboutHostDTO findById(Long id) {
+        Optional<CommentAboutHost> commentAboutHost = commentAboutHostRepository.findById(id);
+        if(commentAboutHost.isEmpty()) return null;
+
+        return new CommentAboutHostDTO(commentAboutHost.get());
     }
 
     @Override
@@ -64,9 +74,10 @@ public class CommentAboutHostService implements ICommentAboutHostService {
     }
 
     @Override
-    public Collection<CommentAboutHost> findByHost(Long id){
+    public Collection<CommentAboutHostDTO> findByHost(Long id){
         Optional<Host> host = hostRepository.findById(id);
-        return commentAboutHostRepository.findAllByHost(host);
+        Collection<CommentAboutHost> commentsAboutHost = commentAboutHostRepository.findAllByHost(host);
+        return mapToDto(commentsAboutHost);
     }
 
     @Override
@@ -92,7 +103,17 @@ public class CommentAboutHostService implements ICommentAboutHostService {
     }
 
     @Override
-    public Collection<CommentAboutHost> findAllReported() {
-        return commentAboutHostRepository.findByReportedTrue();
+    public Collection<CommentAboutHostDTO> findAllReported() {
+        Collection<CommentAboutHost> commentsAboutHost = commentAboutHostRepository.findByReportedTrue();
+        return mapToDto(commentsAboutHost);
+    }
+
+    public Collection<CommentAboutHostDTO> mapToDto(Collection<CommentAboutHost> commentsAboutHost){
+        Collection<CommentAboutHostDTO> commentsAboutHostDTOS = new ArrayList<>();
+        for(CommentAboutHost comment: commentsAboutHost){
+            CommentAboutHostDTO commentDTO = new CommentAboutHostDTO(comment);
+            commentsAboutHostDTOS.add(commentDTO);
+        }
+        return commentsAboutHostDTOS;
     }
 }
