@@ -1,20 +1,9 @@
 package com.booking.project.controller;
 
 import com.booking.project.dto.UserCredentialsDTO;
-import com.booking.project.dto.UserRegisterDTO;
-import com.booking.project.exception.ResourceConflictException;
-import com.booking.project.model.Guest;
-import com.booking.project.model.Host;
 import com.booking.project.model.User;
-import com.booking.project.model.enums.UserType;
-import com.booking.project.security.jwt.JwtTokenUtil;
-import com.booking.project.service.GuestService;
-import com.booking.project.service.HostService;
-import com.booking.project.service.UserDetailsServiceImpl;
-import com.booking.project.service.UserService;
+import com.booking.project.config.security.jwt.JwtTokenUtil;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -25,7 +14,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.util.UriComponentsBuilder;
 
 @RestController
 @RequestMapping("/api/login")
