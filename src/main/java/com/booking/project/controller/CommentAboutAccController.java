@@ -27,21 +27,21 @@ public class CommentAboutAccController {
     }
 
     @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Collection<CommentAboutAcc>> getAll(){
-        Collection<CommentAboutAcc> comments = commentAboutAccService.findAll();
+    public ResponseEntity<Collection<CommentAboutAccDTO>> getAll(){
+        Collection<CommentAboutAccDTO> comments = commentAboutAccService.findAll();
         if (comments == null){
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
-        return new ResponseEntity<Collection<CommentAboutAcc>>(comments, HttpStatus.OK);
+        return new ResponseEntity<Collection<CommentAboutAccDTO>>(comments, HttpStatus.OK);
     }
 
     @GetMapping(value = "/acc/{id}",produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Collection<CommentAboutAcc>> getCommentsAboutAcc(@PathVariable Long id){
-        Collection<CommentAboutAcc> comments = commentAboutAccService.findByAcc(id);
+    public ResponseEntity<Collection<CommentAboutAccDTO>> getCommentsAboutAcc(@PathVariable Long id){
+        Collection<CommentAboutAccDTO> comments = commentAboutAccService.findByAcc(id);
         if (comments == null){
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
-        return new ResponseEntity<Collection<CommentAboutAcc>>(comments, HttpStatus.OK);
+        return new ResponseEntity<Collection<CommentAboutAccDTO>>(comments, HttpStatus.OK);
     }
 
     @DeleteMapping(value = "/{id}")
@@ -73,11 +73,11 @@ public class CommentAboutAccController {
     }
 
     @GetMapping(value = "/reported",produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Collection<CommentAboutAcc>> getReported(){
-        Collection<CommentAboutAcc> comments = commentAboutAccService.findAllReported();
+    public ResponseEntity<Collection<CommentAboutAccDTO>> getReported(){
+        Collection<CommentAboutAccDTO> comments = commentAboutAccService.findAllReported();
         if (comments == null){
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
-        return new ResponseEntity<Collection<CommentAboutAcc>>(comments, HttpStatus.OK);
+        return new ResponseEntity<Collection<CommentAboutAccDTO>>(comments, HttpStatus.OK);
     }
 }

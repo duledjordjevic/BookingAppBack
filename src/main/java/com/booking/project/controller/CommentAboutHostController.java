@@ -29,21 +29,21 @@ public class CommentAboutHostController {
     }
 
     @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Collection<CommentAboutHost>> getAll(){
-        Collection<CommentAboutHost> comments = commentAboutHostService.findAll();
+    public ResponseEntity<Collection<CommentAboutHostDTO>> getAll(){
+        Collection<CommentAboutHostDTO> comments = commentAboutHostService.findAll();
         if (comments == null){
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
-        return new ResponseEntity<Collection<CommentAboutHost>>(comments, HttpStatus.OK);
+        return new ResponseEntity<Collection<CommentAboutHostDTO>>(comments, HttpStatus.OK);
     }
 
     @GetMapping(value = "/host/{id}",produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Collection<CommentAboutHost>> getCommentsAboutHost(@PathVariable Long id){
-        Collection<CommentAboutHost> comments = commentAboutHostService.findByHost(id);
+    public ResponseEntity<Collection<CommentAboutHostDTO>> getCommentsAboutHost(@PathVariable Long id){
+        Collection<CommentAboutHostDTO> comments = commentAboutHostService.findByHost(id);
         if (comments == null){
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
-        return new ResponseEntity<Collection<CommentAboutHost>>(comments, HttpStatus.OK);
+        return new ResponseEntity<Collection<CommentAboutHostDTO>>(comments, HttpStatus.OK);
     }
 
     @DeleteMapping(value = "/{id}")
@@ -75,11 +75,11 @@ public class CommentAboutHostController {
     }
 
     @GetMapping(value = "/reported",produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Collection<CommentAboutHost>> getReported(){
-        Collection<CommentAboutHost> comments = commentAboutHostService.findAllReported();
+    public ResponseEntity<Collection<CommentAboutHostDTO>> getReported(){
+        Collection<CommentAboutHostDTO> comments = commentAboutHostService.findAllReported();
         if (comments == null){
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
-        return new ResponseEntity<Collection<CommentAboutHost>>(comments, HttpStatus.OK);
+        return new ResponseEntity<Collection<CommentAboutHostDTO>>(comments, HttpStatus.OK);
     }
 }

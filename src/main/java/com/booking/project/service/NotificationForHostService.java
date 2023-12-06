@@ -1,8 +1,11 @@
 package com.booking.project.service;
 
 import com.booking.project.dto.CreateNotificationForHostDTO;
+import com.booking.project.dto.NotificationForGuestDTO;
 import com.booking.project.dto.NotificationForHostDTO;
+import com.booking.project.model.Guest;
 import com.booking.project.model.Host;
+import com.booking.project.model.NotificationForGuest;
 import com.booking.project.model.NotificationForHost;
 import com.booking.project.repository.inteface.IHostRepository;
 import com.booking.project.repository.inteface.INotificationForHostRepository;
@@ -10,6 +13,7 @@ import com.booking.project.service.interfaces.INotificationForHostService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Optional;
 
@@ -22,13 +26,17 @@ public class NotificationForHostService implements INotificationForHostService {
     private IHostRepository hostRepository;
 
     @Override
-    public Collection<NotificationForHost> findAll() {
-        return notificationForHostRepository.findAll();
+    public Collection<NotificationForHostDTO> findAll() {
+        Collection<NotificationForHost> notificationsForHost = notificationForHostRepository.findAll();
+        return mapToDto(notificationsForHost);
     }
 
     @Override
-    public Optional<NotificationForHost> findById(Long id) {
-        return notificationForHostRepository.findById(id);
+    public NotificationForHostDTO findById(Long id) {
+        Optional<NotificationForHost> notificationForHost = notificationForHostRepository.findById(id);
+        if(notificationForHost.isEmpty()) return null;
+
+        return new NotificationForHostDTO(notificationForHost.get());
     }
 
     @Override
@@ -42,9 +50,10 @@ public class NotificationForHostService implements INotificationForHostService {
     }
 
     @Override
-    public Collection<NotificationForHost> findByHost(Long id) {
+    public Collection<NotificationForHostDTO> findByHost(Long id) {
         Optional<Host> host = hostRepository.findById(id);
-        return notificationForHostRepository.findAllByHost(host);
+        Collection<NotificationForHost> notificationsForHost = notificationForHostRepository.findAllByHost(host);
+        return mapToDto(notificationsForHost);
     }
 
     @Override
@@ -60,5 +69,14 @@ public class NotificationForHostService implements INotificationForHostService {
 
         save(notificationForHost);
         return notificationForHost;
+    }
+
+    public Collection<NotificationForHostDTO> mapToDto(Collection<NotificationForHost> notificationsForHost){
+        Collection<NotificationForHostDTO> notificationsForHostDTOS = new ArrayList<>();
+        for(NotificationForHost notification: notificationsForHost){
+            NotificationForHostDTO notificationDTO = new NotificationForHostDTO(notification);
+            notificationsForHostDTOS.add(notificationDTO);
+        }
+        return notificationsForHostDTOS;
     }
 }

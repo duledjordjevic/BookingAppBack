@@ -9,16 +9,16 @@ import java.util.Optional;
 
 public interface ICommentAboutHostService {
 
-    Collection<CommentAboutHost> findAll();
+    Collection<CommentAboutHostDTO> findAll();
 
-    Optional<CommentAboutHost> findById(Long id);
+    CommentAboutHostDTO findById(Long id);
 
     CommentAboutHost save(CommentAboutHost commentAboutHost) throws Exception;
 
     void deleteById(Long id);
     CommentAboutHost create(CreateCommentAboutHostDTO createCommentAboutHostDTO) throws Exception;
-    Collection<CommentAboutHost> findByHost(Long id);
-    Collection<CommentAboutHost> findAllReported();
+    Collection<CommentAboutHostDTO> findByHost(Long id);
+    Collection<CommentAboutHostDTO> findAllReported();
     CommentAboutHost approve(Long id, boolean approved) throws  Exception;
     CommentAboutHost report(Long id, boolean reported) throws  Exception;
 

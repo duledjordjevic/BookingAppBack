@@ -1,5 +1,7 @@
 package com.booking.project.service;
 
+import com.booking.project.dto.AccommodationDTO;
+import com.booking.project.dto.CommentAboutAccDTO;
 import com.booking.project.dto.CreateCommentAboutAccDTO;
 import com.booking.project.model.*;
 import com.booking.project.repository.inteface.IAccommodationRepository;
@@ -9,6 +11,7 @@ import com.booking.project.service.interfaces.ICommentAboutAccService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Optional;
 
@@ -22,13 +25,17 @@ public class CommentAboutAccService implements ICommentAboutAccService {
     @Autowired
     private IAccommodationRepository accommodationRepository;
     @Override
-    public Collection<CommentAboutAcc> findAll() {
-        return commentAboutAccRepository.findAll();
+    public Collection<CommentAboutAccDTO> findAll() {
+        Collection<CommentAboutAcc> commentsAboutAcc = commentAboutAccRepository.findAll();
+        return mapToDto(commentsAboutAcc);
     }
 
     @Override
-    public Optional<CommentAboutAcc> findById(Long id) {
-        return commentAboutAccRepository.findById(id);
+    public CommentAboutAccDTO findById(Long id) {
+        Optional<CommentAboutAcc> commentAboutAcc = commentAboutAccRepository.findById(id);
+        if(commentAboutAcc.isEmpty()) return null;
+
+        return new CommentAboutAccDTO(commentAboutAcc.get());
     }
 
     @Override
@@ -62,9 +69,10 @@ public class CommentAboutAccService implements ICommentAboutAccService {
     }
 
     @Override
-    public Collection<CommentAboutAcc> findByAcc(Long id) {
+    public Collection<CommentAboutAccDTO> findByAcc(Long id) {
         Optional<Accommodation> accommodation = accommodationRepository.findById(id);
-        return commentAboutAccRepository.findAllByAccommodation(accommodation);
+        Collection<CommentAboutAcc> commentsAboutAcc = commentAboutAccRepository.findAllByAccommodation(accommodation);
+        return mapToDto(commentsAboutAcc);
     }
 
     @Override
@@ -88,7 +96,17 @@ public class CommentAboutAccService implements ICommentAboutAccService {
     }
 
     @Override
-    public Collection<CommentAboutAcc> findAllReported() {
-        return commentAboutAccRepository.findByReportedTrue();
+    public Collection<CommentAboutAccDTO> findAllReported() {
+        Collection<CommentAboutAcc> commentsAboutAcc = commentAboutAccRepository.findByReportedTrue();
+        return mapToDto(commentsAboutAcc);
+    }
+
+    public Collection<CommentAboutAccDTO> mapToDto(Collection<CommentAboutAcc> commentsAboutAcc){
+        Collection<CommentAboutAccDTO> commentsAboutAccDTOS = new ArrayList<>();
+        for(CommentAboutAcc comment: commentsAboutAcc){
+            CommentAboutAccDTO commentDTO = new CommentAboutAccDTO(comment);
+            commentsAboutAccDTOS.add(commentDTO);
+        }
+        return commentsAboutAccDTOS;
     }
 }
