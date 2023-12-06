@@ -26,6 +26,10 @@ public class GuestService implements IGuestService {
     public Optional<Guest> findById(Long id) {
         return repository.findById(id);
     }
+    @Override
+    public Guest findByUser(Long id){
+        return repository.findByUserId(id);
+    }
 
     @Override
     public Guest save(Guest guest) throws Exception {

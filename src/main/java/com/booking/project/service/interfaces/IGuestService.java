@@ -12,6 +12,8 @@ public interface IGuestService {
 
     Optional<Guest> findById(Long id);
 
+    Guest findByUser(Long id);
+
     Guest save(Guest guest) throws Exception;
 
     Guest addNumberOfCancellation(Long id);

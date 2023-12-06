@@ -44,6 +44,7 @@ public class UserController {
     @GetMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<?> getUser(@PathVariable("id") Long id){
         Optional<User> user = userService.findById(id);
+
         if(user.isEmpty()){
             return new ResponseEntity<Optional<User>>(HttpStatus.NOT_FOUND);
         }
