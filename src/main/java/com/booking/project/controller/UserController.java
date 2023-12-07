@@ -1,9 +1,6 @@
 package com.booking.project.controller;
 
-import com.booking.project.dto.GuestDTO;
-import com.booking.project.dto.HostDTO;
-import com.booking.project.dto.UserCredentialsDTO;
-import com.booking.project.dto.UserDTO;
+import com.booking.project.dto.*;
 import com.booking.project.model.Guest;
 import com.booking.project.model.Host;
 import com.booking.project.model.User;
@@ -44,9 +41,23 @@ public class UserController {
     @GetMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<?> getUser(@PathVariable("id") Long id){
         Optional<User> user = userService.findById(id);
+
         if(user.isEmpty()){
             return new ResponseEntity<Optional<User>>(HttpStatus.NOT_FOUND);
         }
+        if(user.get().getUserType().equals(UserType.GUEST)){
+
+            Guest guest =  guestService.findByUser(user.get().getId());
+            UserInfoDTO userInfoDTO = new UserInfoDTO(guest,user.get());
+            return new ResponseEntity<UserInfoDTO>(userInfoDTO, HttpStatus.OK);
+
+        }else if(user.get().getUserType().equals(UserType.HOST)){
+
+            Host host = hostService.findByUser(user.get().getId());
+            UserInfoDTO userInfoDTO = new UserInfoDTO(host,user.get());
+            return new ResponseEntity<UserInfoDTO>(userInfoDTO, HttpStatus.OK);
+        }
+
         return new ResponseEntity<Optional<User>>(user, HttpStatus.OK);
     }
 

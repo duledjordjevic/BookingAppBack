@@ -1,14 +1,12 @@
 package com.booking.project.model;
 
 import com.booking.project.dto.HostDTO;
-import com.booking.project.dto.UserRegisterDTO;
+import com.booking.project.dto.UserInfoDTO;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.util.List;
 @Getter
 @Setter
 @NoArgsConstructor
@@ -37,11 +35,11 @@ public class Host extends Person{
         User user = new User(hostDTO.getUserCredentialsDTO());
         this.setUser(user);
     }
-    public Host(UserRegisterDTO userRegisterDTO){
-        this.setName(userRegisterDTO.getName());
-        this.setLastName(userRegisterDTO.getLastname());
-        this.setAddress(userRegisterDTO.getAddress());
-        this.setPhoneNumber(userRegisterDTO.getPhoneNumber());
+    public Host(UserInfoDTO userInfoDTO){
+        this.setName(userInfoDTO.getName());
+        this.setLastName(userInfoDTO.getLastname());
+        this.setAddress(userInfoDTO.getAddress());
+        this.setPhoneNumber(userInfoDTO.getPhoneNumber());
         this.setNotificationEnabled(true);
     }
 }

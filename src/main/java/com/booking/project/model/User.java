@@ -2,7 +2,7 @@ package com.booking.project.model;
 
 import com.booking.project.dto.UserCredentialsDTO;
 import com.booking.project.dto.UserDTO;
-import com.booking.project.dto.UserRegisterDTO;
+import com.booking.project.dto.UserInfoDTO;
 import com.booking.project.model.enums.UserStatus;
 import com.booking.project.model.enums.UserType;
 import jakarta.persistence.*;
@@ -64,10 +64,10 @@ public class User {
         this.email = userCredentialsDTO.getEmail();
         this.password = userCredentialsDTO.getPassword();
     }
-    public User(UserRegisterDTO userRegisterDTO){
-        this.email = userRegisterDTO.getEmail();
-        this.password = userRegisterDTO.getPassword();
-        this.userType = userRegisterDTO.getUserType();
+    public User(UserInfoDTO userInfoDTO){
+        this.email = userInfoDTO.getEmail();
+        this.password = userInfoDTO.getPassword();
+        this.userType = userInfoDTO.getUserType();
         this.isReported = false;
         this.setStatus(UserStatus.PENDING);
     }

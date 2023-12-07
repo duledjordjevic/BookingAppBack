@@ -24,6 +24,10 @@ public class HostService implements IHostService {
     public Optional<Host> findById(Long id) {
         return repository.findById(id);
     }
+    @Override
+    public Host findByUser(Long id){
+        return repository.findByUserId(id);
+    }
 
     @Override
     public HostDTO findHost(Long id) {

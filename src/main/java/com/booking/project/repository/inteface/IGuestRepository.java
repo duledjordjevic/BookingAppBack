@@ -17,4 +17,5 @@ public interface IGuestRepository extends JpaRepository<Guest, Long>{
     )
     public Collection<Accommodation> findByFavourites(
             @Param("guestId") Long id);
+    Guest findByUserId(Long id);
 }
