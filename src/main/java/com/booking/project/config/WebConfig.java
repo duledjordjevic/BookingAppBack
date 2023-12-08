@@ -7,6 +7,7 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 public class WebConfig implements WebMvcConfigurer {
     @Override
     public void addCorsMappings(CorsRegistry registry) {
-        registry.addMapping("/**").allowedOrigins("http://localhost:4200");
-    }
+        registry.addMapping("/api/**")
+                .allowedOrigins("http://localhost:4200") // Postavite domen vaše Angular aplikacije
+                .allowedMethods("GET", "POST", "PUT", "DELETE");    }
 }

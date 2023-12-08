@@ -60,20 +60,37 @@ public class UserController {
 
         return new ResponseEntity<Optional<User>>(user, HttpStatus.OK);
     }
+    @DeleteMapping(value = "/{id}")
+    public ResponseEntity<?> deleteUser(@PathVariable("id") Long id) throws Exception {
+        Boolean isUserDeleted = userService.deleteUserById(id);
 
+        if(isUserDeleted.equals(false)){
+            return new ResponseEntity<Boolean>(false, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+
+        return new ResponseEntity<Boolean>(true, HttpStatus.OK);
+    }
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<?> createUser(@RequestBody User user) throws Exception {
         User savedUser = userService.save(user);
         return new ResponseEntity<User>(savedUser, HttpStatus.CREATED);
     }
 
-    @PutMapping(value = "/{id}", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<?> updateUser(@RequestBody UserCredentialsDTO userCredentialsDTO, @PathVariable Long id) throws Exception{
-        User userForUpdate = userService.update(userCredentialsDTO, id);
+    @PutMapping(value = "/admin/{id}", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<?> updateAdmin(@RequestBody UserCredentialsDTO userCredentialsDTO, @PathVariable Long id) throws Exception{
+        User userForUpdate = userService.updateAdmin(userCredentialsDTO, id);
 
         if(userForUpdate == null) return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
 
         return new ResponseEntity<User>(userForUpdate, HttpStatus.CREATED);
+    }
+    @PutMapping(value = "/{id}", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<?> updateUser(@RequestBody UserUpdateDTO userUpdateDTO, @PathVariable Long id) throws Exception{
+        User userForUpdate = userService.update(userUpdateDTO, id);
+
+        if(userForUpdate == null) return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+
+        return new ResponseEntity<User>(userForUpdate, HttpStatus.OK);
     }
 
     @PutMapping(value = "/guest/{id}", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
@@ -92,12 +109,6 @@ public class UserController {
         if(hostForUpdate == null) return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
 
         return new ResponseEntity<>(hostForUpdate, HttpStatus.CREATED);
-    }
-
-    @DeleteMapping(value = "/{id}")
-    public ResponseEntity<?> deleteUser(@PathVariable("id") Long id){
-        userService.deleteById(id);
-        return new ResponseEntity<User>(HttpStatus.NO_CONTENT);
     }
     @PutMapping(value = "/host/{id}/userStatus/{status}", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<?> changeHostStatus(@PathVariable Long id,@PathVariable UserStatus status) throws Exception {

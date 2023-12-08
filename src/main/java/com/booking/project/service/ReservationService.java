@@ -89,7 +89,14 @@ public class ReservationService implements IReservationService {
         }
         return false;
     }
-
+    @Override
+    public Collection<Reservation> findByGuestId(Long id){
+        return reservationRepository.findByGuest(id);
+    }
+    @Override
+    public Collection<Reservation> findByHostId(Long id){
+        return reservationRepository.findByHost(id);
+    }
     @Override
     public List<ReservationDTO> filter(String title, LocalDate startDate, LocalDate endDate, ReservationStatus reservationStatus){
         Query q = em.createQuery("SELECT r FROM Reservation r JOIN FETCH r.accommodation a JOIN FETCH r.guest WHERE (LOWER(a.title) LIKE LOWER(:pattern) OR :pattern is Null)" +
