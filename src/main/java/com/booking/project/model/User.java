@@ -71,4 +71,8 @@ public class User {
         this.isReported = false;
         this.setStatus(UserStatus.PENDING);
     }
+
+    public boolean isDisabled(){
+        return status.equals(UserStatus.BLOCKED) || status.equals(UserStatus.PENDING) || status.equals(UserStatus.DELETED);
+    }
 }
