@@ -27,10 +27,11 @@ public class WebSecurityConfiguration {
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http.csrf().disable().authorizeRequests() // csrf->disabled, pošto nam JWT odrađuje zaštitu od CSRF napada          statički html i login mogu svi da pozovu
-                .requestMatchers("/*").permitAll().requestMatchers("/api/login/*").permitAll()
+                .requestMatchers("/*").permitAll().requestMatchers("/api/login").permitAll()
                 .requestMatchers("/api/register/*").permitAll()
                 .requestMatchers("/api/accommodation**").authenticated() // sav pristup API-ju mora da bude autentikovan
                 .and()
+                .cors().and()
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS); // ne koristimo HttpSession i kukije
         http.addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter.class); // JWT procesiramo pre autentikacije
 
@@ -41,8 +42,8 @@ public class WebSecurityConfiguration {
     public PasswordEncoder passwordEncoder() {
         PasswordEncoder encoder = new BCryptPasswordEncoder();// PasswordEncoderFactories.createDelegatingPasswordEncoder();
         //System.out.println(encoder.encode("admin"));
-//        return encoder;
-        return NoOpPasswordEncoder.getInstance();
+        return encoder;
+//        return NoOpPasswordEncoder.getInstance();
     }
 
     @Bean
