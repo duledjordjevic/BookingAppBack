@@ -3,19 +3,22 @@ package com.booking.project.service;
 import com.booking.project.dto.UserCredentialsDTO;
 import com.booking.project.dto.UserDTO;
 import com.booking.project.dto.UserInfoDTO;
+import com.booking.project.dto.UserUpdateDTO;
+import com.booking.project.model.*;
+import com.booking.project.model.enums.ReservationStatus;
+import com.booking.project.service.interfaces.*;
 import com.booking.project.utils.email.IEmailSender;
-import com.booking.project.model.ConfirmationToken;
-import com.booking.project.model.User;
 import com.booking.project.model.enums.UserStatus;
 import com.booking.project.model.enums.UserType;
 import com.booking.project.repository.inteface.IUserRepository;
-import com.booking.project.service.interfaces.IConfirmationTokenService;
-import com.booking.project.service.interfaces.IUserService;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cglib.core.Local;
+import org.springframework.security.crypto.bcrypt.BCrypt;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -31,6 +34,12 @@ public class UserService implements IUserService {
     private BCryptPasswordEncoder bCryptPasswordEncoder = new BCryptPasswordEncoder();
     @Autowired
     private IConfirmationTokenService confirmationTokenService;
+    @Autowired
+    private IGuestService guestService;
+    @Autowired
+    private IHostService hostService;
+    @Autowired
+    private IReservationService reservationService;
     @Override
     public Collection<User> findAll() {
         return repository.findAll();
@@ -93,7 +102,7 @@ public class UserService implements IUserService {
     }
 
     @Override
-    public User update(UserCredentialsDTO userCredentialsDTO, Long id) throws Exception{
+    public User updateAdmin(UserCredentialsDTO userCredentialsDTO, Long id) throws Exception{
         Optional<User> userForUpdate = findById(id);
 
         if(userForUpdate.isEmpty()) return null;
@@ -104,9 +113,61 @@ public class UserService implements IUserService {
         save(userForUpdate.get());
         return userForUpdate.get();
     }
+
+    @Override
+    public User update(UserUpdateDTO userUpdateDTO, Long id) throws Exception {
+        Optional<User> user = findById(id);
+        if(!BCrypt.checkpw(userUpdateDTO.getOldPassword(), user.get().getPassword())) return null;
+        if(user.isEmpty()) return null;
+        if(!userUpdateDTO.getNewPassword().equals("")){
+            String encodedPassword = bCryptPasswordEncoder.encode(userUpdateDTO.getNewPassword());
+            user.get().setPassword(encodedPassword);
+            save(user.get());
+        }
+
+        if(user.get().getUserType().equals(UserType.GUEST)){
+            Guest guest = guestService.findByUser(id);
+            guest.setName(userUpdateDTO.getName());
+            guest.setLastName(userUpdateDTO.getLastname());
+            guest.setAddress(userUpdateDTO.getAddress());
+            guest.setPhoneNumber(userUpdateDTO.getPhoneNumber());
+            guestService.save(guest);
+
+        }else if(user.get().getUserType().equals(UserType.HOST)){
+            Host host = hostService.findByUser(id);
+            host.setName(userUpdateDTO.getName());
+            host.setLastName(userUpdateDTO.getLastname());
+            host.setAddress(userUpdateDTO.getAddress());
+            host.setPhoneNumber(userUpdateDTO.getPhoneNumber());
+            hostService.save(host);
+        }
+        return user.get();
+
+    }
+
     @Override
     public void deleteById(Long id) {
         repository.deleteById(id);
+    }
+    @Override
+    public boolean deleteUserById(Long id) throws Exception {
+        Optional<User> user = findById(id);
+
+        if(user.isEmpty()) return false;
+
+        if(user.get().getUserType().equals(UserType.GUEST)){
+            Collection<Reservation> guestReservations = reservationService.findByGuestId(guestService.findByUser(id).getId());
+            if(guestReservations.size() != 0) return false;
+
+        }else if(user.get().getUserType().equals(UserType.HOST)){
+            Collection<Reservation> hostReservations = reservationService.findByHostId(hostService.findByUser(id).getId());
+            if(hostReservations.size() != 0) return false;
+        }
+
+        user.get().setStatus(UserStatus.DELETED);
+        save(user.get());
+
+        return true;
     }
     @Override
     public UserDTO changeStatus(Long id, UserStatus status, UserType userType) throws Exception {

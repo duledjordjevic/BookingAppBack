@@ -31,7 +31,8 @@ public class WebSecurityConfiguration {
                 .requestMatchers("/api/register/*").permitAll()
                 .requestMatchers("/api/accommodation**").authenticated() // sav pristup API-ju mora da bude autentikovan
                 .and()
-                .cors().and()
+                .cors()
+                .and()
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS); // ne koristimo HttpSession i kukije
         http.addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter.class); // JWT procesiramo pre autentikacije
 

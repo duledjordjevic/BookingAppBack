@@ -21,6 +21,7 @@ public interface IReservationService {
     Reservation save(Reservation reservation) throws Exception;
 
     Boolean deleteById(Long id);
+    Collection<Reservation> findByGuestId(Long id);
 
     Reservation create(CreateReservationDTO createReservationDTO, double price, ReservationMethod reservationMethod) throws Exception;
 
@@ -29,4 +30,6 @@ public interface IReservationService {
     Reservation updateStatus(Long id, ReservationStatus reservationStatus) throws Exception;
 
     Reservation cancelReservation(Long id);
+
+    Collection<Reservation> findByHostId(Long id);
 }
