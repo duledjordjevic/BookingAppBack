@@ -12,6 +12,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Function;
+import java.util.stream.Collectors;
 
 @Component
 public class JwtTokenUtil implements Serializable {
@@ -59,7 +60,7 @@ public class JwtTokenUtil implements Serializable {
     // Serialization(https://tools.ietf.org/html/draft-ietf-jose-json-web-signature-41#section-3.1)
     // compaction of the JWT to a URL-safe string
     private String doGenerateToken(Map<String, Object> claims, String subject, UserDetails userDetails) {
-        return Jwts.builder().setClaims(claims).setSubject(subject).claim("Authorities", userDetails.getAuthorities()).setIssuedAt(new Date(System.currentTimeMillis()))
+        return Jwts.builder().setClaims(claims).setSubject(subject).claim("Authorities", userDetails.getAuthorities().stream().map(authority -> authority.getAuthority().replace("ROLE_", "")).collect(Collectors.toSet())).setIssuedAt(new Date(System.currentTimeMillis()))
                 .setExpiration(new Date(System.currentTimeMillis() + JWT_TOKEN_VALIDITY * 1000))
                 .signWith(SignatureAlgorithm.HS512, secret).compact();
     }
