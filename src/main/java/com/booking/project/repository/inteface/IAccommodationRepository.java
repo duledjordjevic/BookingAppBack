@@ -34,4 +34,5 @@ public interface IAccommodationRepository extends JpaRepository<Accommodation, L
             @Param("endPrice") Integer endPrice
     );
 
+    Collection<Accommodation> findAccommodationsByIsAvailableForReservationFalse();
 }

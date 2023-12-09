@@ -185,6 +185,20 @@ public class AccommodationService implements IAccommodationService {
     }
 
     @Override
+    public Collection<AccommodationCardDTO> findAccommodationsNotAvailableForReservation() throws IOException {
+        Collection<Accommodation> accommodations = accommodationRepository.findAccommodationsByIsAvailableForReservationFalse();
+
+        List<AccommodationCardDTO> accommodationCards = new ArrayList<AccommodationCardDTO>();
+        for(Accommodation accommodation : accommodations){
+            AccommodationCardDTO card = new AccommodationCardDTO(accommodation);
+            card.setImage(imageService.getCoverImage(accommodation.getImages().split(",")[0]));
+            accommodationCards.add(card);
+        }
+
+        return accommodationCards;
+    }
+
+    @Override
     public AccommodationDTO changeAccommodationReservationMethod(Long id, ReservationMethod reservationMethod) throws Exception {
         Optional<Accommodation> accommodation = findById(id);
 

@@ -86,7 +86,7 @@ public class Accommodation {
         this.description = accommodationDTO.getDescription();
         this.address = accommodationDTO.getAddress();
         this.amenities=  accommodationDTO.getAmenities();
-        this.images = accommodationDTO.getImages();
+//        this.images = accommodationDTO.getImages();
         this.minGuests = accommodationDTO.getMinGuest();
         this.maxGuests = accommodationDTO.getMaxGuest();
         this.type = accommodationDTO.getType();

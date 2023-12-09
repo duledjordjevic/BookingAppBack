@@ -67,4 +67,10 @@ public class ImageService {
 
         return imageBytesList;
     }
+
+    public byte[] getCoverImage(String imageName) throws IOException {
+        String imageDirectory = "src/main/resources/static/images/accommodations";
+
+        return getImage(imageDirectory, imageName);
+    }
 }

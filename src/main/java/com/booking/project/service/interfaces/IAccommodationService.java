@@ -35,6 +35,8 @@ public interface IAccommodationService {
     Collection<AccommodationCardDTO> filterAccommodations(LocalDate startDate, LocalDate endDate, Integer numOfGuests, String city, Integer startPrice, Integer endPrice);
     AccommodationDTO findAccommodationsDetails(Long id) throws IOException;
 
+    Collection<AccommodationCardDTO> findAccommodationsNotAvailableForReservation() throws IOException;
+
     AccommodationDTO changeAccommodationReservationMethod(Long id, ReservationMethod reservationMethod) throws Exception;
 
     AccommodationDTO saveImages(String images, Long accommodationId) throws Exception;
