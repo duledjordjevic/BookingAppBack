@@ -7,6 +7,9 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardCopyOption;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
 import java.util.UUID;
 
 @Service
@@ -48,5 +51,20 @@ public class ImageService {
         } else {
             return "Failed"; // Handle missing images
         }
+    }
+
+
+    public List<byte[]> getImages(String[] imageNames) throws IOException {
+        String imageDirectory = "src/main/resources/static/images/accommodations";
+
+        List<byte[]> imageBytesList = new ArrayList<>();
+
+        // Fetch image data as byte arrays
+        for (String imageName : imageNames) {
+            byte[] imageBytes = getImage(imageDirectory, imageName);
+            imageBytesList.add(imageBytes);
+        }
+
+        return imageBytesList;
     }
 }

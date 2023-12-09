@@ -23,7 +23,7 @@ public class ImageController {
     private IAccommodationService accommodationService;
 
     @PostMapping("/{accommodationId}")
-    public ResponseEntity<?> createAd (@RequestParam("image") MultipartFile[] accImages, @PathVariable Long accommodationId) throws Exception {
+    public ResponseEntity<?> createAccommodationImages (@RequestParam("image") MultipartFile[] accImages, @PathVariable Long accommodationId) throws Exception {
         String uploadDirectory = "src/main/resources/static/images/accommodations";
         StringBuilder accImagesString = new StringBuilder();
 
@@ -39,19 +39,9 @@ public class ImageController {
     @GetMapping("/{accommodationId}")
     public ResponseEntity<List<byte[]>> getImages(@PathVariable Long accommodationId) throws IOException {
         try {
-            String imageDirectory = "src/main/resources/static/images/accommodations";
-
-            // Retrieve image filenames associated with the specified entity (adsId) from the database
             String[] imageNames = accommodationService.getImages(accommodationId).split(",");
-            List<byte[]> imageBytesList = new ArrayList<>();
 
-            // Fetch image data as byte arrays
-            for (String imageName : imageNames) {
-                byte[] imageBytes = imageService.getImage(imageDirectory, imageName);
-                imageBytesList.add(imageBytes);
-            }
-
-            // Respond with the image data and an OK status code
+            List<byte[]> imageBytesList = imageService.getImages(imageNames);
             return ResponseEntity.ok().body(imageBytesList);
         } catch (Exception e) {
             // Handle exceptions and provide appropriate error responses
