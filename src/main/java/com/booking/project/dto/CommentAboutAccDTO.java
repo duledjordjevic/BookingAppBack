@@ -6,6 +6,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.time.LocalDate;
+
 @Getter
 @Setter
 @NoArgsConstructor
@@ -14,17 +16,19 @@ public class CommentAboutAccDTO {
 
     private Long id;
     private int rating;
-    private boolean isReported;
     private String content;
-    private boolean isApproved;
-    private GuestDTO guestDTO;
+    private String guestName;
+    private String guestLastName;
+    private String guestEmail;
+    private LocalDate date;
 
     public CommentAboutAccDTO(CommentAboutAcc commentAboutAcc){
         this.id = commentAboutAcc.getId();
         this.rating = commentAboutAcc.getRating();
-        this.isReported = commentAboutAcc.isReported();
         this.content = commentAboutAcc.getContent();
-        this.isApproved = commentAboutAcc.isApproved();
-        this.guestDTO = new GuestDTO(commentAboutAcc.getGuest());
+        this.guestEmail = commentAboutAcc.getGuest().getUser().getEmail();
+        this.guestName = commentAboutAcc.getGuest().getName();
+        this.guestLastName = commentAboutAcc.getGuest().getLastName();
+        this.date = commentAboutAcc.getDate();
     }
 }
