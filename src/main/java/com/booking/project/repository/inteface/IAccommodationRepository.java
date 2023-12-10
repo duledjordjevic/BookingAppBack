@@ -1,6 +1,7 @@
 package com.booking.project.repository.inteface;
 
 import com.booking.project.model.Accommodation;
+import com.booking.project.model.enums.AccommodationApprovalStatus;
 import com.booking.project.model.enums.AccommodationStatus;
 import com.booking.project.model.enums.Amenities;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -36,5 +37,5 @@ public interface IAccommodationRepository extends JpaRepository<Accommodation, L
             @Param("amenitiesParam") Collection<Amenities> amenitiesParam,
             @Param("amenitieSize") int amenitieSize
     );
-    Collection<Accommodation> findAccommodationsByIsAvailableForReservationFalse();
+    Collection<Accommodation> findAccommodationsByAccommodationApprovalStatus(AccommodationApprovalStatus approvalStatus);
 }

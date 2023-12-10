@@ -3,6 +3,7 @@ package com.booking.project.service.interfaces;
 import com.booking.project.dto.AccommodationCardDTO;
 import com.booking.project.dto.AccommodationDTO;
 import com.booking.project.model.Accommodation;
+import com.booking.project.model.enums.AccommodationApprovalStatus;
 import com.booking.project.model.enums.AccommodationStatus;
 import com.booking.project.model.enums.Amenities;
 import com.booking.project.model.enums.ReservationMethod;
@@ -30,12 +31,12 @@ public interface IAccommodationService {
 
     void deleteById(Long id);
 
-    AccommodationDTO changeAvailableStatus(Long id, Boolean isAvailable) throws Exception;
+    AccommodationDTO changeAvailableStatus(Long id, AccommodationApprovalStatus approvalStatus) throws Exception;
     Collection<Accommodation> findAccomodationsByHostId(Long id);
     Collection<AccommodationCardDTO> filterAccommodations(LocalDate startDate, LocalDate endDate, Integer numOfGuests, String city, Integer startPrice, Integer endPrice,Collection<Amenities> amenities);
     AccommodationDTO findAccommodationsDetails(Long id) throws IOException;
 
-    Collection<AccommodationCardDTO> findAccommodationsNotAvailableForReservation() throws IOException;
+    Collection<AccommodationCardDTO> findApprovalPendingAccommodations() throws IOException;
 
     AccommodationDTO changeAccommodationReservationMethod(Long id, ReservationMethod reservationMethod) throws Exception;
 

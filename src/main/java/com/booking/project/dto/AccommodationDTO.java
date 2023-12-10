@@ -4,10 +4,7 @@ import com.booking.project.model.Accommodation;
 import com.booking.project.model.Address;
 import com.booking.project.model.Photo;
 import com.booking.project.model.PriceList;
-import com.booking.project.model.enums.AccomodationType;
-import com.booking.project.model.enums.Amenities;
-import com.booking.project.model.enums.CancellationPolicy;
-import com.booking.project.model.enums.ReservationMethod;
+import com.booking.project.model.enums.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -32,7 +29,7 @@ public class AccommodationDTO {
     private AccomodationType type;
     private CancellationPolicy cancellationPolicy;
     private ReservationMethod reservationMethod;
-    private boolean isAvailableForReservation;
+    private AccommodationApprovalStatus accommodationApprovalStatus;
     private boolean isPriceForEntireAcc;
     private Set<PriceList> prices;
     private Long hostId;
@@ -49,7 +46,7 @@ public class AccommodationDTO {
         this.prices = accommodation.getPrices();
         this.hostId = accommodation.getHost().getId();
         this.isPriceForEntireAcc = accommodation.isPriceForEntireAcc();
-        this.isAvailableForReservation = accommodation.isAvailableForReservation();
+        this.accommodationApprovalStatus = accommodation.getAccommodationApprovalStatus();
         this.reservationMethod = accommodation.getReservationMethod();
         this.cancellationPolicy = accommodation.getCancellationPolicy();
     }

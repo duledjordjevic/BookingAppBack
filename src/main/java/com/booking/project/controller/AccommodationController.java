@@ -4,6 +4,7 @@ import com.booking.project.dto.AccommodationCardDTO;
 import com.booking.project.dto.AccommodationDTO;
 import com.booking.project.model.Accommodation;
 import com.booking.project.model.Host;
+import com.booking.project.model.enums.AccommodationApprovalStatus;
 import com.booking.project.model.enums.Amenities;
 import com.booking.project.model.enums.ReservationMethod;
 import com.booking.project.service.interfaces.IAccommodationService;
@@ -51,9 +52,10 @@ public class AccommodationController {
         return new ResponseEntity<AccommodationDTO>(accommodationDTO, HttpStatus.OK);
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     @GetMapping(value = "/adminApproving", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<?> getAccommodationsForApproving() throws IOException {
-        Collection<AccommodationCardDTO> accommodationCards = accommodationService.findAccommodationsNotAvailableForReservation();
+        Collection<AccommodationCardDTO> accommodationCards = accommodationService.findApprovalPendingAccommodations();
         if(accommodationCards == null)    return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 
         return new ResponseEntity<Collection<AccommodationCardDTO>>(accommodationCards, HttpStatus.OK);
@@ -74,10 +76,10 @@ public class AccommodationController {
         accommodationService.deleteById(id);
         return new ResponseEntity<Accommodation>(HttpStatus.NO_CONTENT);
     }
-    @PreAuthorize("hasRole('HOST')")
-    @PutMapping(value ="/{id}/isAvailable/{isAvailable}", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<?> changeAccommodationAvailableStatus(@PathVariable Long id,@PathVariable Boolean isAvailable) throws Exception {
-        AccommodationDTO accommodationDTO = accommodationService.changeAvailableStatus(id,isAvailable);
+    @PreAuthorize("hasRole('ADMIN')")
+    @PutMapping(value ="/{id}/isAvailable", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<?> changeAccommodationAvailableStatus(@PathVariable Long id,@RequestBody AccommodationApprovalStatus approvalStatus) throws Exception {
+        AccommodationDTO accommodationDTO = accommodationService.changeAvailableStatus(id, approvalStatus);
 
         if(accommodationDTO == null) return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
 
