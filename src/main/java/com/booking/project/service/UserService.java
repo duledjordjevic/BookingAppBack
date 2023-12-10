@@ -1,9 +1,6 @@
 package com.booking.project.service;
 
-import com.booking.project.dto.UserCredentialsDTO;
-import com.booking.project.dto.UserDTO;
-import com.booking.project.dto.UserInfoDTO;
-import com.booking.project.dto.UserUpdateDTO;
+import com.booking.project.dto.*;
 import com.booking.project.model.*;
 import com.booking.project.model.enums.ReservationStatus;
 import com.booking.project.service.interfaces.*;
@@ -104,13 +101,14 @@ public class UserService implements IUserService {
     }
 
     @Override
-    public User updateAdmin(UserCredentialsDTO userCredentialsDTO, Long id) throws Exception{
+    public User updateAdmin(UserAdminUpdateDTO userAdminDTO, Long id) throws Exception{
         Optional<User> userForUpdate = findById(id);
 
         if(userForUpdate.isEmpty()) return null;
+        if(!BCrypt.checkpw(userAdminDTO.getOldPassword(), userForUpdate.get().getPassword())) return null;
 
-        userForUpdate.get().setEmail(userCredentialsDTO.getEmail());
-        userForUpdate.get().setPassword(userCredentialsDTO.getPassword());
+        String encodedPassword = bCryptPasswordEncoder.encode(userAdminDTO.getNewPassword());
+        userForUpdate.get().setPassword(encodedPassword);
 
         save(userForUpdate.get());
         return userForUpdate.get();
@@ -152,10 +150,11 @@ public class UserService implements IUserService {
         repository.deleteById(id);
     }
     @Override
-    public boolean deleteUserById(Long id) throws Exception {
+    public boolean deleteUserById(UserDeleteDTO userDeleteDTO,Long id) throws Exception {
         Optional<User> user = findById(id);
 
         if(user.isEmpty()) return false;
+        if(!BCrypt.checkpw(userDeleteDTO.getPassword(), user.get().getPassword())) return false;
 
         if(user.get().getUserType().equals(UserType.GUEST)){
             Collection<Reservation> guestReservations = reservationService.findByGuestId(guestService.findByUser(id).getId());

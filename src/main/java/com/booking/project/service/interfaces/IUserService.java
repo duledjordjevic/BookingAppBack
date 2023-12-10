@@ -1,9 +1,6 @@
 package com.booking.project.service.interfaces;
 
-import com.booking.project.dto.UserCredentialsDTO;
-import com.booking.project.dto.UserDTO;
-import com.booking.project.dto.UserInfoDTO;
-import com.booking.project.dto.UserUpdateDTO;
+import com.booking.project.dto.*;
 import com.booking.project.model.User;
 import com.booking.project.model.enums.UserStatus;
 import com.booking.project.model.enums.UserType;
@@ -22,9 +19,9 @@ public interface IUserService {
     User save(User user) throws Exception;
 
     void deleteById(Long id);
-    boolean deleteUserById(Long id) throws Exception;
+    boolean deleteUserById(UserDeleteDTO userDeleteDTO,Long id) throws Exception;
 
-    User updateAdmin(UserCredentialsDTO userCredentialsDTO, Long id) throws Exception;
+    User updateAdmin(UserAdminUpdateDTO userAdminDTO, Long id) throws Exception;
     User update(UserUpdateDTO userUpdateDTO, Long id) throws Exception;
 
     UserDTO changeStatus(Long id, UserStatus status, UserType userType) throws Exception;

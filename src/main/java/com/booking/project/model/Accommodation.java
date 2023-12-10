@@ -37,7 +37,7 @@ public class Accommodation {
     @JoinTable(name = "amenities", joinColumns = @JoinColumn(name = "accommodationID"))
     @Enumerated(EnumType.STRING)
     private List<Amenities> amenities;
-
+    @Column(columnDefinition="text", length=10485760)
     private String  images;
 
     @Column(nullable = false)
