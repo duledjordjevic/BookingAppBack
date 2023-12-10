@@ -11,6 +11,8 @@ import com.booking.project.service.interfaces.IAccommodationService;
 import jakarta.persistence.EntityManager;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.io.IOException;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -23,6 +25,8 @@ public class AccommodationService implements IAccommodationService {
     private IAccommodationRepository accommodationRepository;
     @Autowired
     private EntityManager em;
+    @Autowired
+    private ImageService imageService;
     @Override
     public Collection<AccommodationDTO> findAll() {
 
@@ -52,7 +56,7 @@ public class AccommodationService implements IAccommodationService {
         accommodation.get().setDescription(accommodationDTO.getDescription());
         accommodation.get().setAddress(accommodationDTO.getAddress());
         accommodation.get().setAmenities(accommodationDTO.getAmenities());
-        accommodation.get().setImages(accommodationDTO.getImages());
+//        accommodation.get().setImages(accommodationDTO.getImages());
         accommodation.get().setMinGuests(accommodationDTO.getMinGuest());
         accommodation.get().setMaxGuests(accommodationDTO.getMaxGuest());
         accommodation.get().setType(accommodationDTO.getType());
@@ -152,9 +156,12 @@ public class AccommodationService implements IAccommodationService {
 
         return accommodationDTO;
     }
+    @Override
     public Collection<Accommodation> findAccomodationsByHostId(Long id){
         return accommodationRepository.findAccommodationsByHostId(id);
     }
+
+    @Override
     public Collection<AccommodationCardDTO> filterAccommodations(LocalDate startDate, LocalDate endDate, Integer numOfGuests, String city, Integer startPrice, Integer endPrice){
         Collection<Accommodation> accommodations = accommodationRepository.filterAccommodations(startDate,endDate,city,numOfGuests,startPrice,endPrice);
 
@@ -166,13 +173,29 @@ public class AccommodationService implements IAccommodationService {
 
         return accommodationDTOS;
     }
-    public AccommodationDTO findAccommodationsDetails(Long id){
+    @Override
+    public AccommodationDTO findAccommodationsDetails(Long id) throws IOException {
         Optional<Accommodation> accommodation = findById(id);
 
         if(accommodation.isEmpty()) return null;
 
         AccommodationDTO accommodationDTO = new AccommodationDTO(accommodation.get());
+        accommodationDTO.setImages(imageService.getImages(accommodation.get().getImages().split(",")));
         return accommodationDTO;
+    }
+
+    @Override
+    public Collection<AccommodationCardDTO> findAccommodationsNotAvailableForReservation() throws IOException {
+        Collection<Accommodation> accommodations = accommodationRepository.findAccommodationsByIsAvailableForReservationFalse();
+
+        List<AccommodationCardDTO> accommodationCards = new ArrayList<AccommodationCardDTO>();
+        for(Accommodation accommodation : accommodations){
+            AccommodationCardDTO card = new AccommodationCardDTO(accommodation);
+            card.setImage(imageService.getCoverImage(accommodation.getImages().split(",")[0]));
+            accommodationCards.add(card);
+        }
+
+        return accommodationCards;
     }
 
     @Override

@@ -16,6 +16,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
+import java.io.IOException;
 import java.time.LocalDate;
 import java.util.Collection;
 import java.util.EnumSet;
@@ -43,11 +44,19 @@ public class AccommodationController {
     }
 
     @GetMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<?> getAccommodationDetails(@PathVariable("id") Long id){
+    public ResponseEntity<?> getAccommodationDetails(@PathVariable("id") Long id) throws IOException {
         AccommodationDTO accommodationDTO = accommodationService.findAccommodationsDetails(id);
         if(accommodationDTO == null)    return new ResponseEntity<AccommodationDTO>(HttpStatus.NOT_FOUND);
 
         return new ResponseEntity<AccommodationDTO>(accommodationDTO, HttpStatus.OK);
+    }
+
+    @GetMapping(value = "/adminApproving", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<?> getAccommodationsForApproving() throws IOException {
+        Collection<AccommodationCardDTO> accommodationCards = accommodationService.findAccommodationsNotAvailableForReservation();
+        if(accommodationCards == null)    return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+
+        return new ResponseEntity<Collection<AccommodationCardDTO>>(accommodationCards, HttpStatus.OK);
     }
 
     @PreAuthorize("hasRole('HOST')")

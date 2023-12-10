@@ -6,6 +6,8 @@ import com.booking.project.model.Accommodation;
 import com.booking.project.model.enums.AccommodationStatus;
 import com.booking.project.model.enums.Amenities;
 import com.booking.project.model.enums.ReservationMethod;
+
+import java.io.IOException;
 import java.time.LocalDate;
 import java.util.Collection;
 import java.util.EnumSet;
@@ -31,7 +33,9 @@ public interface IAccommodationService {
     AccommodationDTO changeAvailableStatus(Long id, Boolean isAvailable) throws Exception;
     Collection<Accommodation> findAccomodationsByHostId(Long id);
     Collection<AccommodationCardDTO> filterAccommodations(LocalDate startDate, LocalDate endDate, Integer numOfGuests, String city, Integer startPrice, Integer endPrice);
-    AccommodationDTO findAccommodationsDetails(Long id);
+    AccommodationDTO findAccommodationsDetails(Long id) throws IOException;
+
+    Collection<AccommodationCardDTO> findAccommodationsNotAvailableForReservation() throws IOException;
 
     AccommodationDTO changeAccommodationReservationMethod(Long id, ReservationMethod reservationMethod) throws Exception;
 
