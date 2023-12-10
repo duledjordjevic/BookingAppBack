@@ -106,9 +106,10 @@ public class AccommodationController {
             @RequestParam(required = false) @DateTimeFormat(pattern = "dd-MM-yyyy") LocalDate startDate,
             @RequestParam(required = false) @DateTimeFormat(pattern = "dd-MM-yyyy") LocalDate endDate,
             @RequestParam(required = false) Integer startPrice,
-            @RequestParam(required = false) Integer endPrice
+            @RequestParam(required = false) Integer endPrice,
+            @RequestParam(required = false) Collection<Amenities> amenities
     ) {
-        Collection<AccommodationCardDTO> accommodations = accommodationService.filterAccommodations(startDate,endDate,numberOfGuests,city,startPrice,endPrice);
+        Collection<AccommodationCardDTO> accommodations = accommodationService.filterAccommodations(startDate,endDate,numberOfGuests,city,startPrice,endPrice,amenities);
 
         return new ResponseEntity<Collection<AccommodationCardDTO>>(accommodations, HttpStatus.OK);
     }
