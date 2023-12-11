@@ -1,5 +1,6 @@
 package com.booking.project.controller;
 
+import com.booking.project.dto.AccommodationApprovalStatusDTO;
 import com.booking.project.dto.AccommodationCardDTO;
 import com.booking.project.dto.AccommodationDTO;
 import com.booking.project.model.Accommodation;
@@ -77,9 +78,9 @@ public class AccommodationController {
         return new ResponseEntity<Accommodation>(HttpStatus.NO_CONTENT);
     }
     @PreAuthorize("hasRole('ADMIN')")
-    @PutMapping(value ="/{id}/isAvailable", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<?> changeAccommodationAvailableStatus(@PathVariable Long id,@RequestBody AccommodationApprovalStatus approvalStatus) throws Exception {
-        AccommodationDTO accommodationDTO = accommodationService.changeAvailableStatus(id, approvalStatus);
+    @PutMapping(value ="/{id}/approvalStatus", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<?> changeAccommodationAvailableStatus(@PathVariable Long id, @RequestBody AccommodationApprovalStatusDTO approvalStatus) throws Exception {
+        AccommodationDTO accommodationDTO = accommodationService.changeAvailableStatus(id, approvalStatus.getApprovalStatus());
 
         if(accommodationDTO == null) return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
 

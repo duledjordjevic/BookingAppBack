@@ -43,8 +43,8 @@ public class WebSecurityConfiguration {
     public PasswordEncoder passwordEncoder() {
         PasswordEncoder encoder = new BCryptPasswordEncoder();// PasswordEncoderFactories.createDelegatingPasswordEncoder();
         //System.out.println(encoder.encode("admin"));
-//        return encoder;
-        return NoOpPasswordEncoder.getInstance();
+        return encoder;
+//        return NoOpPasswordEncoder.getInstance();
     }
 
     @Bean

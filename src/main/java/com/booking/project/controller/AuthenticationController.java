@@ -56,7 +56,7 @@ public class AuthenticationController {
 
             return new ResponseEntity<>("You successfully logged out!", HttpStatus.OK);
         } else {
-            throw new RuntimeException("User is not authenticated!");
+            return new ResponseEntity<>("User is not authenticated!", HttpStatus.UNAUTHORIZED);
         }
 
     }
