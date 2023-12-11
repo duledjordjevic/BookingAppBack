@@ -1,10 +1,7 @@
 package com.booking.project.model;
 
 import com.booking.project.dto.AccommodationDTO;
-import com.booking.project.model.enums.AccomodationType;
-import com.booking.project.model.enums.Amenities;
-import com.booking.project.model.enums.CancellationPolicy;
-import com.booking.project.model.enums.ReservationMethod;
+import com.booking.project.model.enums.*;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -54,8 +51,12 @@ public class Accommodation {
     @Enumerated(EnumType.STRING)
     private CancellationPolicy cancellationPolicy;
 
+//    @Column(nullable = false)
+//    private boolean isAvailableForReservation;
+
     @Column(nullable = false)
-    private boolean isAvailableForReservation;
+    @Enumerated(EnumType.STRING)
+    private AccommodationApprovalStatus accommodationApprovalStatus;
 
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)
@@ -92,7 +93,7 @@ public class Accommodation {
         this.type = accommodationDTO.getType();
         this.prices = accommodationDTO.getPrices();
         this.cancellationPolicy = accommodationDTO.getCancellationPolicy();
-        this.isAvailableForReservation = accommodationDTO.isAvailableForReservation();
+        this.accommodationApprovalStatus = accommodationDTO.getAccommodationApprovalStatus();
         this.reservationMethod = accommodationDTO.getReservationMethod();
         this.isPriceForEntireAcc = accommodationDTO.isPriceForEntireAcc();
 

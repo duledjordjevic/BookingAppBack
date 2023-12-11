@@ -64,7 +64,7 @@ public class UserService implements IUserService {
         repository.save(user);
 
         String token = UUID.randomUUID().toString();
-        ConfirmationToken confirmationToken = new ConfirmationToken(token,LocalDateTime.now(),LocalDateTime.now().plusMinutes(15),user);
+        ConfirmationToken confirmationToken = new ConfirmationToken(token,LocalDateTime.now(),LocalDateTime.now().plusHours(24),user);
         confirmationTokenService.saveConfirmationToken(confirmationToken);
 
         String link = "http://localhost:8080/api/register/confirm?token=" + token;

@@ -4,6 +4,7 @@ import com.booking.project.dto.AccommodationDTO;
 import com.booking.project.dto.AccommodationCardDTO;
 import com.booking.project.model.Accommodation;
 import com.booking.project.model.PriceList;
+import com.booking.project.model.enums.AccommodationApprovalStatus;
 import com.booking.project.model.enums.AccommodationStatus;
 import com.booking.project.model.enums.Amenities;
 import com.booking.project.model.enums.ReservationMethod;
@@ -63,7 +64,7 @@ public class AccommodationService implements IAccommodationService {
         accommodation.get().setType(accommodationDTO.getType());
         accommodation.get().setCancellationPolicy(accommodationDTO.getCancellationPolicy());
         accommodation.get().setReservationMethod(accommodationDTO.getReservationMethod());
-        accommodation.get().setAvailableForReservation(accommodationDTO.isAvailableForReservation());
+        accommodation.get().setAccommodationApprovalStatus(accommodationDTO.getAccommodationApprovalStatus());
         accommodation.get().setPriceForEntireAcc(accommodationDTO.isPriceForEntireAcc());
         accommodation.get().setPrices(accommodationDTO.getPrices());
 
@@ -88,7 +89,7 @@ public class AccommodationService implements IAccommodationService {
         if(accommodation.isEmpty())  return new ArrayList<Object>(List.of(false));
 
         double price = 0;
-        if(accommodation.get().isAvailableForReservation() && (accommodation.get().getMinGuests() <= numberOfGuests && accommodation.get().getMaxGuests() >= numberOfGuests) ){
+        if(accommodation.get().getAccommodationApprovalStatus().equals(AccommodationApprovalStatus.APPROVED) && (accommodation.get().getMinGuests() <= numberOfGuests && accommodation.get().getMaxGuests() >= numberOfGuests) ){
             List<PriceList> priceLists = new ArrayList<PriceList>();
             for(PriceList priceList : accommodation.get().getPrices()){
                 if((priceList.getDate().isAfter(startDate) || priceList.getDate().isEqual(startDate))  && (priceList.getDate().isBefore(endDate) || priceList.getDate().isEqual(endDate))){
@@ -145,12 +146,12 @@ public class AccommodationService implements IAccommodationService {
     }
 
     @Override
-    public AccommodationDTO changeAvailableStatus(Long id, Boolean isAvailable) throws Exception {
+    public AccommodationDTO changeAvailableStatus(Long id, AccommodationApprovalStatus approvalStatus) throws Exception {
         Optional<Accommodation> accommodation = findById(id);
 
         if(accommodation.isEmpty()) return null;
 
-        accommodation.get().setAvailableForReservation(isAvailable);
+        accommodation.get().setAccommodationApprovalStatus(approvalStatus);
         save(accommodation.get());
 
         AccommodationDTO accommodationDTO = new AccommodationDTO(accommodation.get());
@@ -185,8 +186,8 @@ public class AccommodationService implements IAccommodationService {
     }
 
     @Override
-    public Collection<AccommodationCardDTO> findAccommodationsNotAvailableForReservation() throws IOException {
-        Collection<Accommodation> accommodations = accommodationRepository.findAccommodationsByIsAvailableForReservationFalse();
+    public Collection<AccommodationCardDTO> findApprovalPendingAccommodations() throws IOException {
+        Collection<Accommodation> accommodations = accommodationRepository.findAccommodationsByAccommodationApprovalStatus(AccommodationApprovalStatus.PENDING);
 
         List<AccommodationCardDTO> accommodationCards = new ArrayList<AccommodationCardDTO>();
         for(Accommodation accommodation : accommodations){
