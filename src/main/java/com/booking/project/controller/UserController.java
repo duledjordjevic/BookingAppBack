@@ -61,9 +61,9 @@ public class UserController {
 
         return new ResponseEntity<Optional<User>>(user, HttpStatus.OK);
     }
-    @DeleteMapping(value = "/{id}")
-    public ResponseEntity<?> deleteUser(@PathVariable("id") Long id) throws Exception {
-        Boolean isUserDeleted = userService.deleteUserById(id);
+    @PutMapping (value = "/delete/{id}")
+    public ResponseEntity<?> deleteUser(@RequestBody UserDeleteDTO userDeleteDTO,@PathVariable("id") Long id) throws Exception {
+        Boolean isUserDeleted = userService.deleteUserById(userDeleteDTO,id);
 
         if(isUserDeleted.equals(false)){
             return new ResponseEntity<Boolean>(false, HttpStatus.INTERNAL_SERVER_ERROR);
@@ -78,8 +78,8 @@ public class UserController {
     }
 
     @PutMapping(value = "/admin/{id}", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<?> updateAdmin(@RequestBody UserCredentialsDTO userCredentialsDTO, @PathVariable Long id) throws Exception{
-        User userForUpdate = userService.updateAdmin(userCredentialsDTO, id);
+    public ResponseEntity<?> updateAdmin(@RequestBody UserAdminUpdateDTO userAdminDTO, @PathVariable Long id) throws Exception{
+        User userForUpdate = userService.updateAdmin(userAdminDTO, id);
 
         if(userForUpdate == null) return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
 
