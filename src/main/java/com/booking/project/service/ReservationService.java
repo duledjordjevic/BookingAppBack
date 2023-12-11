@@ -13,6 +13,7 @@ import com.booking.project.model.enums.AccommodationStatus;
 import com.booking.project.repository.inteface.IGuestRepository;
 import com.booking.project.repository.inteface.IReservationRepository;
 import com.booking.project.service.interfaces.IAccommodationService;
+import com.booking.project.service.interfaces.IGuestService;
 import com.booking.project.service.interfaces.IReservationService;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.Query;
@@ -33,7 +34,7 @@ public class ReservationService implements IReservationService {
     private IAccommodationService accommodationService;
 
     @Autowired
-    private IGuestRepository guestRepository;
+    private IGuestService guestService;
 
     @Autowired
     EntityManager em;
@@ -59,7 +60,7 @@ public class ReservationService implements IReservationService {
         if (accommodation.isEmpty()) return null;
         reservation.setAccommodation(accommodation.get());
 
-        Optional<Guest> guest = guestRepository.findById(createReservationDTO.getGuestId());
+        Optional<Guest> guest = guestService.findByUser(createReservationDTO.getGuestId());
         if (guest.isEmpty()) return null;
         reservation.setGuest(guest.get());
 

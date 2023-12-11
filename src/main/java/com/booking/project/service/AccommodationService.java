@@ -16,6 +16,7 @@ import org.springframework.stereotype.Service;
 
 import java.io.IOException;
 import java.time.LocalDate;
+import java.time.Period;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Optional;
@@ -90,10 +91,12 @@ public class AccommodationService implements IAccommodationService {
 
         double price = 0;
         if(accommodation.get().getAccommodationApprovalStatus().equals(AccommodationApprovalStatus.APPROVED) && (accommodation.get().getMinGuests() <= numberOfGuests && accommodation.get().getMaxGuests() >= numberOfGuests) ){
+            int reservationDays = 0;
             List<PriceList> priceLists = new ArrayList<PriceList>();
             for(PriceList priceList : accommodation.get().getPrices()){
                 if((priceList.getDate().isAfter(startDate) || priceList.getDate().isEqual(startDate))  && (priceList.getDate().isBefore(endDate) || priceList.getDate().isEqual(endDate))){
-                    if (priceList.getStatus() == AccommodationStatus.AVAILABLE && accommodation.get().getReservationMethod() == ReservationMethod.AUTOMATIC){
+                    if (priceList.getStatus() == AccommodationStatus.AVAILABLE){
+                        reservationDays += 1;
                         if(accommodation.get().getReservationMethod().equals(ReservationMethod.AUTOMATIC)){
                             priceLists.add(priceList);
                         }
@@ -102,6 +105,13 @@ public class AccommodationService implements IAccommodationService {
                     }
                 }
             }
+            Period period = Period.between(startDate, endDate);
+            int daysDifference = period.getDays() + 1;
+
+            if (reservationDays != daysDifference){
+                return new ArrayList<Object>(List.of(false));
+            }
+
             for(PriceList priceList : priceLists){
                 priceList.setStatus(AccommodationStatus.RESERVED);
                     price += priceList.getPrice();
