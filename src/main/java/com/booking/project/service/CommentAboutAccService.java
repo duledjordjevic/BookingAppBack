@@ -114,4 +114,8 @@ public class CommentAboutAccService implements ICommentAboutAccService {
     public Collection<Object[]> findAccommodationsByRating(){
         return commentAboutAccRepository.findAccomodationByRating(AccommodationApprovalStatus.APPROVED);
     }
+    @Override
+    public Double findAvgRateById(Long accommodationId){
+        return commentAboutAccRepository.findAvgRateByAccommodation(accommodationId);
+    }
 }

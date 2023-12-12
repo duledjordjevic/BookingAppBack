@@ -21,4 +21,9 @@ public interface ICommentAboutAccRepository extends JpaRepository<CommentAboutAc
             "where a.accommodationApprovalStatus= :approved " +
             "group by a")
     Collection<Object[]> findAccomodationByRating(@Param("approved") AccommodationApprovalStatus approved);
+
+    @Query("select avg(c.rating) " +
+            "from CommentAboutAcc c " +
+            "where c.accommodation.id =:accommodationId")
+    Double findAvgRateByAccommodation(@Param("accommodationId") Long accommodationId);
 }

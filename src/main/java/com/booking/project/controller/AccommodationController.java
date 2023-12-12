@@ -121,7 +121,7 @@ public class AccommodationController {
             @RequestParam(required = false) Integer endPrice,
             @RequestParam(required = false) Collection<Amenities> amenities,
             @RequestParam(required = false) AccommodationType accommodationType
-    ) {
+    ) throws IOException {
         Collection<AccommodationCardDTO> accommodations = accommodationService.filterAccommodations(startDate,endDate,numberOfGuests,city,startPrice,endPrice,amenities,accommodationType);
 
         return new ResponseEntity<Collection<AccommodationCardDTO>>(accommodations, HttpStatus.OK);

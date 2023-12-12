@@ -18,8 +18,8 @@ public class AccommodationCardDTO {
     private Address address;
     private String description;
     private Double avgRate;
-    private Integer pricePerNight;
-    private Integer totalPrice;
+    private Double pricePerNight;
+    private Double totalPrice;
     private byte[] image;
 
     public AccommodationCardDTO(Accommodation accommodation){

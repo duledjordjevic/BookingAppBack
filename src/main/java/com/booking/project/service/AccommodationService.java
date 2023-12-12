@@ -166,7 +166,12 @@ public class AccommodationService implements IAccommodationService {
     }
 
     @Override
-    public Collection<AccommodationCardDTO> filterAccommodations(LocalDate startDate, LocalDate endDate, Integer numOfGuests, String city, Integer startPrice, Integer endPrice, Collection<Amenities> amenities,AccommodationType accommodationType){
+    public Collection<AccommodationCardDTO> filterAccommodations(LocalDate startDate, LocalDate endDate, Integer numOfGuests,
+                                                                 String city, Integer startPrice, Integer endPrice,
+                                                                 Collection<Amenities> amenities,
+                                                                 AccommodationType accommodationType)
+    throws IOException {
+
         int amenitiesSize = 0;
         if(amenities != null){
             amenitiesSize = amenities.size();
@@ -176,7 +181,21 @@ public class AccommodationService implements IAccommodationService {
                 AccommodationApprovalStatus.APPROVED);
         Collection<AccommodationCardDTO> accommodationDTOS = new ArrayList<>();
         for(Accommodation acc: accommodations){
+
             AccommodationCardDTO accomodationDTO = new AccommodationCardDTO(acc);
+            Double avgRate = commentAboutAccService.findAvgRateById(acc.getId());
+            accomodationDTO.setAvgRate(avgRate);
+
+            if(startDate != null && endDate != null){
+                Double totalPrice = accommodationRepository.findTotalPriceForDateInterval(acc.getId(),startDate,endDate);
+                Double pricePerNight = accommodationRepository.findOneNightPrice(startDate.plusDays(1),acc.getId());
+                accomodationDTO.setTotalPrice(totalPrice);
+                accomodationDTO.setPricePerNight(pricePerNight);
+            }
+
+
+
+            accomodationDTO.setImage(imageService.getCoverImage(acc.getImages().split(",")[0]));
             accommodationDTOS.add(accomodationDTO);
         }
 
