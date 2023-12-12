@@ -3,6 +3,7 @@ package com.booking.project.service.interfaces;
 
 import com.booking.project.dto.CommentAboutAccDTO;
 import com.booking.project.dto.CreateCommentAboutAccDTO;
+import com.booking.project.model.Accommodation;
 import com.booking.project.model.CommentAboutAcc;
 
 import java.util.Collection;
@@ -22,4 +23,5 @@ public interface ICommentAboutAccService {
     Collection<CommentAboutAccDTO> findAllReported();
     CommentAboutAcc approve(Long id, boolean approved) throws  Exception;
     CommentAboutAcc report(Long id, boolean reported) throws  Exception;
+    Collection<Accommodation> findAccommodationsByRating();
 }

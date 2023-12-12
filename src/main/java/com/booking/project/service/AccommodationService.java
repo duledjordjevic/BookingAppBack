@@ -9,7 +9,9 @@ import com.booking.project.model.enums.AccommodationStatus;
 import com.booking.project.model.enums.Amenities;
 import com.booking.project.model.enums.ReservationMethod;
 import com.booking.project.repository.inteface.IAccommodationRepository;
+import com.booking.project.repository.inteface.ICommentAboutAccRepository;
 import com.booking.project.service.interfaces.IAccommodationService;
+import com.booking.project.service.interfaces.ICommentAboutAccService;
 import jakarta.persistence.EntityManager;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -29,6 +31,8 @@ public class AccommodationService implements IAccommodationService {
     private EntityManager em;
     @Autowired
     private ImageService imageService;
+    @Autowired
+    private ICommentAboutAccService commentAboutAccService;
     @Override
     public Collection<AccommodationDTO> findAll() {
 
@@ -191,6 +195,19 @@ public class AccommodationService implements IAccommodationService {
 
         List<AccommodationCardDTO> accommodationCards = new ArrayList<AccommodationCardDTO>();
         for(Accommodation accommodation : accommodations){
+            AccommodationCardDTO card = new AccommodationCardDTO(accommodation);
+            card.setImage(imageService.getCoverImage(accommodation.getImages().split(",")[0]));
+            accommodationCards.add(card);
+        }
+
+        return accommodationCards;
+    }
+    @Override
+    public Collection<AccommodationCardDTO> findPopularAccommodations() throws IOException {
+        Collection<Accommodation> popularAccommodations = commentAboutAccService.findAccommodationsByRating();
+
+        List<AccommodationCardDTO> accommodationCards = new ArrayList<AccommodationCardDTO>();
+        for(Accommodation accommodation : popularAccommodations){
             AccommodationCardDTO card = new AccommodationCardDTO(accommodation);
             card.setImage(imageService.getCoverImage(accommodation.getImages().split(",")[0]));
             accommodationCards.add(card);

@@ -37,6 +37,7 @@ public interface IAccommodationService {
     AccommodationDTO findAccommodationsDetails(Long id) throws IOException;
 
     Collection<AccommodationCardDTO> findApprovalPendingAccommodations() throws IOException;
+    Collection<AccommodationCardDTO> findPopularAccommodations() throws IOException;
 
     AccommodationDTO changeAccommodationReservationMethod(Long id, ReservationMethod reservationMethod) throws Exception;
 

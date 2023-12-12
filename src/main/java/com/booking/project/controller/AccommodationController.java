@@ -61,6 +61,14 @@ public class AccommodationController {
 
         return new ResponseEntity<Collection<AccommodationCardDTO>>(accommodationCards, HttpStatus.OK);
     }
+//    @PreAuthorize("hasRole('ADMIN')")
+    @GetMapping(value = "/popular", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<?> getPopularAccommodations() throws IOException {
+        Collection<AccommodationCardDTO> accommodationCards = accommodationService.findPopularAccommodations();
+        if(accommodationCards == null)    return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+
+        return new ResponseEntity<Collection<AccommodationCardDTO>>(accommodationCards, HttpStatus.OK);
+    }
 
     @PreAuthorize("hasRole('HOST')")
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)

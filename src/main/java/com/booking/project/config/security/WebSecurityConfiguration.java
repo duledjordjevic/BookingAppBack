@@ -29,7 +29,7 @@ public class WebSecurityConfiguration {
         http.csrf().disable().authorizeRequests() // csrf->disabled, pošto nam JWT odrađuje zaštitu od CSRF napada          statički html i login mogu svi da pozovu
                 .requestMatchers("/*").permitAll().requestMatchers("/api/login").permitAll()
                 .requestMatchers("/api/register/*").permitAll()
-                .requestMatchers("/api/accommodation**").authenticated() // sav pristup API-ju mora da bude autentikovan
+//                .requestMatchers("/api/accommodation**").authenticated() // sav pristup API-ju mora da bude autentikovan
                 .and()
                 .cors()
                 .and()
