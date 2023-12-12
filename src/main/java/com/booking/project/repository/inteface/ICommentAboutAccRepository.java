@@ -15,9 +15,10 @@ public interface ICommentAboutAccRepository extends JpaRepository<CommentAboutAc
     Collection<CommentAboutAcc> findAllByAccommodation(Optional<Accommodation> accommodation);
     @Query("select c from CommentAboutAcc c where c.isReported = true")
     Collection<CommentAboutAcc> findByReportedTrue();
-    @Query("select distinct a " +
+    @Query("select distinct a,avg(c.rating) " +
             "from CommentAboutAcc  c " +
             "join c.accommodation a " +
-            "where a.accommodationApprovalStatus= :approved ")
-    Collection<Accommodation> findAccomodationByRating(@Param("approved") AccommodationApprovalStatus approved);
+            "where a.accommodationApprovalStatus= :approved " +
+            "group by a")
+    Collection<Object[]> findAccomodationByRating(@Param("approved") AccommodationApprovalStatus approved);
 }

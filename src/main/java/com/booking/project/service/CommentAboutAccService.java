@@ -111,7 +111,7 @@ public class CommentAboutAccService implements ICommentAboutAccService {
         return commentsAboutAccDTOS;
     }
     @Override
-    public Collection<Accommodation> findAccommodationsByRating(){
+    public Collection<Object[]> findAccommodationsByRating(){
         return commentAboutAccRepository.findAccomodationByRating(AccommodationApprovalStatus.APPROVED);
     }
 }

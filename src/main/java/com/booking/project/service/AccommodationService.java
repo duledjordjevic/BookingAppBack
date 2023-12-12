@@ -4,10 +4,7 @@ import com.booking.project.dto.AccommodationDTO;
 import com.booking.project.dto.AccommodationCardDTO;
 import com.booking.project.model.Accommodation;
 import com.booking.project.model.PriceList;
-import com.booking.project.model.enums.AccommodationApprovalStatus;
-import com.booking.project.model.enums.AccommodationStatus;
-import com.booking.project.model.enums.Amenities;
-import com.booking.project.model.enums.ReservationMethod;
+import com.booking.project.model.enums.*;
 import com.booking.project.repository.inteface.IAccommodationRepository;
 import com.booking.project.repository.inteface.ICommentAboutAccRepository;
 import com.booking.project.service.interfaces.IAccommodationService;
@@ -33,6 +30,7 @@ public class AccommodationService implements IAccommodationService {
     private ImageService imageService;
     @Autowired
     private ICommentAboutAccService commentAboutAccService;
+    private static final Double avgRateCriterium = 3.5;
     @Override
     public Collection<AccommodationDTO> findAll() {
 
@@ -168,8 +166,14 @@ public class AccommodationService implements IAccommodationService {
     }
 
     @Override
-    public Collection<AccommodationCardDTO> filterAccommodations(LocalDate startDate, LocalDate endDate, Integer numOfGuests, String city, Integer startPrice, Integer endPrice, Collection<Amenities> amenities){
-        Collection<Accommodation> accommodations = accommodationRepository.filterAccommodations(startDate,endDate,city,numOfGuests,startPrice,endPrice,amenities, amenities.size());
+    public Collection<AccommodationCardDTO> filterAccommodations(LocalDate startDate, LocalDate endDate, Integer numOfGuests, String city, Integer startPrice, Integer endPrice, Collection<Amenities> amenities,AccommodationType accommodationType){
+        int amenitiesSize = 0;
+        if(amenities != null){
+            amenitiesSize = amenities.size();
+        }
+        Collection<Accommodation> accommodations = accommodationRepository.filterAccommodations(startDate,endDate,
+                city,numOfGuests,startPrice,endPrice,amenities, amenitiesSize,accommodationType,
+                AccommodationApprovalStatus.APPROVED);
         Collection<AccommodationCardDTO> accommodationDTOS = new ArrayList<>();
         for(Accommodation acc: accommodations){
             AccommodationCardDTO accomodationDTO = new AccommodationCardDTO(acc);
@@ -204,12 +208,18 @@ public class AccommodationService implements IAccommodationService {
     }
     @Override
     public Collection<AccommodationCardDTO> findPopularAccommodations() throws IOException {
-        Collection<Accommodation> popularAccommodations = commentAboutAccService.findAccommodationsByRating();
+        Collection<Object[]> popularAccommodations = commentAboutAccService.findAccommodationsByRating();
 
         List<AccommodationCardDTO> accommodationCards = new ArrayList<AccommodationCardDTO>();
-        for(Accommodation accommodation : popularAccommodations){
+        for(Object[] accommodationAndAvgRate : popularAccommodations){
+            Double avgRate =(Double) accommodationAndAvgRate[1];
+
+            if(avgRate < avgRateCriterium) continue;
+
+            Accommodation accommodation = (Accommodation) accommodationAndAvgRate[0];
             AccommodationCardDTO card = new AccommodationCardDTO(accommodation);
             card.setImage(imageService.getCoverImage(accommodation.getImages().split(",")[0]));
+            card.setAvgRate(avgRate);
             accommodationCards.add(card);
         }
 

@@ -23,5 +23,5 @@ public interface ICommentAboutAccService {
     Collection<CommentAboutAccDTO> findAllReported();
     CommentAboutAcc approve(Long id, boolean approved) throws  Exception;
     CommentAboutAcc report(Long id, boolean reported) throws  Exception;
-    Collection<Accommodation> findAccommodationsByRating();
+    Collection<Object[]> findAccommodationsByRating();
 }

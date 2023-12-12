@@ -6,6 +6,7 @@ import com.booking.project.dto.AccommodationDTO;
 import com.booking.project.model.Accommodation;
 import com.booking.project.model.Host;
 import com.booking.project.model.enums.AccommodationApprovalStatus;
+import com.booking.project.model.enums.AccommodationType;
 import com.booking.project.model.enums.Amenities;
 import com.booking.project.model.enums.ReservationMethod;
 import com.booking.project.service.interfaces.IAccommodationService;
@@ -109,7 +110,7 @@ public class AccommodationController {
 
         return new ResponseEntity<AccommodationDTO>(accommodation.get(), HttpStatus.CREATED);
     }
-    @PreAuthorize("hasRole('HOST') OR hasRole('GUEST')")
+//    @PreAuthorize("hasRole('HOST') OR hasRole('GUEST')")
     @GetMapping(value = "/cards/filter",produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<?> filterAccommodations(
             @RequestParam(required = false) String city,
@@ -118,9 +119,10 @@ public class AccommodationController {
             @RequestParam(required = false) @DateTimeFormat(pattern = "dd-MM-yyyy") LocalDate endDate,
             @RequestParam(required = false) Integer startPrice,
             @RequestParam(required = false) Integer endPrice,
-            @RequestParam(required = false) Collection<Amenities> amenities
+            @RequestParam(required = false) Collection<Amenities> amenities,
+            @RequestParam(required = false) AccommodationType accommodationType
     ) {
-        Collection<AccommodationCardDTO> accommodations = accommodationService.filterAccommodations(startDate,endDate,numberOfGuests,city,startPrice,endPrice,amenities);
+        Collection<AccommodationCardDTO> accommodations = accommodationService.filterAccommodations(startDate,endDate,numberOfGuests,city,startPrice,endPrice,amenities,accommodationType);
 
         return new ResponseEntity<Collection<AccommodationCardDTO>>(accommodations, HttpStatus.OK);
     }
