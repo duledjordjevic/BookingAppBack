@@ -5,6 +5,9 @@ public enum Amenities {
     AIRCONDITION,
     PARKING,
     BREAKFAST,
+    LUNCH,
+    DINNER,
     POOL,
-    KITCHEN
+    KITCHEN,
+    TV
 }

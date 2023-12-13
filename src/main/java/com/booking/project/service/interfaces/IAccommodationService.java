@@ -41,4 +41,6 @@ public interface IAccommodationService {
     AccommodationDTO saveImages(String images, Long accommodationId) throws Exception;
 
     String getImages(Long accommodationId);
+
+    Collection<Double> getMinMaxPrice();
 }

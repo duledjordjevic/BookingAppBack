@@ -19,8 +19,8 @@ public interface IAccommodationRepository extends JpaRepository<Accommodation, L
     @Query("SELECT a " +
             "FROM Accommodation a " +
             "JOIN a.prices p " +
-            "JOIN a.amenities am " +
-            "WHERE  (:amenitieSize = 0  OR  am in :amenitiesParam) " +
+            "LEFT JOIN a.amenities am " +
+            "WHERE  (:amenitieSize = 0  OR  (am IS NOT NULL AND am in :amenitiesParam )) " +
             "   AND a.accommodationApprovalStatus = :approvalStatus" +
             "   AND (:accommodationType IS NULL OR a.type = :accommodationType )" +
             "   AND (cast(:startDate as date) is null OR cast(:endDate as date) is null OR (p.date BETWEEN :startDate AND :endDate)) " +
@@ -63,4 +63,12 @@ public interface IAccommodationRepository extends JpaRepository<Accommodation, L
             "and p.status = 'AVAILABLE' ")
     Double findOneNightPrice(@Param("date") LocalDate date,
                            @Param("accommodationId") Long accommodationId);
+    @Query("Select max(p.price)" +
+            "from PriceList p " +
+            "where p.date > CURRENT_DATE")
+    Double findMaxPrice();
+    @Query("Select min(p.price)" +
+            "from PriceList p " +
+            "where p.date > CURRENT_DATE")
+    Double findMinPrice();
 }

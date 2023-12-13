@@ -135,5 +135,10 @@ public class AccommodationController {
 
         return new ResponseEntity<AccommodationDTO>(accommodationDTO, HttpStatus.OK);
     }
+    @GetMapping(value="/minMaxPrice",produces = MediaType.APPLICATION_JSON_VALUE)
+    public  ResponseEntity<?> getMinMaxPrices(){
+        Collection<Double> minMax = accommodationService.getMinMaxPrice();
+        return new ResponseEntity<Collection<Double>>(minMax, HttpStatus.OK);
+    }
 
 }

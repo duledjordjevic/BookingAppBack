@@ -6,7 +6,6 @@ import com.booking.project.model.Accommodation;
 import com.booking.project.model.PriceList;
 import com.booking.project.model.enums.*;
 import com.booking.project.repository.inteface.IAccommodationRepository;
-import com.booking.project.repository.inteface.ICommentAboutAccRepository;
 import com.booking.project.service.interfaces.IAccommodationService;
 import com.booking.project.service.interfaces.ICommentAboutAccService;
 import jakarta.persistence.EntityManager;
@@ -228,7 +227,6 @@ public class AccommodationService implements IAccommodationService {
     @Override
     public Collection<AccommodationCardDTO> findPopularAccommodations() throws IOException {
         Collection<Object[]> popularAccommodations = commentAboutAccService.findAccommodationsByRating();
-
         List<AccommodationCardDTO> accommodationCards = new ArrayList<AccommodationCardDTO>();
         for(Object[] accommodationAndAvgRate : popularAccommodations){
             Double avgRate =(Double) accommodationAndAvgRate[1];
@@ -280,6 +278,17 @@ public class AccommodationService implements IAccommodationService {
         if(accommodation.isEmpty()) return null;
 
         return accommodation.get().getImages();
+    }
+    @Override
+    public Collection<Double> getMinMaxPrice(){
+        Collection<Double> minMaxPrice= new ArrayList<>();
+
+        Double minPrice = accommodationRepository.findMinPrice();
+        Double maxPrice = accommodationRepository.findMaxPrice();
+        minMaxPrice.add(minPrice);
+        minMaxPrice.add(maxPrice);
+
+        return minMaxPrice;
     }
 }
 
