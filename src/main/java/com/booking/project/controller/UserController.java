@@ -48,8 +48,8 @@ public class UserController {
         }
         if(user.get().getUserType().equals(UserType.GUEST)){
 
-            Guest guest =  guestService.findByUser(user.get().getId());
-            UserInfoDTO userInfoDTO = new UserInfoDTO(guest,user.get());
+            Optional<Guest> guest =  guestService.findByUser(user.get().getId());
+            UserInfoDTO userInfoDTO = new UserInfoDTO(guest.get(),user.get());
             return new ResponseEntity<UserInfoDTO>(userInfoDTO, HttpStatus.OK);
 
         }else if(user.get().getUserType().equals(UserType.HOST)){

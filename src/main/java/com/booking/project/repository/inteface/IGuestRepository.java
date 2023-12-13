@@ -8,6 +8,7 @@ import org.springframework.data.repository.query.Param;
 
 import java.time.LocalDate;
 import java.util.Collection;
+import java.util.Optional;
 
 public interface IGuestRepository extends JpaRepository<Guest, Long>{
     @Query(
@@ -17,5 +18,5 @@ public interface IGuestRepository extends JpaRepository<Guest, Long>{
     )
     public Collection<Accommodation> findByFavourites(
             @Param("guestId") Long id);
-    Guest findByUserId(Long id);
+    Optional<Guest> findByUserId(Long id);
 }
