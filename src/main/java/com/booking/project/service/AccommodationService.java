@@ -4,12 +4,10 @@ import com.booking.project.dto.AccommodationDTO;
 import com.booking.project.dto.AccommodationCardDTO;
 import com.booking.project.model.Accommodation;
 import com.booking.project.model.PriceList;
-import com.booking.project.model.enums.AccommodationApprovalStatus;
-import com.booking.project.model.enums.AccommodationStatus;
-import com.booking.project.model.enums.Amenities;
-import com.booking.project.model.enums.ReservationMethod;
+import com.booking.project.model.enums.*;
 import com.booking.project.repository.inteface.IAccommodationRepository;
 import com.booking.project.service.interfaces.IAccommodationService;
+import com.booking.project.service.interfaces.ICommentAboutAccService;
 import jakarta.persistence.EntityManager;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -30,6 +28,9 @@ public class AccommodationService implements IAccommodationService {
     private EntityManager em;
     @Autowired
     private ImageService imageService;
+    @Autowired
+    private ICommentAboutAccService commentAboutAccService;
+    private static final Double avgRateCriterium = 3.5;
     @Override
     public Collection<AccommodationDTO> findAll() {
 
@@ -220,11 +221,36 @@ public class AccommodationService implements IAccommodationService {
     }
 
     @Override
-    public Collection<AccommodationCardDTO> filterAccommodations(LocalDate startDate, LocalDate endDate, Integer numOfGuests, String city, Integer startPrice, Integer endPrice, Collection<Amenities> amenities){
-        Collection<Accommodation> accommodations = accommodationRepository.filterAccommodations(startDate,endDate,city,numOfGuests,startPrice,endPrice,amenities, amenities.size());
+    public Collection<AccommodationCardDTO> filterAccommodations(LocalDate startDate, LocalDate endDate, Integer numOfGuests,
+                                                                 String city, Integer startPrice, Integer endPrice,
+                                                                 Collection<Amenities> amenities,
+                                                                 AccommodationType accommodationType)
+    throws IOException {
+
+        int amenitiesSize = 0;
+        if(amenities != null){
+            amenitiesSize = amenities.size();
+        }
+        Collection<Accommodation> accommodations = accommodationRepository.filterAccommodations(startDate,endDate,
+                city,numOfGuests,startPrice,endPrice,amenities, amenitiesSize,accommodationType,
+                AccommodationApprovalStatus.APPROVED);
         Collection<AccommodationCardDTO> accommodationDTOS = new ArrayList<>();
         for(Accommodation acc: accommodations){
+
             AccommodationCardDTO accomodationDTO = new AccommodationCardDTO(acc);
+            Double avgRate = commentAboutAccService.findAvgRateById(acc.getId());
+            accomodationDTO.setAvgRate(avgRate);
+
+            if(startDate != null && endDate != null){
+                Double totalPrice = accommodationRepository.findTotalPriceForDateInterval(acc.getId(),startDate,endDate);
+                Double pricePerNight = accommodationRepository.findOneNightPrice(startDate.plusDays(1),acc.getId());
+                accomodationDTO.setTotalPrice(totalPrice);
+                accomodationDTO.setPricePerNight(pricePerNight);
+            }
+
+
+
+            accomodationDTO.setImage(imageService.getCoverImage(acc.getImages().split(",")[0]));
             accommodationDTOS.add(accomodationDTO);
         }
 
@@ -249,6 +275,24 @@ public class AccommodationService implements IAccommodationService {
         for(Accommodation accommodation : accommodations){
             AccommodationCardDTO card = new AccommodationCardDTO(accommodation);
             card.setImage(imageService.getCoverImage(accommodation.getImages().split(",")[0]));
+            accommodationCards.add(card);
+        }
+
+        return accommodationCards;
+    }
+    @Override
+    public Collection<AccommodationCardDTO> findPopularAccommodations() throws IOException {
+        Collection<Object[]> popularAccommodations = commentAboutAccService.findAccommodationsByRating();
+        List<AccommodationCardDTO> accommodationCards = new ArrayList<AccommodationCardDTO>();
+        for(Object[] accommodationAndAvgRate : popularAccommodations){
+            Double avgRate =(Double) accommodationAndAvgRate[1];
+
+            if(avgRate < avgRateCriterium) continue;
+
+            Accommodation accommodation = (Accommodation) accommodationAndAvgRate[0];
+            AccommodationCardDTO card = new AccommodationCardDTO(accommodation);
+            card.setImage(imageService.getCoverImage(accommodation.getImages().split(",")[0]));
+            card.setAvgRate(avgRate);
             accommodationCards.add(card);
         }
 
@@ -290,6 +334,17 @@ public class AccommodationService implements IAccommodationService {
         if(accommodation.isEmpty()) return null;
 
         return accommodation.get().getImages();
+    }
+    @Override
+    public Collection<Double> getMinMaxPrice(){
+        Collection<Double> minMaxPrice= new ArrayList<>();
+
+        Double minPrice = accommodationRepository.findMinPrice();
+        Double maxPrice = accommodationRepository.findMaxPrice();
+        minMaxPrice.add(minPrice);
+        minMaxPrice.add(maxPrice);
+
+        return minMaxPrice;
     }
 }
 

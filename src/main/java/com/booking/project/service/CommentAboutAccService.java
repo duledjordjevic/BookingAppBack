@@ -4,6 +4,7 @@ import com.booking.project.dto.AccommodationDTO;
 import com.booking.project.dto.CommentAboutAccDTO;
 import com.booking.project.dto.CreateCommentAboutAccDTO;
 import com.booking.project.model.*;
+import com.booking.project.model.enums.AccommodationApprovalStatus;
 import com.booking.project.repository.inteface.IAccommodationRepository;
 import com.booking.project.repository.inteface.ICommentAboutAccRepository;
 import com.booking.project.repository.inteface.IGuestRepository;
@@ -108,5 +109,13 @@ public class CommentAboutAccService implements ICommentAboutAccService {
             commentsAboutAccDTOS.add(commentDTO);
         }
         return commentsAboutAccDTOS;
+    }
+    @Override
+    public Collection<Object[]> findAccommodationsByRating(){
+        return commentAboutAccRepository.findAccomodationByRating(AccommodationApprovalStatus.APPROVED);
+    }
+    @Override
+    public Double findAvgRateById(Long accommodationId){
+        return commentAboutAccRepository.findAvgRateByAccommodation(accommodationId);
     }
 }

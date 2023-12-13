@@ -26,4 +26,12 @@ public class ConfirmationTokenService implements IConfirmationTokenService {
         return confirmationTokenRepository.updateConfirmedAt(
                 token, LocalDateTime.now());
     }
+    @Override
+    public ConfirmationToken findTokenByUser(Long id){
+        return confirmationTokenRepository.findByUserId(id);
+    }
+    @Override
+    public void deleteById(Long id){
+        confirmationTokenRepository.deleteById(id);
+    }
 }

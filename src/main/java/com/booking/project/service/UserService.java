@@ -55,9 +55,24 @@ public class UserService implements IUserService {
     public User registerUser(UserInfoDTO userInfoDTO){
         Optional<User> userExist = repository.findByEmail(userInfoDTO.getEmail());
 
+
         if(!userExist.isEmpty()){
-            return null;
+            ConfirmationToken token = confirmationTokenService.findTokenByUser(userExist.get().getId());
+
+            if(token.getExpiresAt().isAfter(LocalDateTime.now())) return null;
+
+            confirmationTokenService.deleteById(token.getId());
+
+            if(userExist.get().getUserType().equals(UserType.GUEST)){
+                Optional<Guest> guest = guestService.findByUser(userExist.get().getId());
+                guestService.deleteById(guest.get().getId());
+            }else if(userExist.get().getUserType().equals(UserType.HOST)){
+                Host host = hostService.findByUser(userExist.get().getId());
+                hostService.deleteById(host.getId());
+            }
+            repository.deleteById(userExist.get().getId());
         }
+
         String passwordEncoded = bCryptPasswordEncoder.encode(userInfoDTO.getPassword());
         User user = new User(userInfoDTO);
         user.setPassword(passwordEncoded);

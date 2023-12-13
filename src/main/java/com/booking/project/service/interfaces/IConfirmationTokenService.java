@@ -8,4 +8,7 @@ public interface IConfirmationTokenService {
     void saveConfirmationToken(ConfirmationToken token);
     Optional<ConfirmationToken> getToken(String token);
     int setConfirmedAt(String token);
+    ConfirmationToken findTokenByUser(Long id);
+
+    void deleteById(Long id);
 }

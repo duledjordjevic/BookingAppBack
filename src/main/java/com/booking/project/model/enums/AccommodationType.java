@@ -1,6 +1,6 @@
 package com.booking.project.model.enums;
 
-public enum AccomodationType {
+public enum AccommodationType {
     HOTEL,
     APARTMENT
 }

@@ -2,7 +2,6 @@ package com.booking.project.dto;
 
 import com.booking.project.model.Accommodation;
 import com.booking.project.model.Address;
-import com.booking.project.model.Photo;
 import com.booking.project.model.PriceList;
 import com.booking.project.model.enums.*;
 import lombok.AllArgsConstructor;
@@ -10,7 +9,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.util.Collection;
 import java.util.List;
 import java.util.Set;
 @Getter
@@ -26,7 +24,7 @@ public class AccommodationDTO {
     private List<byte[]> images;
     private int minGuest;
     private int maxGuest;
-    private AccomodationType type;
+    private AccommodationType type;
     private CancellationPolicy cancellationPolicy;
     private ReservationMethod reservationMethod;
     private AccommodationApprovalStatus accommodationApprovalStatus;
