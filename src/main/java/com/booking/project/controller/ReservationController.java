@@ -74,7 +74,16 @@ public class ReservationController {
         double price = (double) reservationResponse.get(1);
         ReservationMethod reservationMethod = (ReservationMethod) reservationResponse.get(2);
         Reservation createdReservation = reservationService.create(createReservationDTO, price, reservationMethod);
-        return new ResponseEntity<>(HttpStatus.CREATED);
+        return new ResponseEntity<ReservationMethod>(reservationMethod, HttpStatus.CREATED);
+    }
+
+    @PostMapping(value = "/reservationPrice",consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<?> getReservationPrice(@RequestBody CreateReservationDTO createReservationDTO ) {
+        List<Object> reservationPrice = accommodationService.calculateReservationPrice(createReservationDTO.getStartDate(), createReservationDTO.getEndDate(), createReservationDTO.getAccommodationId(), createReservationDTO.getNumberOfGuests());
+
+        if(reservationPrice.size() == 1) return new ResponseEntity<Double>(Double.valueOf(0), HttpStatus.OK );
+
+        return new ResponseEntity<Double>((Double) reservationPrice.get(1), HttpStatus.OK );
     }
 
     @PutMapping(value = "/{id}/{reservationStatus}", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
