@@ -12,7 +12,7 @@ public interface IGuestService {
 
     Optional<Guest> findById(Long id);
 
-    Guest findByUser(Long id);
+    Optional<Guest> findByUser(Long id);
 
     Guest save(Guest guest) throws Exception;
 

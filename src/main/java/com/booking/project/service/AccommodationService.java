@@ -14,6 +14,7 @@ import org.springframework.stereotype.Service;
 
 import java.io.IOException;
 import java.time.LocalDate;
+import java.time.Period;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Optional;
@@ -91,10 +92,13 @@ public class AccommodationService implements IAccommodationService {
 
         double price = 0;
         if(accommodation.get().getAccommodationApprovalStatus().equals(AccommodationApprovalStatus.APPROVED) && (accommodation.get().getMinGuests() <= numberOfGuests && accommodation.get().getMaxGuests() >= numberOfGuests) ){
+            int reservationDays = 0;
             List<PriceList> priceLists = new ArrayList<PriceList>();
             for(PriceList priceList : accommodation.get().getPrices()){
                 if((priceList.getDate().isAfter(startDate) || priceList.getDate().isEqual(startDate))  && (priceList.getDate().isBefore(endDate) || priceList.getDate().isEqual(endDate))){
-                    if (priceList.getStatus() == AccommodationStatus.AVAILABLE && accommodation.get().getReservationMethod() == ReservationMethod.AUTOMATIC){
+                    if (priceList.getStatus() == AccommodationStatus.AVAILABLE){
+                        reservationDays += 1;
+                        price += priceList.getPrice();
                         if(accommodation.get().getReservationMethod().equals(ReservationMethod.AUTOMATIC)){
                             priceLists.add(priceList);
                         }
@@ -103,9 +107,15 @@ public class AccommodationService implements IAccommodationService {
                     }
                 }
             }
+            Period period = Period.between(startDate, endDate);
+            int daysDifference = period.getDays() + 1;
+
+            if (reservationDays != daysDifference){
+                return new ArrayList<Object>(List.of(false));
+            }
+
             for(PriceList priceList : priceLists){
                 priceList.setStatus(AccommodationStatus.RESERVED);
-                    price += priceList.getPrice();
             }
             if(!accommodation.get().isPriceForEntireAcc()){
                 price = price * numberOfGuests;
@@ -115,6 +125,38 @@ public class AccommodationService implements IAccommodationService {
         }
         save(accommodation.get());
         return new ArrayList<Object>(List.of(false, price, accommodation.get().getReservationMethod()));
+    }
+
+    @Override
+    public ArrayList<Object> calculateReservationPrice(LocalDate startDate, LocalDate endDate, Long id, int numberOfGuests){
+        Optional<Accommodation> accommodation = accommodationRepository.findById(id);
+
+        if(accommodation.isEmpty()) return new ArrayList<Object>(List.of(false));
+
+        double price = 0;
+        int reservationDays = 0;
+        for(PriceList priceList : accommodation.get().getPrices()){
+            if ((priceList.getDate().isAfter(startDate) || priceList.getDate().isEqual(startDate) ) && (priceList.getDate().isBefore(endDate) || priceList.getDate().isEqual(endDate))){
+                if(priceList.getStatus().equals(AccommodationStatus.AVAILABLE)){
+                    reservationDays += 1;
+                    price += priceList.getPrice();
+                }else{
+                    return new ArrayList<Object>(List.of(false));
+                }
+            }
+        }
+        Period period = Period.between(startDate, endDate);
+        int daysDifference = period.getDays() + 1;
+
+        if (reservationDays != daysDifference){
+            return new ArrayList<Object>(List.of(false));
+        }
+
+        if(!accommodation.get().isPriceForEntireAcc()){
+            price = price * numberOfGuests;
+        }
+
+        return new ArrayList<Object>(List.of(true, price));
     }
 
     @Override
@@ -140,6 +182,20 @@ public class AccommodationService implements IAccommodationService {
         }
     }
 
+    @Override
+    public List<LocalDate> getAvailableDates(Long id){
+        List<LocalDate> availableDates = new ArrayList<LocalDate>();
+        Optional<Accommodation> accommodation = accommodationRepository.findById(id);
+
+        if(accommodation.isPresent()) {
+            for(PriceList priceList : accommodation.get().getPrices()){
+                if (priceList.getStatus().equals(AccommodationStatus.AVAILABLE) && (priceList.getDate().isAfter(LocalDate.now()) || priceList.getDate().isEqual(LocalDate.now()))){
+                    availableDates.add(priceList.getDate());
+                }
+            }
+        }
+        return availableDates;
+     }
 
     @Override
     public void deleteById(Long id) {

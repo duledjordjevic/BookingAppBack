@@ -141,12 +141,12 @@ public class UserService implements IUserService {
         }
 
         if(user.get().getUserType().equals(UserType.GUEST)){
-            Guest guest = guestService.findByUser(id);
-            guest.setName(userUpdateDTO.getName());
-            guest.setLastName(userUpdateDTO.getLastname());
-            guest.setAddress(userUpdateDTO.getAddress());
-            guest.setPhoneNumber(userUpdateDTO.getPhoneNumber());
-            guestService.save(guest);
+            Optional<Guest> guest = guestService.findByUser(id);
+            guest.get().setName(userUpdateDTO.getName());
+            guest.get().setLastName(userUpdateDTO.getLastname());
+            guest.get().setAddress(userUpdateDTO.getAddress());
+            guest.get().setPhoneNumber(userUpdateDTO.getPhoneNumber());
+            guestService.save(guest.get());
 
         }else if(user.get().getUserType().equals(UserType.HOST)){
             Host host = hostService.findByUser(id);
@@ -172,7 +172,7 @@ public class UserService implements IUserService {
         if(!BCrypt.checkpw(userDeleteDTO.getPassword(), user.get().getPassword())) return false;
 
         if(user.get().getUserType().equals(UserType.GUEST)){
-            Collection<Reservation> guestReservations = reservationService.findByGuestId(guestService.findByUser(id).getId());
+            Collection<Reservation> guestReservations = reservationService.findByGuestId(guestService.findByUser(id).get().getId());
             if(guestReservations.size() != 0) return false;
 
         }else if(user.get().getUserType().equals(UserType.HOST)){

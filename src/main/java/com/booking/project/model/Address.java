@@ -28,4 +28,9 @@ public class Address {
     @Column(nullable = false)
     private int postalCode;
 
+//    @Column(nullable = false)
+    private double latitude;
+
+//    @Column(nullable = false)
+    private double longitude;
 }

@@ -7,10 +7,7 @@ import com.booking.project.model.enums.*;
 
 import java.io.IOException;
 import java.time.LocalDate;
-import java.util.Collection;
-import java.util.EnumSet;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 public interface IAccommodationService {
     Collection<AccommodationDTO> findAll();
@@ -23,8 +20,11 @@ public interface IAccommodationService {
 
     List<Object> reservate(Long accommodationId, LocalDate startDate, LocalDate endDate, int numberOfGuests) throws Exception;
 
+    ArrayList<Object> calculateReservationPrice(LocalDate startDate, LocalDate endDate, Long id, int numberOfGuests);
 
     Boolean changePriceList(LocalDate startDate, LocalDate endDate, Long id, AccommodationStatus accommodationStatus) throws Exception;
+
+    List<LocalDate> getAvailableDates(Long id);
 
     void deleteById(Long id);
 
