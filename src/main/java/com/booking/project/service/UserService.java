@@ -64,8 +64,8 @@ public class UserService implements IUserService {
             confirmationTokenService.deleteById(token.getId());
 
             if(userExist.get().getUserType().equals(UserType.GUEST)){
-                Guest guest = guestService.findByUser(userExist.get().getId());
-                guestService.deleteById(guest.getId());
+                Optional<Guest> guest = guestService.findByUser(userExist.get().getId());
+                guestService.deleteById(guest.get().getId());
             }else if(userExist.get().getUserType().equals(UserType.HOST)){
                 Host host = hostService.findByUser(userExist.get().getId());
                 hostService.deleteById(host.getId());
