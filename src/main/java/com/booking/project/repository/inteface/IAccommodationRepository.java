@@ -15,7 +15,10 @@ import java.util.EnumSet;
 import java.util.List;
 
 public interface IAccommodationRepository extends JpaRepository<Accommodation, Long> {
-    Collection<Accommodation> findAccommodationsByHostId(Long id);
+    @Query("Select a " +
+            "from Accommodation a " +
+            "where a.host.user.id = :id ")
+    Collection<Accommodation> findAccommodationsByHost(@Param("id") Long id);
     @Query("SELECT a " +
             "FROM Accommodation a " +
             "JOIN a.prices p " +

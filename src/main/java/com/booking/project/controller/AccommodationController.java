@@ -104,9 +104,9 @@ public class AccommodationController {
 
     @PreAuthorize("hasRole('HOST')")
     @GetMapping(value = "/host/{id_host}", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<?> getHostAccommodations(@PathVariable("id_host") Long id){
-        Collection<Accommodation> accommodations = accommodationService.findAccomodationsByHostId(id);
-        return new ResponseEntity<Collection<Accommodation>>(accommodations, HttpStatus.OK);
+    public ResponseEntity<?> getHostAccommodations(@PathVariable("id_host") Long id) throws IOException {
+        Collection<AccommodationCardDTO> accommodations = accommodationService.findAccomodationsByHostId(id);
+        return new ResponseEntity<Collection<AccommodationCardDTO>>(accommodations, HttpStatus.OK);
     }
     @PreAuthorize("hasRole('HOST')")
     @PutMapping(value = "/{id}", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
