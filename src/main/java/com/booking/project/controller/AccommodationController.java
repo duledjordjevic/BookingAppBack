@@ -20,9 +20,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
 import java.time.LocalDate;
-import java.util.Collection;
-import java.util.EnumSet;
-import java.util.Optional;
+import java.util.*;
 
 @RestController
 @RequestMapping("/api/accommodations")
@@ -86,6 +84,15 @@ public class AccommodationController {
 
         return new ResponseEntity<AccommodationDTO>(accommodationDTO, HttpStatus.OK);
     }
+
+    @GetMapping(value = "/{id}/availableDates", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<?> getAvailableDates(@PathVariable("id") Long id) throws IOException {
+        List<LocalDate> availableDates = accommodationService.getAvailableDates(id);
+
+        return new ResponseEntity<List<LocalDate>>(availableDates, HttpStatus.OK);
+    }
+
+
     @PreAuthorize("hasRole('HOST')")
     @GetMapping(value = "/host/{id_host}", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<?> getHostAccommodations(@PathVariable("id_host") Long id){

@@ -181,6 +181,20 @@ public class AccommodationService implements IAccommodationService {
         }
     }
 
+    @Override
+    public List<LocalDate> getAvailableDates(Long id){
+        List<LocalDate> availableDates = new ArrayList<LocalDate>();
+        Optional<Accommodation> accommodation = accommodationRepository.findById(id);
+
+        if(accommodation.isPresent()) {
+            for(PriceList priceList : accommodation.get().getPrices()){
+                if (priceList.getStatus().equals(AccommodationStatus.AVAILABLE) && (priceList.getDate().isAfter(LocalDate.now()) || priceList.getDate().isEqual(LocalDate.now()))){
+                    availableDates.add(priceList.getDate());
+                }
+            }
+        }
+        return availableDates;
+     }
 
     @Override
     public void deleteById(Long id) {

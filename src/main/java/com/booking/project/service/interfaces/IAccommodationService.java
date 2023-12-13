@@ -27,6 +27,8 @@ public interface IAccommodationService {
 
     Boolean changePriceList(LocalDate startDate, LocalDate endDate, Long id, AccommodationStatus accommodationStatus) throws Exception;
 
+    List<LocalDate> getAvailableDates(Long id);
+
     void deleteById(Long id);
 
     AccommodationDTO changeAvailableStatus(Long id, AccommodationApprovalStatus approvalStatus) throws Exception;
