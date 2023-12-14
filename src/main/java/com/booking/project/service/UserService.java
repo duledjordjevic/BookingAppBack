@@ -169,7 +169,14 @@ public class UserService implements IUserService {
         Optional<User> user = findById(id);
 
         if(user.isEmpty()) return false;
-        if(!BCrypt.checkpw(userDeleteDTO.getPassword(), user.get().getPassword())) return false;
+        try {
+            if (!BCrypt.checkpw(userDeleteDTO.getPassword(), user.get().getPassword())) {
+                return false;
+            }
+        } catch (IllegalArgumentException e) {
+            System.out.println(e.getMessage());
+            return false;
+        }
 
         if(user.get().getUserType().equals(UserType.GUEST)){
             Collection<Reservation> guestReservations = reservationService.findByGuestId(guestService.findByUser(id).get().getId());
