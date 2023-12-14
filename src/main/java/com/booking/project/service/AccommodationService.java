@@ -216,8 +216,17 @@ public class AccommodationService implements IAccommodationService {
         return accommodationDTO;
     }
     @Override
-    public Collection<Accommodation> findAccomodationsByHostId(Long id){
-        return accommodationRepository.findAccommodationsByHostId(id);
+    public Collection<AccommodationCardDTO> findAccomodationsByHostId(Long id) throws IOException {
+        Collection<Accommodation> accommodations = accommodationRepository.findAccommodationsByHost(id);
+
+        Collection<AccommodationCardDTO> accommodationDTOS = new ArrayList<>();
+        for(Accommodation accommodation: accommodations){
+            AccommodationCardDTO accommodationDTO = new AccommodationCardDTO(accommodation);
+            accommodationDTO.setImage(imageService.getCoverImage(accommodation.getImages().split(",")[0]));
+
+            accommodationDTOS.add(accommodationDTO);
+        }
+        return accommodationDTOS;
     }
 
     @Override

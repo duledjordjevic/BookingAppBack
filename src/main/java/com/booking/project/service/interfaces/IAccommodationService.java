@@ -29,7 +29,7 @@ public interface IAccommodationService {
     void deleteById(Long id);
 
     AccommodationDTO changeAvailableStatus(Long id, AccommodationApprovalStatus approvalStatus) throws Exception;
-    Collection<Accommodation> findAccomodationsByHostId(Long id);
+    Collection<AccommodationCardDTO> findAccomodationsByHostId(Long id) throws IOException;
     Collection<AccommodationCardDTO> filterAccommodations(LocalDate startDate, LocalDate endDate, Integer numOfGuests, String city, Integer startPrice, Integer endPrice, Collection<Amenities> amenities, AccommodationType accommodationType) throws IOException;
     AccommodationDTO findAccommodationsDetails(Long id) throws IOException;
 
