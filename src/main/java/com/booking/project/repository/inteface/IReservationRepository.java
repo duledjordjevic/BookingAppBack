@@ -14,13 +14,13 @@ public interface IReservationRepository extends JpaRepository<Reservation, Long>
             "from Reservation r " +
             "where r.guest.id = :guestId " +
             "and r.status='ACCEPTED' " +
-            "AND r.endDate < CURRENT_DATE ")
+            "AND r.startDate > CURRENT_DATE ")
     Collection<Reservation> findByGuest(@Param("guestId") Long guestId);
     @Query("Select r " +
             "from Reservation r " +
             "where r.accommodation.host.id = :hostId " +
             "and r.status = 'ACCEPTED' " +
-            "and r.endDate < CURRENT_DATE ")
+            "and r.startDate > CURRENT_DATE ")
     Collection<Reservation> findByHost( @Param("hostId") Long hostId);
 
 }
