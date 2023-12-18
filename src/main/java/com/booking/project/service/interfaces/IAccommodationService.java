@@ -3,6 +3,7 @@ package com.booking.project.service.interfaces;
 import com.booking.project.dto.AccommodationCardDTO;
 import com.booking.project.dto.AccommodationDTO;
 import com.booking.project.model.Accommodation;
+import com.booking.project.model.PriceList;
 import com.booking.project.model.enums.*;
 
 import java.io.IOException;
@@ -43,4 +44,6 @@ public interface IAccommodationService {
     String getImages(Long accommodationId);
 
     Collection<Double> getMinMaxPrice();
+
+    List<PriceList> findPriceList(Long id);
 }

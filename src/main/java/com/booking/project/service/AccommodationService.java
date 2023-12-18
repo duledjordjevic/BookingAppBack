@@ -355,6 +355,11 @@ public class AccommodationService implements IAccommodationService {
 
         return minMaxPrice;
     }
+
+    @Override
+    public List<PriceList> findPriceList(Long id) {
+        return accommodationRepository.findPriceList(id, AccommodationStatus.AVAILABLE);
+    }
 }
 
 
