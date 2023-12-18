@@ -3,6 +3,7 @@ package com.booking.project.controller;
 import com.booking.project.dto.AccommodationApprovalStatusDTO;
 import com.booking.project.dto.AccommodationCardDTO;
 import com.booking.project.dto.AccommodationDTO;
+import com.booking.project.dto.IntervalPriceDTO;
 import com.booking.project.model.Accommodation;
 import com.booking.project.model.Host;
 import com.booking.project.model.enums.AccommodationApprovalStatus;
@@ -11,6 +12,7 @@ import com.booking.project.model.enums.Amenities;
 import com.booking.project.model.enums.ReservationMethod;
 import com.booking.project.service.interfaces.IAccommodationService;
 import com.booking.project.service.interfaces.IHostService;
+import com.booking.project.service.interfaces.IPriceListService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
@@ -31,6 +33,8 @@ public class AccommodationController {
     private IAccommodationService accommodationService;
     @Autowired
     private IHostService hostService;
+    @Autowired
+    private IPriceListService priceListService;
 
 
     @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
@@ -146,6 +150,48 @@ public class AccommodationController {
     public  ResponseEntity<?> getMinMaxPrices(){
         Collection<Double> minMax = accommodationService.getMinMaxPrice();
         return new ResponseEntity<Collection<Double>>(minMax, HttpStatus.OK);
+    }
+
+    @PostMapping(value = "/priceList/{accommodationId}", consumes = "application/json")
+    public ResponseEntity<Integer> addCalendar(@PathVariable Long accommodationId, @RequestBody List<IntervalPriceDTO> dtos) {
+
+        Optional<Accommodation> accommodation = accommodationService.findById(accommodationId);
+        accommodation.get().setPrices(priceListService.getPriceList(dtos));
+        try {
+            accommodationService.save(accommodation.get());
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+
+        return new ResponseEntity<>(accommodation.get().getPrices().size(), HttpStatus.OK);
+    }
+
+    @PutMapping(value = "/priceList/{accommodationId}", consumes = "application/json")
+    public ResponseEntity<Integer> updatePriceList(@PathVariable Long accommodationId,
+                                                   @RequestBody List<IntervalPriceDTO> dtos) {
+
+        int length = 0;
+        try {
+            length = priceListService.updatePriceList(accommodationId, dtos);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+
+        return new ResponseEntity<>(length, HttpStatus.OK);
+    }
+
+    @GetMapping(value = "priceList/{id}")
+    public ResponseEntity<?> getPriceList(@PathVariable Long id) {
+
+        Accommodation accommodation = accommodationService.findById(id).get();
+        return new ResponseEntity<>(accommodation.getPrices(), HttpStatus.OK);
+    }
+
+
+    @GetMapping(value = "intervalPrices/{id}")
+    public ResponseEntity<List<IntervalPriceDTO>> getIntervalPrices(@PathVariable Long id) {
+
+        return new ResponseEntity<>(priceListService.getIntervalPrices(id), HttpStatus.OK);
     }
 
 }
