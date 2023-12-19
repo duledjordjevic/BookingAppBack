@@ -77,10 +77,11 @@ public class AccommodationController {
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<?> createAccommodation(@RequestBody AccommodationDTO accommodationDTO) throws Exception {
         Accommodation accommodationNew = new Accommodation(accommodationDTO);
-        Host host = hostService.findById(accommodationDTO.getHostId()).get();
+        Host host = hostService.findByUser(accommodationDTO.getHostId());
         accommodationNew.setHost(host);
         Accommodation savedAccommodation = accommodationService.save(accommodationNew);
-        return new ResponseEntity<Accommodation>(savedAccommodation, HttpStatus.CREATED);
+        AccommodationDTO newAccommodationDTO = new AccommodationDTO(savedAccommodation);
+        return new ResponseEntity<AccommodationDTO>(newAccommodationDTO, HttpStatus.CREATED);
     }
     @PreAuthorize("hasRole('HOST')")
     @DeleteMapping(value = "/{id}")
