@@ -1,6 +1,7 @@
 package com.booking.project.repository.inteface;
 
 import com.booking.project.model.Accommodation;
+import com.booking.project.model.PriceList;
 import com.booking.project.model.enums.AccommodationApprovalStatus;
 import com.booking.project.model.enums.AccommodationStatus;
 import com.booking.project.model.enums.AccommodationType;
@@ -74,4 +75,12 @@ public interface IAccommodationRepository extends JpaRepository<Accommodation, L
             "from PriceList p " +
             "where p.date > CURRENT_DATE")
     Double findMinPrice();
+
+    @Query("select p from" +
+            " Accommodation a join" +
+            " a.prices p" +
+            " where a.id = :id" +
+            " and p.status = :status" +
+            " order by p.date")
+    List<PriceList> findPriceList(Long id, AccommodationStatus status);
 }
