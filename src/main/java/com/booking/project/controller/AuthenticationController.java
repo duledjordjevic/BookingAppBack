@@ -30,7 +30,7 @@ public class AuthenticationController {
     @Autowired
     private UserDetailsService userDetailsService;
 
-    @PostMapping(value = "login")
+    @PostMapping(value = "/login")
     public User login(@RequestBody UserCredentialsDTO userCredentialsDTO) {
         UsernamePasswordAuthenticationToken authReq = new UsernamePasswordAuthenticationToken(userCredentialsDTO.getEmail(),
                 userCredentialsDTO.getPassword());
