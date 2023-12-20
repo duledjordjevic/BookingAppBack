@@ -64,7 +64,7 @@ public class AccommodationController {
 
         return new ResponseEntity<Collection<AccommodationCardDTO>>(accommodationCards, HttpStatus.OK);
     }
-//    @PreAuthorize("hasRole('ADMIN')")
+
     @GetMapping(value = "/popular", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<?> getPopularAccommodations() throws IOException {
         Collection<AccommodationCardDTO> accommodationCards = accommodationService.findPopularAccommodations();
