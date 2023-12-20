@@ -76,7 +76,7 @@ public class UserController {
         User savedUser = userService.save(user);
         return new ResponseEntity<User>(savedUser, HttpStatus.CREATED);
     }
-
+    @PreAuthorize("hasRole('ADMIN')")
     @PutMapping(value = "/admin/{id}", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<?> updateAdmin(@RequestBody UserAdminUpdateDTO userAdminDTO, @PathVariable Long id) throws Exception{
         User userForUpdate = userService.updateAdmin(userAdminDTO, id);
@@ -85,6 +85,7 @@ public class UserController {
 
         return new ResponseEntity<User>(userForUpdate, HttpStatus.CREATED);
     }
+    @PreAuthorize("hasRole('GUEST') OR hasRole('HOST')")
     @PutMapping(value = "/{id}", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<?> updateUser(@RequestBody UserUpdateDTO userUpdateDTO, @PathVariable Long id) throws Exception{
         User userForUpdate = userService.update(userUpdateDTO, id);
