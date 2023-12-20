@@ -16,6 +16,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.bind.annotation.*;
 
@@ -38,21 +39,7 @@ public class ReservationController {
     @Autowired
     private IGuestService guestService;
 
-//    @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
-//    public ResponseEntity<Collection<Reservation>> getReservations(){
-//        Collection<Reservation> reservations = reservationService.findAll();
-//        return new ResponseEntity<Collection<Reservation>>(reservations, HttpStatus.OK);
-//    }
-
-//    @GetMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
-//    public ResponseEntity<Optional<Reservation>> getReservation(@PathVariable("id") Long id){
-//        Optional<Reservation> reservation = reservationService.findById(id);
-//        if(reservation.isEmpty()){
-//            return new ResponseEntity<Optional<Reservation>>(HttpStatus.NOT_FOUND);
-//        }
-//        return new ResponseEntity<Optional<Reservation>>(reservation, HttpStatus.OK);
-//    }
-
+    @PreAuthorize("hasRole('HOST') or hasRole('GUEST')")
     @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<?> filterReservations(@PathParam("title") String title,
                                                                     @PathParam("startDate") LocalDate startDate,
@@ -65,6 +52,7 @@ public class ReservationController {
         return new ResponseEntity<Collection<ReservationDTO>>(reservations, HttpStatus.OK);
     }
 
+    @PreAuthorize("hasRole('GUEST')")
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<?> createReservation(@RequestBody CreateReservationDTO createReservationDTO) throws Exception {
         List<Object> reservationResponse = accommodationService.reservate(createReservationDTO.getAccommodationId(), createReservationDTO.getStartDate(), createReservationDTO.getEndDate(), createReservationDTO.getNumberOfGuests());
@@ -77,6 +65,7 @@ public class ReservationController {
         return new ResponseEntity<ReservationMethod>(reservationMethod, HttpStatus.CREATED);
     }
 
+    @PreAuthorize("hasRole('GUEST')")
     @PostMapping(value = "/reservationPrice",consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<?> getReservationPrice(@RequestBody CreateReservationDTO createReservationDTO ) {
         List<Object> reservationPrice = accommodationService.calculateReservationPrice(createReservationDTO.getStartDate(), createReservationDTO.getEndDate(), createReservationDTO.getAccommodationId(), createReservationDTO.getNumberOfGuests());
@@ -86,6 +75,7 @@ public class ReservationController {
         return new ResponseEntity<Double>((Double) reservationPrice.get(1), HttpStatus.OK );
     }
 
+    @PreAuthorize("hasRole('HOST')")
     @PutMapping(value = "/{id}/{reservationStatus}", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<?> updateReservationStatus(@PathVariable Long id, @PathVariable ReservationStatus reservationStatus) throws Exception{
         Reservation reservation = reservationService.updateStatus(id, reservationStatus);
@@ -97,6 +87,7 @@ public class ReservationController {
         return new ResponseEntity<ReservationDTO>(new ReservationDTO(reservation), HttpStatus.CREATED);
     }
 
+    @PreAuthorize("hasRole('GUEST')")
     @DeleteMapping(value = "/pending/{id}")
     public ResponseEntity<?> deletePendingReservation(@PathVariable("id") Long id){
         Boolean isDeleted = reservationService.deleteById(id);
@@ -108,6 +99,7 @@ public class ReservationController {
         return new ResponseEntity<Boolean>(true, HttpStatus.OK);
     }
 
+    @PreAuthorize("hasRole('GUEST')")
     @PutMapping(value = "/deleteAccepted/{id}")
     public ResponseEntity<?> cancelReservation(@PathVariable("id") Long id) throws Exception {
         Reservation reservation = reservationService.cancelReservation(id);

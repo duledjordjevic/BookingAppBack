@@ -99,6 +99,7 @@ public class AccommodationController {
         return new ResponseEntity<AccommodationDTO>(accommodationDTO, HttpStatus.OK);
     }
 
+    @PreAuthorize("hasRole('GUEST')")
     @GetMapping(value = "/{id}/availableDates", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<?> getAvailableDates(@PathVariable("id") Long id) throws IOException {
         List<LocalDate> availableDates = accommodationService.getAvailableDates(id);
