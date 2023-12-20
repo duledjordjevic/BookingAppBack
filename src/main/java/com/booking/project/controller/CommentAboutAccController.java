@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Collection;
@@ -18,14 +19,14 @@ public class CommentAboutAccController {
 
     @Autowired
     private ICommentAboutAccService commentAboutAccService;
-
+    @PreAuthorize("hasRole('GUEST')")
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<CommentAboutAcc> createCommentAboutAcc
             (@RequestBody CreateCommentAboutAccDTO createCommentAboutAccDTO) throws Exception {
         CommentAboutAcc savedCommentAboutAcc = commentAboutAccService.create(createCommentAboutAccDTO);
         return new ResponseEntity<CommentAboutAcc>(savedCommentAboutAcc, HttpStatus.CREATED);
     }
-
+    @PreAuthorize("hasRole('GUEST')")
     @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Collection<CommentAboutAccDTO>> getAll(){
         Collection<CommentAboutAccDTO> comments = commentAboutAccService.findAll();
@@ -43,13 +44,13 @@ public class CommentAboutAccController {
         }
         return new ResponseEntity<Collection<CommentAboutAccDTO>>(comments, HttpStatus.OK);
     }
-
+    @PreAuthorize("hasRole('ADMIN')")
     @DeleteMapping(value = "/{id}")
     public ResponseEntity<CommentAboutAcc> deleteCommentAboutAcc(@PathVariable("id") Long id){
         commentAboutAccService.deleteById(id);
         return new ResponseEntity<CommentAboutAcc>(HttpStatus.NO_CONTENT);
     }
-
+    @PreAuthorize("hasRole('GUEST') OR hasRole('HOST')")
     @PutMapping(value = "/{id}/report/{isReported}", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<?> reportCommentAboutAcc(@PathVariable Long id, @PathVariable boolean isReported) throws Exception{
         CommentAboutAcc commentAboutAcc = commentAboutAccService.report(id, isReported);
@@ -60,7 +61,7 @@ public class CommentAboutAccController {
 
         return new ResponseEntity<CommentAboutAccDTO>(new CommentAboutAccDTO(commentAboutAcc), HttpStatus.CREATED);
     }
-
+    @PreAuthorize("hasRole('ADMIN')")
     @PutMapping(value = "/{id}/approve/{isApproved}", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<?> approveCommentAboutAcc(@PathVariable Long id, @PathVariable boolean isApproved) throws Exception{
         CommentAboutAcc commentAboutAcc = commentAboutAccService.approve(id, isApproved);
@@ -71,7 +72,7 @@ public class CommentAboutAccController {
 
         return new ResponseEntity<CommentAboutAccDTO>(new CommentAboutAccDTO(commentAboutAcc), HttpStatus.CREATED);
     }
-
+    @PreAuthorize("hasRole('ADMIN')")
     @GetMapping(value = "/reported",produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Collection<CommentAboutAccDTO>> getReported(){
         Collection<CommentAboutAccDTO> comments = commentAboutAccService.findAllReported();

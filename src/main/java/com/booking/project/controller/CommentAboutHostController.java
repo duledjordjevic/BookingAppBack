@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Collection;
@@ -20,7 +21,7 @@ public class CommentAboutHostController {
 
     @Autowired
     private ICommentAboutHostService commentAboutHostService;
-
+    @PreAuthorize("hasRole('GUEST')")
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<?> createCommentAboutHost
             (@RequestBody CreateCommentAboutHostDTO createCommentAboutHostDTO) throws Exception {
@@ -45,13 +46,13 @@ public class CommentAboutHostController {
         }
         return new ResponseEntity<Collection<CommentAboutHostDTO>>(comments, HttpStatus.OK);
     }
-
+    @PreAuthorize("hasRole('ADMIN')")
     @DeleteMapping(value = "/{id}")
     public ResponseEntity<CommentAboutHost> deleteCommentAboutHost(@PathVariable("id") Long id){
         commentAboutHostService.deleteById(id);
         return new ResponseEntity<CommentAboutHost>(HttpStatus.NO_CONTENT);
     }
-
+    @PreAuthorize("hasRole('HOST')")
     @PutMapping(value = "/{id}/report/{isReported}", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<?> reportCommentAboutHost(@PathVariable Long id, @PathVariable boolean isReported) throws Exception{
         CommentAboutHost commentAboutHost = commentAboutHostService.report(id, isReported);
@@ -62,7 +63,7 @@ public class CommentAboutHostController {
 
         return new ResponseEntity<CommentAboutHostDTO>(new CommentAboutHostDTO(commentAboutHost), HttpStatus.CREATED);
     }
-
+    @PreAuthorize("hasRole('ADMIN')")
     @PutMapping(value = "/{id}/approve/{isApproved}", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<?> approveCommentAboutHost(@PathVariable Long id, @PathVariable boolean isApproved) throws Exception{
         CommentAboutHost commentAboutHost = commentAboutHostService.approve(id, isApproved);
@@ -73,7 +74,7 @@ public class CommentAboutHostController {
 
         return new ResponseEntity<CommentAboutHostDTO>(new CommentAboutHostDTO(commentAboutHost), HttpStatus.CREATED);
     }
-
+    @PreAuthorize("hasRole('ADMIN')")
     @GetMapping(value = "/reported",produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Collection<CommentAboutHostDTO>> getReported(){
         Collection<CommentAboutHostDTO> comments = commentAboutHostService.findAllReported();

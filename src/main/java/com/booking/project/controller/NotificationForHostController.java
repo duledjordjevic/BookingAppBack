@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Collection;
@@ -25,7 +26,7 @@ public class NotificationForHostController {
         NotificationForHost savedNotificationForHost = notificationForHostService.create(createNotificationForHostDTO);
         return new ResponseEntity<NotificationForHost>(savedNotificationForHost, HttpStatus.CREATED);
     }
-
+    @PreAuthorize("hasRole('HOST')")
     @GetMapping(value = "/host/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Collection<NotificationForHostDTO>> getNotificationsForHost(@PathVariable Long id){
         Collection<NotificationForHostDTO> notificationForHost = notificationForHostService.findByHost(id);

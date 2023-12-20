@@ -61,6 +61,7 @@ public class UserController {
 
         return new ResponseEntity<Optional<User>>(user, HttpStatus.OK);
     }
+    @PreAuthorize("hasRole('HOST') OR hasRole('GUEST')")
     @PutMapping (value = "/delete/{id}")
     public ResponseEntity<?> deleteUser(@RequestBody UserDeleteDTO userDeleteDTO,@PathVariable("id") Long id) throws Exception {
         Boolean isUserDeleted = userService.deleteUserById(userDeleteDTO,id);
@@ -70,11 +71,6 @@ public class UserController {
         }
 
         return new ResponseEntity<Boolean>(true, HttpStatus.OK);
-    }
-    @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<?> createUser(@RequestBody User user) throws Exception {
-        User savedUser = userService.save(user);
-        return new ResponseEntity<User>(savedUser, HttpStatus.CREATED);
     }
     @PreAuthorize("hasRole('ADMIN')")
     @PutMapping(value = "/admin/{id}", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
@@ -94,24 +90,7 @@ public class UserController {
 
         return new ResponseEntity<User>(userForUpdate, HttpStatus.OK);
     }
-
-    @PutMapping(value = "/guest/{id}", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<?> updateGuest(@RequestBody GuestDTO guestDTO, @PathVariable Long id) throws Exception{
-        Guest guestForUpdate = guestService.update(guestDTO, id);
-
-        if(guestForUpdate == null) return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
-
-        return new ResponseEntity<>(guestForUpdate, HttpStatus.CREATED);
-    }
-
-    @PutMapping(value = "/host/{id}", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<?> updateHost(@RequestBody HostDTO hostDTO, @PathVariable Long id) throws Exception{
-        Host hostForUpdate = hostService.update(hostDTO, id);
-
-        if(hostForUpdate == null) return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
-
-        return new ResponseEntity<>(hostForUpdate, HttpStatus.CREATED);
-    }
+    @PreAuthorize("hasRole('HOST')")
     @PutMapping(value = "/host/{id}/userStatus/{status}", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<?> changeHostStatus(@PathVariable Long id,@PathVariable UserStatus status) throws Exception {
         UserDTO userDTO = userService.changeStatus(id,status, UserType.HOST);
@@ -120,6 +99,7 @@ public class UserController {
 
         return new ResponseEntity<UserDTO>(userDTO, HttpStatus.OK);
     }
+    @PreAuthorize("hasRole('GUEST')")
     @PutMapping(value = "/guest/{id}/userStatus/{status}", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<?> changeGuestStatus(@PathVariable Long id,@PathVariable UserStatus status) throws Exception {
         UserDTO userDTO = userService.changeStatus(id,status,UserType.GUEST);
@@ -128,17 +108,7 @@ public class UserController {
 
         return new ResponseEntity<UserDTO>(userDTO, HttpStatus.OK);
     }
-    @PostMapping(value = "/guest",consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<?> createGuest(@RequestBody GuestDTO guestDTO) throws Exception {
-        GuestDTO savedGuest = guestService.addGuest(guestDTO);
-        return new ResponseEntity<GuestDTO>(savedGuest, HttpStatus.CREATED);
-    }
-
-    @PostMapping(value = "/host",consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<?> createHost(@RequestBody HostDTO hostDTO) throws Exception {
-        HostDTO savedHost = hostService.addHost(hostDTO);
-        return new ResponseEntity<HostDTO>(savedHost, HttpStatus.CREATED);
-    }
+    @PreAuthorize("hasRole('GUEST') OR hasRole('HOST')")
     @PutMapping(value = "/report/{id}", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<?> reportUser(@PathVariable Long id) throws Exception {
         UserDTO userDTO = userService.report(id);
@@ -147,6 +117,7 @@ public class UserController {
 
         return new ResponseEntity<UserDTO>(userDTO, HttpStatus.OK);
     }
+    @PreAuthorize("hasRole('ADMIN')")
     @GetMapping(value = "/reported", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<?> getReportedUsers() throws Exception{
         Collection<UserDTO> reportedUsersDTOs = userService.findReportedUsers();

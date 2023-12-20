@@ -28,7 +28,8 @@ public class WebSecurityConfiguration {
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http.csrf().disable().authorizeRequests() // csrf->disabled, pošto nam JWT odrađuje zaštitu od CSRF napada          statički html i login mogu svi da pozovu
                 .requestMatchers("/*").permitAll().requestMatchers("/api/auth/login").permitAll()
-                .requestMatchers("/api/auth/register/*").permitAll()
+                .requestMatchers("/api/register**").permitAll()
+                .requestMatchers("api/register/confirm**").permitAll()
                 .requestMatchers("/api/accommodations/cards/filter**").permitAll()
                 .requestMatchers("/api/accommodations/minMaxPrice").permitAll()
                 .requestMatchers("/api/accommodations/popular").permitAll()

@@ -20,47 +20,6 @@ public class GuestController {
 
     @Autowired
     private IGuestService guestService;
-
-    @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Collection<Guest>> getGuests(){
-
-        Collection<Guest> guests = guestService.findAll();
-        return new ResponseEntity<Collection<Guest>>(guests, HttpStatus.OK);
-    }
-
-    @GetMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Optional<Guest>> getGuest(@PathVariable("id") Long id){
-        Optional<Guest> guest = guestService.findById(id);
-        if(guest.isEmpty()){
-            return new ResponseEntity<Optional<Guest>>(HttpStatus.NOT_FOUND);
-        }
-        return new ResponseEntity<Optional<Guest>>(guest, HttpStatus.OK);
-    }
-
-    @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Guest> createGuest(@RequestBody Guest guest) throws Exception {
-        Guest savedGuest = guestService.save(guest);
-        return new ResponseEntity<Guest>(savedGuest, HttpStatus.CREATED);
-    }
-
-//    @PutMapping(value = "/{id}", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-//    public ResponseEntity<Guest> updateGuest(@RequestBody Guest guest, @PathVariable Long id) throws Exception{
-//        Optional<Guest> guestForUpdate = guestService.findById(id);
-//
-//        if (guestForUpdate.isEmpty()) {
-//            return new ResponseEntity<Guest>(HttpStatus.BAD_REQUEST);
-//        }
-//
-//        guestForUpdate.get().copyValues(guest);
-//
-//        return new ResponseEntity<Guest>(guestService.save(guestForUpdate.get()), HttpStatus.OK);
-//    }
-    @PreAuthorize("hasRole('ADMIN')")
-    @DeleteMapping(value = "/{id}")
-    public ResponseEntity<Guest> deleteGuest(@PathVariable("id") Long id){
-        guestService.deleteById(id);
-        return new ResponseEntity<Guest>(HttpStatus.NO_CONTENT);
-    }
     @PreAuthorize("hasRole('GUEST')")
     @GetMapping(value = "/{id}/favourites", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Collection<AccommodationCardDTO>> getFavouritesAccommodations(@PathVariable("id") Long id){
