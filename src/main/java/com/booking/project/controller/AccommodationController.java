@@ -154,7 +154,7 @@ public class AccommodationController {
     }
 
     @PostMapping(value = "/priceList/{accommodationId}", consumes = "application/json")
-    public ResponseEntity<Integer> addCalendar(@PathVariable Long accommodationId, @RequestBody List<IntervalPriceDTO> dtos) {
+    public ResponseEntity<Integer> addPriceList(@PathVariable Long accommodationId, @RequestBody List<IntervalPriceDTO> dtos) {
 
         Optional<Accommodation> accommodation = accommodationService.findById(accommodationId);
         accommodation.get().setPrices(priceListService.getPriceList(dtos));
