@@ -152,4 +152,13 @@ public class UserController {
 
         return new ResponseEntity<Collection<UserDTO>>(reportedUsersDTOs, HttpStatus.OK);
     }
+
+    @GetMapping(value = "/host/{user_id}")
+    public ResponseEntity<?> getHostId(@PathVariable Long user_id) throws Exception{
+        Host host = hostService.findByUser(user_id);
+
+        if(host == null)  return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+
+        return new ResponseEntity<Integer>(Math.toIntExact(host.getId()), HttpStatus.OK);
+    }
  }

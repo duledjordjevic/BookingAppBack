@@ -30,7 +30,7 @@ public class RegisterController {
     private HostService hostService;
 
     @PostMapping()
-    public ResponseEntity<User> addUser(@RequestBody UserInfoDTO userInfoDTO, UriComponentsBuilder ucBuilder) throws Exception {
+    public ResponseEntity<User> addUser(@RequestBody UserInfoDTO userInfoDTO) throws Exception {
         User savedUser = userService.registerUser(userInfoDTO);
 
         if(savedUser == null){
