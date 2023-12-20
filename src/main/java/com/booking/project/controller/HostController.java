@@ -20,21 +20,7 @@ public class HostController {
 
     @Autowired
     private IHostService hostService;
-
-    @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Collection<HostDTO>> getHosts(){
-        Collection<HostDTO> hosts = hostService.findHosts();
-        return new ResponseEntity<Collection<HostDTO>>(hosts, HttpStatus.OK);
-    }
-
-    @GetMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<HostDTO> getHost(@PathVariable("id") Long id){
-        HostDTO hostDTO = hostService.findHost(id);
-        if(hostDTO == null)     return new ResponseEntity<HostDTO>(hostDTO,HttpStatus.NOT_FOUND);
-
-        return new ResponseEntity<HostDTO>(hostDTO, HttpStatus.OK);
-    }
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasRole('HOST')")
     @DeleteMapping(value = "/{id}")
     public ResponseEntity<HostDTO> deleteHost(@PathVariable("id") Long id){
         hostService.deleteById(id);

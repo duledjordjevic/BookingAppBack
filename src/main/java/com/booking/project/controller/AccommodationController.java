@@ -153,7 +153,7 @@ public class AccommodationController {
         Collection<Double> minMax = accommodationService.getMinMaxPrice();
         return new ResponseEntity<Collection<Double>>(minMax, HttpStatus.OK);
     }
-
+    @PreAuthorize("hasRole('HOST')")
     @PostMapping(value = "/priceList/{accommodationId}", consumes = "application/json")
     public ResponseEntity<Integer> addPriceList(@PathVariable Long accommodationId, @RequestBody List<IntervalPriceDTO> dtos) {
 
@@ -167,7 +167,7 @@ public class AccommodationController {
 
         return new ResponseEntity<>(accommodation.get().getPrices().size(), HttpStatus.OK);
     }
-
+    @PreAuthorize("hasRole('HOST')")
     @PutMapping(value = "/priceList/{accommodationId}", consumes = "application/json")
     public ResponseEntity<Integer> updatePriceList(@PathVariable Long accommodationId,
                                                    @RequestBody List<IntervalPriceDTO> dtos) {
@@ -181,7 +181,7 @@ public class AccommodationController {
 
         return new ResponseEntity<>(length, HttpStatus.OK);
     }
-
+    @PreAuthorize("hasRole('HOST')")
     @GetMapping(value = "priceList/{id}")
     public ResponseEntity<?> getPriceList(@PathVariable Long id) {
 
@@ -189,7 +189,7 @@ public class AccommodationController {
         return new ResponseEntity<>(accommodation.getPrices(), HttpStatus.OK);
     }
 
-
+    @PreAuthorize("hasRole('HOST')")
     @GetMapping(value = "intervalPrices/{id}")
     public ResponseEntity<List<IntervalPriceDTO>> getIntervalPrices(@PathVariable Long id) {
 
