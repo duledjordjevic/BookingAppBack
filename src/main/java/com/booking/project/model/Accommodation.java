@@ -64,7 +64,7 @@ public class Accommodation {
     @Column(nullable = false)
     private boolean isPriceForEntireAcc;
 
-    @OneToMany(fetch = FetchType.LAZY)
+    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private Set<PriceList> prices = new HashSet<PriceList>();
 
     @ManyToOne(fetch = FetchType.EAGER)
