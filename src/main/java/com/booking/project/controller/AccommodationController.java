@@ -43,7 +43,7 @@ public class AccommodationController {
         return new ResponseEntity<Collection<AccommodationDTO>>(accommodations, HttpStatus.OK);
     }
     @GetMapping(value = "/cards",produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<?> getAccommodationsCards(){
+    public ResponseEntity<?> getAccommodationsCards() throws IOException{
         Collection<AccommodationCardDTO> accommodations = accommodationService.findAllCards();
         return new ResponseEntity<Collection<AccommodationCardDTO>>(accommodations, HttpStatus.OK);
     }

@@ -42,11 +42,12 @@ public class AccommodationService implements IAccommodationService {
         }
         return accommodationDTOS;
     }
-    public Collection<AccommodationCardDTO> findAllCards(){
-        Collection<Accommodation> accommodations = accommodationRepository.findAll();
+    public Collection<AccommodationCardDTO> findAllCards() throws IOException {
+        Collection<Accommodation> accommodations = accommodationRepository.findAccommodationsByApprovalStatus(AccommodationApprovalStatus.APPROVED);
         Collection<AccommodationCardDTO> accommodationDTOS = new ArrayList<>();
         for(Accommodation acc : accommodations){
             AccommodationCardDTO accomodationDTO = new AccommodationCardDTO(acc);
+            accomodationDTO.setImage(imageService.getCoverImage(acc.getImages().split(",")[0]));
             accommodationDTOS.add(accomodationDTO);
         }
         return accommodationDTOS;

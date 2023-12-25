@@ -12,7 +12,7 @@ import java.util.*;
 
 public interface IAccommodationService {
     Collection<AccommodationDTO> findAll();
-    Collection<AccommodationCardDTO> findAllCards();
+    Collection<AccommodationCardDTO> findAllCards() throws IOException;
     Optional<AccommodationDTO> changeAccommodations(AccommodationDTO accommodationDTO,Long id) throws Exception;
 
     Optional<Accommodation> findById(Long id);

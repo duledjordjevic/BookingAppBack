@@ -36,7 +36,7 @@ public class WebSecurityConfiguration {
                 .requestMatchers("/api/accommodations/{id}").permitAll()
                 .requestMatchers("/api/commentsAboutAcc/acc/{id}").permitAll()
 //                .requestMatchers("/api/accommodation**").authenticated() // sav pristup API-ju mora da bude autentikovan
-                .anyRequest().authenticated()
+//                .anyRequest().authenticated()
                 .and()
                 .cors()
                 .and()
