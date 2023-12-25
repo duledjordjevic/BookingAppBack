@@ -23,7 +23,7 @@ public class ImageController {
     @Autowired
     private IAccommodationService accommodationService;
 
-    @PreAuthorize("hasRole('HOST')")
+//    @PreAuthorize("hasRole('HOST')")
     @PostMapping("/{accommodationId}")
     public ResponseEntity<?> createAccommodationImages (@RequestParam("image") MultipartFile[] accImages, @PathVariable Long accommodationId) throws Exception {
         String uploadDirectory = "src/main/resources/static/images/accommodations";

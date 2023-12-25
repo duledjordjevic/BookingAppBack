@@ -83,4 +83,9 @@ public interface IAccommodationRepository extends JpaRepository<Accommodation, L
             " and p.status = :status" +
             " order by p.date")
     List<PriceList> findPriceList(Long id, AccommodationStatus status);
+
+    @Query("select a " +
+            "from Accommodation  a " +
+            "where a.accommodationApprovalStatus = :approvalStatus ")
+    List<Accommodation> findAccommodationsByApprovalStatus(@Param("approvalStatus") AccommodationApprovalStatus approvalStatus);
 }
