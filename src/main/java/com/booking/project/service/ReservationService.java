@@ -99,9 +99,10 @@ public class ReservationService implements IReservationService {
         return reservationRepository.findByHost(id);
     }
     @Override
-    public List<ReservationDTO> filter(String title, LocalDate startDate, LocalDate endDate, ReservationStatus reservationStatus){
+    public List<ReservationDTO> filterGuestReservations(String title, LocalDate startDate, LocalDate endDate, ReservationStatus reservationStatus, Integer guestUserId){
         Query q = em.createQuery("SELECT r FROM Reservation r JOIN FETCH r.accommodation a JOIN FETCH r.guest WHERE (LOWER(a.title) LIKE LOWER(:pattern) OR :pattern is Null)" +
-                " AND ((r.startDate >= :startDate AND r.endDate <= :endDate) OR cast(:startDate as date) is null) AND (r.status = :reservationStatus OR :reservationStatus is Null)");
+                " AND ((r.startDate >= :startDate AND r.endDate <= :endDate) OR cast(:startDate as date) is null) " +
+                "AND (r.status = :reservationStatus OR :reservationStatus is Null) AND (:guestUserId is Null OR r.guest.user.id = :guestUserId)");
         if(title == null){
             q.setParameter("pattern", null);
         }else{
@@ -110,6 +111,7 @@ public class ReservationService implements IReservationService {
         q.setParameter("startDate" , startDate);
         q.setParameter("endDate", endDate);
         q.setParameter("reservationStatus", reservationStatus);
+        q.setParameter("guestUserId", guestUserId);
 
         List<ReservationDTO> reservationDTOs = new ArrayList<ReservationDTO>();
         List<Reservation> reservations = q.getResultList();
