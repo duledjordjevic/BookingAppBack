@@ -35,5 +35,6 @@ public class ReservationDTO {
         this.numberOfGuests = reservation.getNumberOfGuests();
         this.status = reservation.getStatus();
         this.accommodation = new AccommodationDTO(reservation.getAccommodation());
+        this.guest = reservation.getGuest();
     }
 }

@@ -122,6 +122,29 @@ public class ReservationService implements IReservationService {
     }
 
     @Override
+    public List<ReservationDTO> filterHostReservations(String title, LocalDate startDate, LocalDate endDate, ReservationStatus reservationStatus, Integer hostUserId){
+        Query q = em.createQuery("SELECT r FROM Reservation r JOIN FETCH r.accommodation a JOIN FETCH r.guest WHERE (LOWER(a.title) LIKE LOWER(:pattern) OR :pattern is Null)" +
+                " AND ((r.startDate >= :startDate AND r.endDate <= :endDate) OR cast(:startDate as date) is null) " +
+                "AND (r.status = :reservationStatus OR :reservationStatus is Null) AND (:hostUserId is Null OR a.host.user.id = :hostUserId)");
+        if(title == null){
+            q.setParameter("pattern", null);
+        }else{
+            q.setParameter("pattern", "%" + title + "%");
+        }
+        q.setParameter("startDate" , startDate);
+        q.setParameter("endDate", endDate);
+        q.setParameter("reservationStatus", reservationStatus);
+        q.setParameter("hostUserId", hostUserId);
+
+        List<ReservationDTO> reservationDTOs = new ArrayList<ReservationDTO>();
+        List<Reservation> reservations = q.getResultList();
+        for(Reservation reservation : reservations){
+            reservationDTOs.add(new ReservationDTO(reservation));
+        }
+        return reservationDTOs;
+    }
+
+    @Override
     public Reservation updateStatus(Long id, ReservationStatus reservationStatus) throws Exception {
         Optional<Reservation> reservation = reservationRepository.findById(id);
 
