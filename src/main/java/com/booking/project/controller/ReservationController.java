@@ -111,12 +111,12 @@ public class ReservationController {
     }
 
     @PreAuthorize("hasRole('GUEST')")
-    @PutMapping(value = "/deleteAccepted/{id}")
-    public ResponseEntity<?> cancelReservation(@PathVariable("id") Long id) throws Exception {
-        Reservation reservation = reservationService.cancelReservation(id);
+    @PutMapping(value = "/cancelAccepted/{id}")
+    public ResponseEntity<?> cancelAcceptedReservation(@PathVariable("id") Long id) throws Exception {
+        Reservation reservation = reservationService.cancelAcceptedReservation(id);
 
         if(reservation == null){
-            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+            return new ResponseEntity<>(HttpStatus.METHOD_NOT_ALLOWED);
         }
 
         Guest guest = reservation.getGuest();
