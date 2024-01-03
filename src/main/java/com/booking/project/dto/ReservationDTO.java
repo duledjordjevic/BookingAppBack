@@ -25,7 +25,7 @@ public class ReservationDTO {
     private int numberOfGuests;
     private ReservationStatus status;
     private Guest guest;
-    private Accommodation accommodation;
+    private AccommodationDTO accommodation;
 
     public ReservationDTO(Reservation reservation){
         this.id = reservation.getId();
@@ -34,5 +34,6 @@ public class ReservationDTO {
         this.price = reservation.getPrice();
         this.numberOfGuests = reservation.getNumberOfGuests();
         this.status = reservation.getStatus();
+        this.accommodation = new AccommodationDTO(reservation.getAccommodation());
     }
 }

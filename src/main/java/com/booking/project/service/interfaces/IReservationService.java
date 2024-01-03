@@ -25,7 +25,7 @@ public interface IReservationService {
 
     Reservation create(CreateReservationDTO createReservationDTO, double price, ReservationMethod reservationMethod) throws Exception;
 
-    List<ReservationDTO> filter(String title, LocalDate startDate, LocalDate endDate, ReservationStatus reservationStatus);
+    List<ReservationDTO> filterGuestReservations(String title, LocalDate startDate, LocalDate endDate, ReservationStatus reservationStatus, Integer guestUserId);
 
     Reservation updateStatus(Long id, ReservationStatus reservationStatus) throws Exception;
 

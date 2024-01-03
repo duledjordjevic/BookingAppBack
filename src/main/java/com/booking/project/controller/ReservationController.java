@@ -39,16 +39,15 @@ public class ReservationController {
     @Autowired
     private IGuestService guestService;
 
-    @PreAuthorize("hasRole('HOST') or hasRole('GUEST')")
-    @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<?> filterReservations(@PathParam("title") String title,
-                                                                    @PathParam("startDate") LocalDate startDate,
-                                                                    @PathParam("endDate") LocalDate endDate,
-                                                                    @PathParam("status") ReservationStatus status){
-        List<ReservationDTO> reservations = reservationService.filter(title, startDate, endDate, status);
-        if(reservations.isEmpty()){
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
+    @PreAuthorize("hasRole('GUEST')")
+    @GetMapping(value = "/filterGuest", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<?> filterGuestReservations(@PathParam("title") String title,
+                                                     @PathParam("startDate") LocalDate startDate,
+                                                     @PathParam("endDate") LocalDate endDate,
+                                                     @PathParam("status") ReservationStatus status,
+                                                     @PathParam("guestId") Integer guestId){
+        List<ReservationDTO> reservations = reservationService.filterGuestReservations(title, startDate, endDate, status, guestId);
+
         return new ResponseEntity<Collection<ReservationDTO>>(reservations, HttpStatus.OK);
     }
 
