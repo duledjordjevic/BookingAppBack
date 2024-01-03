@@ -45,8 +45,20 @@ public class ReservationController {
                                                      @PathParam("startDate") LocalDate startDate,
                                                      @PathParam("endDate") LocalDate endDate,
                                                      @PathParam("status") ReservationStatus status,
-                                                     @PathParam("guestId") Integer guestId){
-        List<ReservationDTO> reservations = reservationService.filterGuestReservations(title, startDate, endDate, status, guestId);
+                                                     @PathParam("guestId") Integer guestUserId){
+        List<ReservationDTO> reservations = reservationService.filterGuestReservations(title, startDate, endDate, status, guestUserId);
+
+        return new ResponseEntity<Collection<ReservationDTO>>(reservations, HttpStatus.OK);
+    }
+
+    @PreAuthorize("hasRole('HOST')")
+    @GetMapping(value = "/filterHost", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<?> filterHostReservations(@PathParam("title") String title,
+                                                     @PathParam("startDate") LocalDate startDate,
+                                                     @PathParam("endDate") LocalDate endDate,
+                                                     @PathParam("status") ReservationStatus status,
+                                                     @PathParam("hostId") Integer hostUserId){
+        List<ReservationDTO> reservations = reservationService.filterHostReservations(title, startDate, endDate, status, hostUserId);
 
         return new ResponseEntity<Collection<ReservationDTO>>(reservations, HttpStatus.OK);
     }
