@@ -166,7 +166,7 @@ public class ReservationService implements IReservationService {
     }
 
     @Override
-    public Reservation cancelReservation(Long id){
+    public Reservation cancelAcceptedReservation(Long id){
         Optional<Reservation> reservation = reservationRepository.findById(id);
 
         if(reservation.isEmpty()) return null;
@@ -178,6 +178,11 @@ public class ReservationService implements IReservationService {
             }
         }else if(reservation.get().getAccommodation().getCancellationPolicy().equals(CancellationPolicy.HOURS48)){
             if (!reservation.get().getStartDate().minusDays(2).isEqual(LocalDate.now())){
+                reservation.get().setStatus(ReservationStatus.CANCELLED);
+                return reservation.get();
+            }
+        }else if(reservation.get().getAccommodation().getCancellationPolicy().equals(CancellationPolicy.HOURS72)){
+            if (!reservation.get().getStartDate().minusDays(3).isEqual(LocalDate.now())){
                 reservation.get().setStatus(ReservationStatus.CANCELLED);
                 return reservation.get();
             }
