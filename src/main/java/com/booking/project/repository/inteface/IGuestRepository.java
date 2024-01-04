@@ -14,9 +14,9 @@ public interface IGuestRepository extends JpaRepository<Guest, Long>{
     @Query(
             "SELECT g.favourites " +
                     "FROM Guest g " +
-                    "where g.id = :guestId "
+                    "where g.user.id = :guestUserId "
     )
     public Collection<Accommodation> findByFavourites(
-            @Param("guestId") Long id);
+            @Param("guestUserId") Long guestUserid);
     Optional<Guest> findByUserId(Long id);
 }

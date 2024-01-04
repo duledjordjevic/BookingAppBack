@@ -11,6 +11,7 @@ import com.booking.project.model.enums.AccommodationType;
 import com.booking.project.model.enums.Amenities;
 import com.booking.project.model.enums.ReservationMethod;
 import com.booking.project.service.interfaces.IAccommodationService;
+import com.booking.project.service.interfaces.IGuestService;
 import com.booking.project.service.interfaces.IHostService;
 import com.booking.project.service.interfaces.IPriceListService;
 import org.springframework.beans.factory.annotation.Autowired;
