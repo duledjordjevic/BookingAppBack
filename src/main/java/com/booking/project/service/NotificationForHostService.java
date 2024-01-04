@@ -1,11 +1,8 @@
 package com.booking.project.service;
 
 import com.booking.project.dto.CreateNotificationForHostDTO;
-import com.booking.project.dto.NotificationForGuestDTO;
 import com.booking.project.dto.NotificationForHostDTO;
-import com.booking.project.model.Guest;
 import com.booking.project.model.Host;
-import com.booking.project.model.NotificationForGuest;
 import com.booking.project.model.NotificationForHost;
 import com.booking.project.repository.inteface.IHostRepository;
 import com.booking.project.repository.inteface.INotificationForHostRepository;
@@ -70,6 +67,20 @@ public class NotificationForHostService implements INotificationForHostService {
 
         save(notificationForHost);
         return notificationForHost;
+    }
+    @Override
+    public NotificationForHostDTO markAsRead(Long id) {
+        Optional<NotificationForHost> notificationForHost = notificationForHostRepository.findById(id);
+
+        if(notificationForHost.isEmpty()){
+            return null;
+        }
+        notificationForHost.get().setRead(true);
+        notificationForHostRepository.save(notificationForHost.get());
+
+        NotificationForHostDTO notificationForHostDTO = new NotificationForHostDTO(notificationForHost.get());
+        return notificationForHostDTO;
+
     }
 
     public Collection<NotificationForHostDTO> mapToDto(Collection<NotificationForHost> notificationsForHost){
