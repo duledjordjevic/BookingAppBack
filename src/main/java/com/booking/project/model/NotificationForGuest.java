@@ -21,4 +21,7 @@ public class NotificationForGuest {
     @ManyToOne(fetch = FetchType.LAZY)
     private Guest guest;
 
+    @Column(nullable = false)
+    private boolean isRead;
+
 }

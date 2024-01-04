@@ -25,4 +25,7 @@ public class NotificationForHost {
 
     @ManyToOne(fetch = FetchType.LAZY)
     private Host host;
+
+    @Column(nullable = false)
+    private boolean isRead;
 }

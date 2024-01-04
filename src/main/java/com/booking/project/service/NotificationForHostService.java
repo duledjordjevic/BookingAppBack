@@ -51,7 +51,7 @@ public class NotificationForHostService implements INotificationForHostService {
 
     @Override
     public Collection<NotificationForHostDTO> findByHost(Long id) {
-        Optional<Host> host = hostRepository.findById(id);
+        Host host = hostRepository.findByUserId(id);
         Collection<NotificationForHost> notificationsForHost = notificationForHostRepository.findAllByHost(host);
         return mapToDto(notificationsForHost);
     }
@@ -62,6 +62,7 @@ public class NotificationForHostService implements INotificationForHostService {
         NotificationForHost notificationForHost = new NotificationForHost();
         notificationForHost.setType(createNotificationForHostDTO.getType());
         notificationForHost.setDescription(createNotificationForHostDTO.getDescription());
+        notificationForHost.setRead(false);
 
         Optional<Host> host = hostRepository.findById(createNotificationForHostDTO.getHostId());
         if (host.isEmpty()) return null;
