@@ -10,6 +10,8 @@ import com.booking.project.service.interfaces.INotificationForHostService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Optional;
@@ -60,6 +62,8 @@ public class NotificationForHostService implements INotificationForHostService {
         notificationForHost.setType(createNotificationForHostDTO.getType());
         notificationForHost.setDescription(createNotificationForHostDTO.getDescription());
         notificationForHost.setRead(false);
+        LocalDateTime timeNow = LocalDateTime.now();
+        notificationForHost.setDateTime(timeNow);
 
         Optional<Host> host = hostRepository.findById(createNotificationForHostDTO.getHostId());
         if (host.isEmpty()) return null;

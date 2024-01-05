@@ -2,6 +2,7 @@ package com.booking.project.controller;
 
 import com.booking.project.dto.CreateNotificationForGuestDTO;
 import com.booking.project.dto.NotificationForGuestDTO;
+import com.booking.project.dto.NotificationForHostDTO;
 import com.booking.project.model.NotificationForGuest;
 import com.booking.project.service.interfaces.INotificationForGuestService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,6 +32,12 @@ public class NotificationForGuestController {
     public ResponseEntity<Collection<NotificationForGuestDTO>> getNotificationsForGuest(@PathVariable Long id){
         Collection<NotificationForGuestDTO> notificationsForGuests = notificationForGuestService.findByGuest(id);
         return new ResponseEntity<Collection<NotificationForGuestDTO>>(notificationsForGuests, HttpStatus.OK);
+    }
+    @PreAuthorize("hasRole('GUEST')")
+    @GetMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<?> markNotificationAsRead(@PathVariable("id") Long id){
+        NotificationForGuestDTO notificationForGuestDTO = notificationForGuestService.markAsRead(id);
+        return new ResponseEntity<NotificationForGuestDTO>(notificationForGuestDTO,HttpStatus.OK);
     }
 
 }

@@ -5,6 +5,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.time.LocalDateTime;
+
 @Getter
 @Setter
 @NoArgsConstructor
@@ -23,5 +25,8 @@ public class NotificationForGuest {
 
     @Column(nullable = false)
     private boolean isRead;
+
+    @Column(nullable = false)
+    private LocalDateTime dateTime;
 
 }

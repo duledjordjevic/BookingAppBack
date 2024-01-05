@@ -1,11 +1,10 @@
 package com.booking.project.service;
 
-import com.booking.project.dto.CommentAboutAccDTO;
 import com.booking.project.dto.CreateNotificationForGuestDTO;
 import com.booking.project.dto.NotificationForGuestDTO;
+import com.booking.project.dto.NotificationForHostDTO;
 import com.booking.project.model.*;
 import com.booking.project.repository.inteface.IGuestRepository;
-import com.booking.project.repository.inteface.IHostRepository;
 import com.booking.project.repository.inteface.INotificationForGuestRepository;
 import com.booking.project.service.interfaces.INotificationForGuestService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -49,7 +48,7 @@ public class NotificationForGuestService implements INotificationForGuestService
 
     @Override
     public Collection<NotificationForGuestDTO> findByGuest(Long id) {
-        Optional<Guest> guest = guestRepository.findById(id);
+        Optional<Guest> guest = guestRepository.findByUserId(id);
         Collection<NotificationForGuest> notificationsForGuest = notificationForGuestRepository.findAllByGuest(guest);
         return mapToDto(notificationsForGuest);
     }
@@ -66,6 +65,20 @@ public class NotificationForGuestService implements INotificationForGuestService
 
         save(notificationForGuest);
         return notificationForGuest;
+    }
+    @Override
+    public NotificationForGuestDTO markAsRead(Long id) {
+        Optional<NotificationForGuest> notificationForGuest = notificationForGuestRepository.findById(id);
+
+        if(notificationForGuest.isEmpty()){
+            return null;
+        }
+        notificationForGuest.get().setRead(true);
+        notificationForGuestRepository.save(notificationForGuest.get());
+
+        NotificationForGuestDTO notificationForGuestDTO = new NotificationForGuestDTO(notificationForGuest.get());
+        return notificationForGuestDTO;
+
     }
 
     public Collection<NotificationForGuestDTO> mapToDto(Collection<NotificationForGuest> notificationsForGuest){
