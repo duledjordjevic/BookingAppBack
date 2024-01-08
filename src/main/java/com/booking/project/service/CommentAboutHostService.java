@@ -14,6 +14,7 @@ import com.booking.project.service.interfaces.ICommentAboutHostService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Optional;
@@ -60,14 +61,14 @@ public class CommentAboutHostService implements ICommentAboutHostService {
         commentAboutHost.setContent(createCommentAboutHostDTO.getContent());
         commentAboutHost.setApproved(true);
         commentAboutHost.setReported(false);
+        commentAboutHost.setDate(LocalDate.now());
 
-        Optional<Guest> guest = guestRepository.findById(createCommentAboutHostDTO.getGuestId());
+        Optional<Guest> guest = guestRepository.findByUserId(createCommentAboutHostDTO.getGuestId());
         if (guest.isEmpty()) return null;
         commentAboutHost.setGuest(guest.get());
 
-        Optional<Host> host = hostRepository.findById(createCommentAboutHostDTO.getHostId());
-        if (host.isEmpty()) return null;
-        commentAboutHost.setHost(host.get());
+        Host host = hostRepository.findByUserId(createCommentAboutHostDTO.getHostId());
+        commentAboutHost.setHost(host);
 
         save(commentAboutHost);
         return commentAboutHost;
@@ -75,7 +76,7 @@ public class CommentAboutHostService implements ICommentAboutHostService {
 
     @Override
     public Collection<CommentAboutHostDTO> findByHost(Long id){
-        Optional<Host> host = hostRepository.findById(id);
+        Host host = hostRepository.findByUserId(id);
         Collection<CommentAboutHost> commentsAboutHost = commentAboutHostRepository.findAllByHost(host);
         return mapToDto(commentsAboutHost);
     }
@@ -115,5 +116,11 @@ public class CommentAboutHostService implements ICommentAboutHostService {
             commentsAboutHostDTOS.add(commentDTO);
         }
         return commentsAboutHostDTOS;
+    }
+
+    @Override
+    public Collection<CommentAboutHostDTO> findByGuest(Long id){
+        Collection<CommentAboutHost> commentsAboutHost = commentAboutHostRepository.findByGuestUser(id);
+        return mapToDto(commentsAboutHost);
     }
 }
