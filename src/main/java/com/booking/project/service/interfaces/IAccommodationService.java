@@ -46,4 +46,5 @@ public interface IAccommodationService {
     Collection<Double> getMinMaxPrice();
 
     List<PriceList> findPriceList(Long id);
+    List<AccommodationDTO> getGuestAccommodations(Long guestUserId);
 }
