@@ -46,7 +46,7 @@ public class CommentAboutHostController {
         }
         return new ResponseEntity<Collection<CommentAboutHostDTO>>(comments, HttpStatus.OK);
     }
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasRole('ADMIN') OR hasRole('GUEST')")
     @DeleteMapping(value = "/{id}")
     public ResponseEntity<CommentAboutHost> deleteCommentAboutHost(@PathVariable("id") Long id){
         commentAboutHostService.deleteById(id);
@@ -78,6 +78,15 @@ public class CommentAboutHostController {
     @GetMapping(value = "/reported",produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Collection<CommentAboutHostDTO>> getReported(){
         Collection<CommentAboutHostDTO> comments = commentAboutHostService.findAllReported();
+        if (comments == null){
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+        return new ResponseEntity<Collection<CommentAboutHostDTO>>(comments, HttpStatus.OK);
+    }
+
+    @GetMapping(value = "/guest/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<Collection<CommentAboutHostDTO>> getCommentsAboutHostForGuest(@PathVariable Long id){
+        Collection<CommentAboutHostDTO> comments = commentAboutHostService.findByGuest(id);
         if (comments == null){
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
