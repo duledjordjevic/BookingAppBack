@@ -1,8 +1,6 @@
 package com.booking.project.dto;
 
-import com.booking.project.model.Accommodation;
-import com.booking.project.model.Address;
-import com.booking.project.model.PriceList;
+import com.booking.project.model.*;
 import com.booking.project.model.enums.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -31,6 +29,7 @@ public class AccommodationDTO {
     private boolean isPriceForEntireAcc;
     private Set<PriceList> prices;
     private Long hostId;
+    private Host host;
 
     public AccommodationDTO(Accommodation accommodation){
         this.id = accommodation.getId();
@@ -47,6 +46,7 @@ public class AccommodationDTO {
         this.accommodationApprovalStatus = accommodation.getAccommodationApprovalStatus();
         this.reservationMethod = accommodation.getReservationMethod();
         this.cancellationPolicy = accommodation.getCancellationPolicy();
+        this.host = accommodation.getHost();
     }
 
 
