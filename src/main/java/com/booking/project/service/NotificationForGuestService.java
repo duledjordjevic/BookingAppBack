@@ -10,9 +10,9 @@ import com.booking.project.service.interfaces.INotificationForGuestService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Optional;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.util.*;
 
 @Service
 public class NotificationForGuestService implements INotificationForGuestService {
@@ -50,6 +50,13 @@ public class NotificationForGuestService implements INotificationForGuestService
     public Collection<NotificationForGuestDTO> findByGuest(Long id) {
         Optional<Guest> guest = guestRepository.findByUserId(id);
         Collection<NotificationForGuest> notificationsForGuest = notificationForGuestRepository.findAllByGuest(guest);
+
+        ArrayList<NotificationForGuest> listToSort = new ArrayList<>(notificationsForGuest);
+
+        Collections.sort(listToSort, Comparator.comparing(NotificationForGuest::getDateTime).reversed());
+        notificationsForGuest.clear();
+        notificationsForGuest.addAll(listToSort);
+
         return mapToDto(notificationsForGuest);
     }
 
@@ -62,6 +69,8 @@ public class NotificationForGuestService implements INotificationForGuestService
         Optional<Guest> guest = guestRepository.findById(createNotificationForGuestDTO.getGuestId());
         if (guest.isEmpty()) return null;
         notificationForGuest.setGuest(guest.get());
+        notificationForGuest.setDateTime(LocalDateTime.now());
+        notificationForGuest.setRead(false);
 
         save(notificationForGuest);
         return notificationForGuest;

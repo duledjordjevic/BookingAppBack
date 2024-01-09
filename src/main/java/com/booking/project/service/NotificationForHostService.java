@@ -12,9 +12,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Optional;
+import java.util.*;
 
 @Service
 public class NotificationForHostService implements INotificationForHostService {
@@ -52,6 +50,13 @@ public class NotificationForHostService implements INotificationForHostService {
     public Collection<NotificationForHostDTO> findByHost(Long id) {
         Host host = hostRepository.findByUserId(id);
         Collection<NotificationForHost> notificationsForHost = notificationForHostRepository.findAllByHost(host);
+
+        ArrayList<NotificationForHost> listToSort = new ArrayList<>(notificationsForHost);
+
+        Collections.sort(listToSort, Comparator.comparing(NotificationForHost::getDateTime).reversed());
+        notificationsForHost.clear();
+        notificationsForHost.addAll(listToSort);
+
         return mapToDto(notificationsForHost);
     }
 

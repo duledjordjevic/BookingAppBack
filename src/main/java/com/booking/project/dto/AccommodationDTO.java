@@ -2,6 +2,7 @@ package com.booking.project.dto;
 
 import com.booking.project.model.Accommodation;
 import com.booking.project.model.Address;
+import com.booking.project.model.Host;
 import com.booking.project.model.PriceList;
 import com.booking.project.model.enums.*;
 import lombok.AllArgsConstructor;
@@ -31,6 +32,7 @@ public class AccommodationDTO {
     private boolean isPriceForEntireAcc;
     private Set<PriceList> prices;
     private Long hostId;
+    private Host host;
 
     public AccommodationDTO(Accommodation accommodation){
         this.id = accommodation.getId();
