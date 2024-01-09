@@ -8,6 +8,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.time.LocalDate;
+
 @Getter
 @Setter
 @NoArgsConstructor
@@ -19,7 +21,11 @@ public class CommentAboutHostDTO {
     private boolean isReported;
     private String content;
     private boolean isApproved;
-    private GuestDTO guestDTO;
+    private String guestName;
+    private String guestLastName;
+    private String guestEmail;
+    private LocalDate date;
+    private Host host;
 
     public CommentAboutHostDTO(CommentAboutHost commentAboutHost){
         this.id = commentAboutHost.getId();
@@ -27,6 +33,10 @@ public class CommentAboutHostDTO {
         this.isReported = commentAboutHost.isReported();
         this.content = commentAboutHost.getContent();
         this.isApproved = commentAboutHost.isApproved();
-        this.guestDTO = new GuestDTO(commentAboutHost.getGuest());
+        this.guestEmail = commentAboutHost.getGuest().getUser().getEmail();
+        this.guestName = commentAboutHost.getGuest().getName();
+        this.guestLastName = commentAboutHost.getGuest().getLastName();
+        this.date = commentAboutHost.getDate();
+        this.host = commentAboutHost.getHost();
     }
 }

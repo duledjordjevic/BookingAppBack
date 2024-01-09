@@ -90,4 +90,10 @@ public class HostService implements IHostService {
 
         return hostDTO;
     }
+
+    @Override
+    public Long getUserId(Long id){
+        HostDTO hostDTO = findHost(id);
+        return hostDTO.getUserCredentialsDTO().getId();
+    }
 }

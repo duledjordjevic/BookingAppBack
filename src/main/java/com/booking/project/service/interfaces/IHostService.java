@@ -23,4 +23,6 @@ public interface IHostService {
 
     Host update(HostDTO hostDTO, Long id) throws Exception;
     HostDTO addHost(HostDTO hostDTO) throws Exception;
+
+    Long getUserId(Long id);
 }

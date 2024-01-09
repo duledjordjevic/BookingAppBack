@@ -22,4 +22,6 @@ public interface ICommentAboutHostService {
     CommentAboutHost approve(Long id, boolean approved) throws  Exception;
     CommentAboutHost report(Long id, boolean reported) throws  Exception;
 
+    Collection<CommentAboutHostDTO> findByGuest(Long id);
+
 }
