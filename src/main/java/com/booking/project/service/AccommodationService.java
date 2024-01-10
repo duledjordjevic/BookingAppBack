@@ -9,6 +9,7 @@ import com.booking.project.repository.inteface.IAccommodationRepository;
 import com.booking.project.service.interfaces.IAccommodationService;
 import com.booking.project.service.interfaces.ICommentAboutAccService;
 import jakarta.persistence.EntityManager;
+import jakarta.persistence.Query;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -361,6 +362,23 @@ public class AccommodationService implements IAccommodationService {
     public List<PriceList> findPriceList(Long id) {
         return accommodationRepository.findPriceList(id, AccommodationStatus.AVAILABLE);
     }
+
+    @Override
+    public List<AccommodationDTO> getGuestAccommodations(Long guestUserId){
+
+        Query q = em.createQuery("select r.accommodation from Reservation r join r.accommodation a " +
+                "where r.guest.user.id = :guestUserId and r.status = 'ACCEPTED' and r.endDate < current_timestamp()");
+        q.setParameter("guestUserId" , guestUserId);
+
+        List<AccommodationDTO> accommodationDTOS = new ArrayList<AccommodationDTO>();
+        List<Accommodation> accommodations = q.getResultList();
+        for(Accommodation accommodation : accommodations){
+            accommodationDTOS.add(new AccommodationDTO(accommodation));
+        }
+
+        return accommodationDTOS;
+    }
+
 }
 
 

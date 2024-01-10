@@ -197,4 +197,12 @@ public class AccommodationController {
         return new ResponseEntity<>(priceListService.getIntervalPrices(id), HttpStatus.OK);
     }
 
+    @PreAuthorize("hasRole('GUEST')")
+    @GetMapping(value = "/guest/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<?> getGuestAccommodations(@PathVariable("id") Long id){
+        List<AccommodationDTO> accommodationDTOS = accommodationService.getGuestAccommodations(id);
+        if(accommodationDTOS == null)    return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+
+        return new ResponseEntity<>(accommodationDTOS, HttpStatus.OK);
+    }
 }

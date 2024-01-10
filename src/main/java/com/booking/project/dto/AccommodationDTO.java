@@ -2,8 +2,8 @@ package com.booking.project.dto;
 
 import com.booking.project.model.Accommodation;
 import com.booking.project.model.Address;
-import com.booking.project.model.Host;
 import com.booking.project.model.PriceList;
+import com.booking.project.model.Host;
 import com.booking.project.model.enums.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -49,6 +49,7 @@ public class AccommodationDTO {
         this.accommodationApprovalStatus = accommodation.getAccommodationApprovalStatus();
         this.reservationMethod = accommodation.getReservationMethod();
         this.cancellationPolicy = accommodation.getCancellationPolicy();
+        this.host = accommodation.getHost();
     }
 
 
