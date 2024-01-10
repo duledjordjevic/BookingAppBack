@@ -11,8 +11,11 @@ import com.booking.project.model.enums.ReservationStatus;
 import com.booking.project.service.interfaces.IAccommodationService;
 import com.booking.project.service.interfaces.IGuestService;
 import com.booking.project.service.interfaces.IReservationService;
+import com.booking.project.validation.IdentityConstraint;
+import jakarta.validation.Valid;
 import jakarta.websocket.server.PathParam;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -42,10 +45,10 @@ public class ReservationController {
     @PreAuthorize("hasRole('GUEST')")
     @GetMapping(value = "/filterGuest", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<?> filterGuestReservations(@PathParam("title") String title,
-                                                     @PathParam("startDate") LocalDate startDate,
-                                                     @PathParam("endDate") LocalDate endDate,
+                                                     @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)  @PathParam("startDate") LocalDate startDate,
+                                                     @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) @PathParam("endDate") LocalDate endDate,
                                                      @PathParam("status") ReservationStatus status,
-                                                     @PathParam("guestId") Integer guestUserId){
+                                                     @IdentityConstraint  @PathParam("guestId") Integer guestUserId){
         List<ReservationDTO> reservations = reservationService.filterGuestReservations(title, startDate, endDate, status, guestUserId);
 
         return new ResponseEntity<Collection<ReservationDTO>>(reservations, HttpStatus.OK);
@@ -54,10 +57,10 @@ public class ReservationController {
     @PreAuthorize("hasRole('HOST')")
     @GetMapping(value = "/filterHost", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<?> filterHostReservations(@PathParam("title") String title,
-                                                     @PathParam("startDate") LocalDate startDate,
-                                                     @PathParam("endDate") LocalDate endDate,
+                                                    @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) @PathParam("startDate") LocalDate startDate,
+                                                    @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) @PathParam("endDate") LocalDate endDate,
                                                      @PathParam("status") ReservationStatus status,
-                                                     @PathParam("hostId") Integer hostUserId){
+                                                    @IdentityConstraint @PathParam("hostId") Integer hostUserId){
         List<ReservationDTO> reservations = reservationService.filterHostReservations(title, startDate, endDate, status, hostUserId);
 
         return new ResponseEntity<Collection<ReservationDTO>>(reservations, HttpStatus.OK);
@@ -65,7 +68,7 @@ public class ReservationController {
 
     @PreAuthorize("hasRole('GUEST')")
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<?> createReservation(@RequestBody CreateReservationDTO createReservationDTO) throws Exception {
+    public ResponseEntity<?> createReservation(@Valid  @RequestBody CreateReservationDTO createReservationDTO) throws Exception {
         List<Object> reservationResponse = accommodationService.reservate(createReservationDTO.getAccommodationId(), createReservationDTO.getStartDate(), createReservationDTO.getEndDate(), createReservationDTO.getNumberOfGuests());
 
         if(reservationResponse.size() == 1) return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
@@ -78,7 +81,7 @@ public class ReservationController {
 
     @PreAuthorize("hasRole('GUEST')")
     @PostMapping(value = "/reservationPrice",consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<?> getReservationPrice(@RequestBody CreateReservationDTO createReservationDTO ) {
+    public ResponseEntity<?> getReservationPrice(@Valid @RequestBody CreateReservationDTO createReservationDTO ) {
         List<Object> reservationPrice = accommodationService.calculateReservationPrice(createReservationDTO.getStartDate(), createReservationDTO.getEndDate(), createReservationDTO.getAccommodationId(), createReservationDTO.getNumberOfGuests());
 
         if(reservationPrice.size() == 1) return new ResponseEntity<Double>(Double.valueOf(0), HttpStatus.OK );
@@ -88,7 +91,7 @@ public class ReservationController {
 
     @PreAuthorize("hasRole('HOST')")
     @PutMapping(value = "/{id}/{reservationStatus}", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<?> updateReservationStatus(@PathVariable Long id, @PathVariable ReservationStatus reservationStatus) throws Exception{
+    public ResponseEntity<?> updateReservationStatus(@IdentityConstraint @PathVariable Long id, @PathVariable ReservationStatus reservationStatus) throws Exception{
         Reservation reservation = reservationService.updateStatus(id, reservationStatus);
 
         if (reservation == null){
@@ -100,7 +103,7 @@ public class ReservationController {
 
     @PreAuthorize("hasRole('GUEST')")
     @DeleteMapping(value = "/pending/{id}")
-    public ResponseEntity<?> deletePendingReservation(@PathVariable("id") Long id){
+    public ResponseEntity<?> deletePendingReservation(@IdentityConstraint @PathVariable("id") Long id){
         Boolean isDeleted = reservationService.deleteById(id);
 
         if(isDeleted.equals(false)){
@@ -112,7 +115,7 @@ public class ReservationController {
 
     @PreAuthorize("hasRole('GUEST')")
     @PutMapping(value = "/cancelAccepted/{id}")
-    public ResponseEntity<?> cancelAcceptedReservation(@PathVariable("id") Long id) throws Exception {
+    public ResponseEntity<?> cancelAcceptedReservation(@IdentityConstraint @PathVariable("id") Long id) throws Exception {
         Reservation reservation = reservationService.cancelAcceptedReservation(id);
 
         if(reservation == null){
