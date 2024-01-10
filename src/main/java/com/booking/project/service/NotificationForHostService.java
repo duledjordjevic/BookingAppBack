@@ -1,11 +1,8 @@
 package com.booking.project.service;
 
 import com.booking.project.dto.CreateNotificationForHostDTO;
-import com.booking.project.dto.NotificationForGuestDTO;
 import com.booking.project.dto.NotificationForHostDTO;
-import com.booking.project.model.Guest;
 import com.booking.project.model.Host;
-import com.booking.project.model.NotificationForGuest;
 import com.booking.project.model.NotificationForHost;
 import com.booking.project.repository.inteface.IHostRepository;
 import com.booking.project.repository.inteface.INotificationForHostRepository;
@@ -13,9 +10,9 @@ import com.booking.project.service.interfaces.INotificationForHostService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Optional;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.util.*;
 
 @Service
 public class NotificationForHostService implements INotificationForHostService {
@@ -51,8 +48,15 @@ public class NotificationForHostService implements INotificationForHostService {
 
     @Override
     public Collection<NotificationForHostDTO> findByHost(Long id) {
-        Optional<Host> host = hostRepository.findById(id);
+        Host host = hostRepository.findByUserId(id);
         Collection<NotificationForHost> notificationsForHost = notificationForHostRepository.findAllByHost(host);
+
+        ArrayList<NotificationForHost> listToSort = new ArrayList<>(notificationsForHost);
+
+        Collections.sort(listToSort, Comparator.comparing(NotificationForHost::getDateTime).reversed());
+        notificationsForHost.clear();
+        notificationsForHost.addAll(listToSort);
+
         return mapToDto(notificationsForHost);
     }
 
@@ -62,6 +66,9 @@ public class NotificationForHostService implements INotificationForHostService {
         NotificationForHost notificationForHost = new NotificationForHost();
         notificationForHost.setType(createNotificationForHostDTO.getType());
         notificationForHost.setDescription(createNotificationForHostDTO.getDescription());
+        notificationForHost.setRead(false);
+        LocalDateTime timeNow = LocalDateTime.now();
+        notificationForHost.setDateTime(timeNow);
 
         Optional<Host> host = hostRepository.findById(createNotificationForHostDTO.getHostId());
         if (host.isEmpty()) return null;
@@ -69,6 +76,20 @@ public class NotificationForHostService implements INotificationForHostService {
 
         save(notificationForHost);
         return notificationForHost;
+    }
+    @Override
+    public NotificationForHostDTO markAsRead(Long id) {
+        Optional<NotificationForHost> notificationForHost = notificationForHostRepository.findById(id);
+
+        if(notificationForHost.isEmpty()){
+            return null;
+        }
+        notificationForHost.get().setRead(true);
+        notificationForHostRepository.save(notificationForHost.get());
+
+        NotificationForHostDTO notificationForHostDTO = new NotificationForHostDTO(notificationForHost.get());
+        return notificationForHostDTO;
+
     }
 
     public Collection<NotificationForHostDTO> mapToDto(Collection<NotificationForHost> notificationsForHost){

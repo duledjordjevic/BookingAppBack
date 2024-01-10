@@ -10,5 +10,5 @@ import java.util.Optional;
 
 public interface INotificationForHostRepository extends JpaRepository<NotificationForHost,Long> {
 
-    Collection<NotificationForHost> findAllByHost(Optional<Host> host);
+    Collection<NotificationForHost> findAllByHost(Host host);
 }

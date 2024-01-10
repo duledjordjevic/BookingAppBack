@@ -1,6 +1,9 @@
 package com.booking.project.dto;
 
-import com.booking.project.model.*;
+import com.booking.project.model.Accommodation;
+import com.booking.project.model.Address;
+import com.booking.project.model.PriceList;
+import com.booking.project.model.Host;
 import com.booking.project.model.enums.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;

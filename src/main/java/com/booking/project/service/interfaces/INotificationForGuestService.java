@@ -5,7 +5,6 @@ import com.booking.project.dto.NotificationForGuestDTO;
 import com.booking.project.model.NotificationForGuest;
 
 import java.util.Collection;
-import java.util.Optional;
 
 public interface INotificationForGuestService {
 
@@ -15,4 +14,6 @@ public interface INotificationForGuestService {
     void deleteById(Long id);
     Collection<NotificationForGuestDTO> findByGuest(Long id);
     NotificationForGuest create(CreateNotificationForGuestDTO createNotificationForGuestDTO) throws Exception;
+
+    NotificationForGuestDTO markAsRead(Long id);
 }
