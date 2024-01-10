@@ -3,6 +3,7 @@ package com.booking.project.controller;
 import com.booking.project.dto.UserCredentialsDTO;
 import com.booking.project.model.User;
 import com.booking.project.config.security.jwt.JwtTokenUtil;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -31,7 +32,7 @@ public class AuthenticationController {
     private UserDetailsService userDetailsService;
 
     @PostMapping(value = "/login")
-    public User login(@RequestBody UserCredentialsDTO userCredentialsDTO) {
+    public User login(@Valid @RequestBody UserCredentialsDTO userCredentialsDTO) {
         UsernamePasswordAuthenticationToken authReq = new UsernamePasswordAuthenticationToken(userCredentialsDTO.getEmail(),
                 userCredentialsDTO.getPassword());
         Authentication auth = authenticationManager.authenticate(authReq);
