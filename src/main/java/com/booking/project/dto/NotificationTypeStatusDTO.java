@@ -1,21 +1,19 @@
 package com.booking.project.dto;
 
+import com.booking.project.model.User;
 import com.booking.project.model.enums.NotificationType;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.time.LocalDate;
-
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class CreateNotificationForHostDTO {
-
+public class NotificationTypeStatusDTO {
+    private Long id;
+    private Long userId;
     private NotificationType type;
-    private String description;
-    private Long hostId;
-
+    private Boolean isTurned;
 }

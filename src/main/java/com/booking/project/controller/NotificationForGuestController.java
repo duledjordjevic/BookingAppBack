@@ -2,8 +2,12 @@ package com.booking.project.controller;
 
 import com.booking.project.dto.CreateNotificationForGuestDTO;
 import com.booking.project.dto.NotificationForGuestDTO;
+import com.booking.project.dto.NotificationForHostDTO;
+import com.booking.project.dto.NotificationTypeStatusDTO;
 import com.booking.project.model.NotificationForGuest;
+import com.booking.project.model.NotificationTypeStatus;
 import com.booking.project.service.interfaces.INotificationForGuestService;
+import com.booking.project.service.interfaces.INotificationTypeStatusService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -19,6 +23,8 @@ public class NotificationForGuestController {
 
     @Autowired
     private INotificationForGuestService notificationForGuestService;
+    @Autowired
+    private INotificationTypeStatusService notificationTypeStatusService;
 
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<NotificationForGuest> createNotificationForGuest
@@ -31,6 +37,24 @@ public class NotificationForGuestController {
     public ResponseEntity<Collection<NotificationForGuestDTO>> getNotificationsForGuest(@PathVariable Long id){
         Collection<NotificationForGuestDTO> notificationsForGuests = notificationForGuestService.findByGuest(id);
         return new ResponseEntity<Collection<NotificationForGuestDTO>>(notificationsForGuests, HttpStatus.OK);
+    }
+    @PreAuthorize("hasRole('GUEST')")
+    @GetMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<?> markNotificationAsRead(@PathVariable("id") Long id){
+        NotificationForGuestDTO notificationForGuestDTO = notificationForGuestService.markAsRead(id);
+        return new ResponseEntity<NotificationForGuestDTO>(notificationForGuestDTO,HttpStatus.OK);
+    }
+    @PreAuthorize("hasRole('GUEST')")
+    @GetMapping(value="/guestNotificationStatus/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<?> getGuestNotificationsStatus(@PathVariable Long id){
+        Collection<NotificationTypeStatus> notificationsTypeStatus = notificationTypeStatusService.findByUser(id);
+        return new ResponseEntity<Collection<NotificationTypeStatus>>(notificationsTypeStatus, HttpStatus.OK);
+    }
+    @PreAuthorize("hasRole('GUEST')")
+    @PutMapping(value="/changeNotificationStatus", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<?> changeGuestNotificationStatus(@RequestBody NotificationTypeStatusDTO notificationTypeStatusDTO){
+        notificationTypeStatusService.changeNotificationStatus(notificationTypeStatusDTO);
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 
 }
