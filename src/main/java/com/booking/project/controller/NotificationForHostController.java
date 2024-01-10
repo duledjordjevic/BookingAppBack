@@ -2,6 +2,7 @@ package com.booking.project.controller;
 
 import com.booking.project.dto.CreateNotificationForHostDTO;
 import com.booking.project.dto.NotificationForHostDTO;
+import com.booking.project.dto.NotificationTypeStatusDTO;
 import com.booking.project.model.NotificationForHost;
 import com.booking.project.model.NotificationTypeStatus;
 import com.booking.project.service.NotificationForHostService;
@@ -49,5 +50,11 @@ public class NotificationForHostController {
     public ResponseEntity<?> getHostNotificationsStatus(@PathVariable Long id){
         Collection<NotificationTypeStatus> notificationsTypeStatus = notificationTypeStatusService.findByUser(id);
         return new ResponseEntity<Collection<NotificationTypeStatus>>(notificationsTypeStatus, HttpStatus.OK);
+    }
+    @PreAuthorize("hasRole('HOST')")
+    @PutMapping(value="/changeNotificationStatus", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<?> changeHostNotificationStatus(@RequestBody NotificationTypeStatusDTO notificationTypeStatusDTO){
+        notificationTypeStatusService.changeNotificationStatus(notificationTypeStatusDTO);
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 }
