@@ -2,6 +2,7 @@ package com.booking.project.controller;
 
 import com.booking.project.service.ImageService;
 import com.booking.project.service.interfaces.IAccommodationService;
+import com.booking.project.validation.IdentityConstraint;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -25,7 +26,7 @@ public class ImageController {
 
 //    @PreAuthorize("hasRole('HOST')")
     @PostMapping("/{accommodationId}")
-    public ResponseEntity<?> createAccommodationImages (@RequestParam("image") MultipartFile[] accImages, @PathVariable Long accommodationId) throws Exception {
+    public ResponseEntity<?> createAccommodationImages (@RequestParam("image") MultipartFile[] accImages, @IdentityConstraint @PathVariable Long accommodationId) throws Exception {
         String uploadDirectory = "src/main/resources/static/images/accommodations";
         StringBuilder accImagesString = new StringBuilder();
 
@@ -39,7 +40,7 @@ public class ImageController {
     }
 
     @GetMapping("/{accommodationId}")
-    public ResponseEntity<List<byte[]>> getImages(@PathVariable Long accommodationId) throws IOException {
+    public ResponseEntity<List<byte[]>> getImages(@IdentityConstraint @PathVariable Long accommodationId) throws IOException {
         try {
             String[] imageNames = accommodationService.getImages(accommodationId).split(",");
 
