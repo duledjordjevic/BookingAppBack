@@ -2,10 +2,12 @@ package com.booking.project.service.interfaces;
 
 
 import com.booking.project.dto.CommentAboutAccDTO;
+import com.booking.project.dto.CommentAboutHostDTO;
 import com.booking.project.dto.CreateCommentAboutAccDTO;
 import com.booking.project.model.Accommodation;
 import com.booking.project.model.CommentAboutAcc;
 
+import java.io.IOException;
 import java.util.Collection;
 import java.util.Optional;
 
@@ -25,4 +27,5 @@ public interface ICommentAboutAccService {
     CommentAboutAcc report(Long id, boolean reported) throws  Exception;
     Collection<Object[]> findAccommodationsByRating();
     Double findAvgRateById(Long accommodationId);
+    Collection<CommentAboutAccDTO> findByGuest(Long id) throws IOException;
 }
