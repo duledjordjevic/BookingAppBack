@@ -1,6 +1,7 @@
 package com.booking.project.controller;
 
 import com.booking.project.dto.CommentAboutAccDTO;
+import com.booking.project.dto.CommentAboutHostDTO;
 import com.booking.project.dto.CreateCommentAboutAccDTO;
 import com.booking.project.model.CommentAboutAcc;
 import com.booking.project.service.interfaces.ICommentAboutAccService;
@@ -11,6 +12,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
+import java.io.IOException;
 import java.util.Collection;
 
 @RestController
@@ -44,7 +46,7 @@ public class CommentAboutAccController {
         }
         return new ResponseEntity<Collection<CommentAboutAccDTO>>(comments, HttpStatus.OK);
     }
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasRole('ADMIN') OR hasRole('GUEST')")
     @DeleteMapping(value = "/{id}")
     public ResponseEntity<CommentAboutAcc> deleteCommentAboutAcc(@PathVariable("id") Long id){
         commentAboutAccService.deleteById(id);
@@ -76,6 +78,16 @@ public class CommentAboutAccController {
     @GetMapping(value = "/reported",produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Collection<CommentAboutAccDTO>> getReported(){
         Collection<CommentAboutAccDTO> comments = commentAboutAccService.findAllReported();
+        if (comments == null){
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+        return new ResponseEntity<Collection<CommentAboutAccDTO>>(comments, HttpStatus.OK);
+    }
+
+    @PreAuthorize("hasRole('GUEST')")
+    @GetMapping(value = "/guest/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<Collection<CommentAboutAccDTO>> getCommentsAboutAccForGuest(@PathVariable Long id) throws IOException {
+        Collection<CommentAboutAccDTO> comments = commentAboutAccService.findByGuest(id);
         if (comments == null){
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }

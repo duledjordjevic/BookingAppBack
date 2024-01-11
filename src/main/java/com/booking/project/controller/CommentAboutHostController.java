@@ -84,6 +84,7 @@ public class CommentAboutHostController {
         return new ResponseEntity<Collection<CommentAboutHostDTO>>(comments, HttpStatus.OK);
     }
 
+    @PreAuthorize("hasRole('GUEST')")
     @GetMapping(value = "/guest/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Collection<CommentAboutHostDTO>> getCommentsAboutHostForGuest(@PathVariable Long id){
         Collection<CommentAboutHostDTO> comments = commentAboutHostService.findByGuest(id);
