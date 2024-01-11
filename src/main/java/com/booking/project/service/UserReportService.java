@@ -24,6 +24,10 @@ public class UserReportService implements IUserReportService {
     private IUserService userService;
     @Autowired
     private IReservationService reservationService;
+    
+    public Collection<UserReport> findAll(){
+        return userReportRepository.findAll();
+    }
     @Override
     public UserReportDTO create(UserReportDTO userReportDTO) throws Exception {
         UserReport userReport = new UserReport();
