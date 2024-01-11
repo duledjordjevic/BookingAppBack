@@ -15,8 +15,6 @@ public interface ICommentAboutHostRepository extends JpaRepository<CommentAboutH
     @Query("select c from CommentAboutHost c where c.isReported = true")
     Collection<CommentAboutHost> findByReportedTrue();
 
-    Collection<CommentAboutHost> findAllByGuest(Optional<Guest> guest);
-
     @Query("select c from" +
             " CommentAboutHost c where" +
             " c.guest.user.id = :id")

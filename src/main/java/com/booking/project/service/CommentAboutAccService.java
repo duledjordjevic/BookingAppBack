@@ -2,6 +2,7 @@ package com.booking.project.service;
 
 import com.booking.project.dto.AccommodationDTO;
 import com.booking.project.dto.CommentAboutAccDTO;
+import com.booking.project.dto.CommentAboutHostDTO;
 import com.booking.project.dto.CreateCommentAboutAccDTO;
 import com.booking.project.model.*;
 import com.booking.project.model.enums.AccommodationApprovalStatus;
@@ -12,9 +13,9 @@ import com.booking.project.service.interfaces.ICommentAboutAccService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Optional;
+import java.io.IOException;
+import java.time.LocalDate;
+import java.util.*;
 
 @Service
 public class CommentAboutAccService implements ICommentAboutAccService {
@@ -25,6 +26,8 @@ public class CommentAboutAccService implements ICommentAboutAccService {
     private IGuestRepository guestRepository;
     @Autowired
     private IAccommodationRepository accommodationRepository;
+    @Autowired
+    private ImageService imageService;
     @Override
     public Collection<CommentAboutAccDTO> findAll() {
         Collection<CommentAboutAcc> commentsAboutAcc = commentAboutAccRepository.findAll();
@@ -56,8 +59,9 @@ public class CommentAboutAccService implements ICommentAboutAccService {
         commentAboutAcc.setContent(createCommentAboutAccDTO.getContent());
         commentAboutAcc.setApproved(true);
         commentAboutAcc.setReported(false);
+        commentAboutAcc.setDate(LocalDate.now());
 
-        Optional<Guest> guest = guestRepository.findById(createCommentAboutAccDTO.getGuestId());
+        Optional<Guest> guest = guestRepository.findByUserId(createCommentAboutAccDTO.getGuestId());
         if (guest.isEmpty()) return null;
         commentAboutAcc.setGuest(guest.get());
 
@@ -117,5 +121,15 @@ public class CommentAboutAccService implements ICommentAboutAccService {
     @Override
     public Double findAvgRateById(Long accommodationId){
         return commentAboutAccRepository.findAvgRateByAccommodation(accommodationId);
+    }
+
+    @Override
+    public Collection<CommentAboutAccDTO> findByGuest(Long id) throws IOException {
+        Collection<CommentAboutAcc> commentsAboutAcc = commentAboutAccRepository.findByGuestUser(id);
+        Collection<CommentAboutAccDTO> commentAboutAccDTOS = mapToDto(commentsAboutAcc);
+        for (CommentAboutAccDTO commentAboutAccDTO: commentAboutAccDTOS){
+            commentAboutAccDTO.setCoverImage(imageService.getCoverImage(commentAboutAccDTO.getAccommodation().getImages().split(",")[0]));
+        }
+        return commentAboutAccDTOS;
     }
 }

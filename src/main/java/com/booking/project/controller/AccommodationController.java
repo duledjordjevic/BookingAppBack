@@ -205,4 +205,13 @@ public class AccommodationController {
 
         return new ResponseEntity<>(accommodationDTOS, HttpStatus.OK);
     }
+
+    @PreAuthorize("hasRole('GUEST')")
+    @GetMapping(value = "/guest/comment/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<?> getGuestAccommodationsForComment(@PathVariable("id") Long id) throws IOException {
+        List<AccommodationDTO> accommodationDTOS = accommodationService.getGuestAccommodationsForComment(id);
+        if(accommodationDTOS == null)    return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+
+        return new ResponseEntity<>(accommodationDTOS, HttpStatus.OK);
+    }
 }

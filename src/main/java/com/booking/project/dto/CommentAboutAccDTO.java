@@ -1,5 +1,6 @@
 package com.booking.project.dto;
 
+import com.booking.project.model.Accommodation;
 import com.booking.project.model.CommentAboutAcc;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -21,6 +22,9 @@ public class CommentAboutAccDTO {
     private String guestLastName;
     private String guestEmail;
     private LocalDate date;
+    private Accommodation accommodation;
+    private Long accommodationId;
+    private byte[] coverImage;
 
     public CommentAboutAccDTO(CommentAboutAcc commentAboutAcc){
         this.id = commentAboutAcc.getId();
@@ -30,5 +34,7 @@ public class CommentAboutAccDTO {
         this.guestName = commentAboutAcc.getGuest().getName();
         this.guestLastName = commentAboutAcc.getGuest().getLastName();
         this.date = commentAboutAcc.getDate();
+        this.accommodation = commentAboutAcc.getAccommodation();
+        this.accommodationId = commentAboutAcc.getAccommodation().getId();
     }
 }
