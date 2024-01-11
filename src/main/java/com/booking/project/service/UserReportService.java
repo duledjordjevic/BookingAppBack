@@ -4,11 +4,13 @@ import com.booking.project.dto.UserReportDTO;
 import com.booking.project.model.Reservation;
 import com.booking.project.model.User;
 import com.booking.project.model.UserReport;
+import com.booking.project.model.enums.UserType;
 import com.booking.project.repository.inteface.IUserReportRepository;
 import com.booking.project.service.interfaces.IReservationService;
 import com.booking.project.service.interfaces.IUserReportService;
 import com.booking.project.service.interfaces.IUserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.parameters.P;
 import org.springframework.stereotype.Service;
 
 import java.util.Collection;
@@ -34,8 +36,11 @@ public class UserReportService implements IUserReportService {
         if(reservation.isEmpty()){
             return null;
         }
-
-        reservation.get().setHostReported(true);
+        if(user.get().getUserType().equals(UserType.GUEST)){
+            reservation.get().setGuestReported(true);
+        }else if(user.get().getUserType().equals(UserType.HOST)) {
+            reservation.get().setHostReported(true);
+        }
         reservationService.save(reservation.get());
 
         user.get().setReported(true);
