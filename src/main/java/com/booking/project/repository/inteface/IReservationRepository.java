@@ -1,7 +1,10 @@
 package com.booking.project.repository.inteface;
 
 import com.booking.project.model.Reservation;
+import com.booking.project.model.enums.ReservationStatus;
+import jakarta.transaction.Transactional;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
@@ -23,4 +26,11 @@ public interface IReservationRepository extends JpaRepository<Reservation, Long>
             "and r.startDate > CURRENT_DATE ")
     Collection<Reservation> findByHost( @Param("hostId") Long hostId);
 
+    @Modifying
+    @Transactional
+    @Query("update Reservation r " +
+            "set r.status = :status " +
+            "where r.guest.user.id = :id and r.startDate > CURRENT_DATE ")
+    void cancellGuestReservation(@Param("id") Long id,
+                                 @Param("status")ReservationStatus status);
 }

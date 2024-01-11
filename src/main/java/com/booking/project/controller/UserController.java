@@ -110,6 +110,15 @@ public class UserController {
 
         return new ResponseEntity<UserDTO>(userDTO, HttpStatus.OK);
     }
+    @PreAuthorize("hasRole('ADMIN')")
+    @PutMapping(value = "/block/{id}", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<?> blockUser(@PathVariable Long id) throws Exception {
+        UserDTO userDTO = userReportService.blockUser(id);
+
+        if(userDTO == null) return new ResponseEntity<UserDTO>(userDTO,HttpStatus.INTERNAL_SERVER_ERROR);
+
+        return new ResponseEntity<UserDTO>(userDTO, HttpStatus.OK);
+    }
     @PreAuthorize("hasRole('GUEST') OR hasRole('HOST')")
     @PutMapping(value = "/report/{id}", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<?> reportUser(@PathVariable Long id) throws Exception {
@@ -120,11 +129,11 @@ public class UserController {
         return new ResponseEntity<UserDTO>(userDTO, HttpStatus.OK);
     }
     @PreAuthorize("hasRole('ADMIN')")
-    @GetMapping(value = "/reported", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    @GetMapping(value = "/reported",produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<?> getReportedUsers() throws Exception{
-        Collection<UserDTO> reportedUsersDTOs = userService.findReportedUsers();
+        Collection<UserBlockDTO> reportedUsersDTOs = userReportService.findAll();
 
-        return new ResponseEntity<Collection<UserDTO>>(reportedUsersDTOs, HttpStatus.OK);
+        return new ResponseEntity<Collection<UserBlockDTO>>(reportedUsersDTOs, HttpStatus.OK);
     }
 
     @GetMapping(value = "/host/{user_id}")

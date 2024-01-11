@@ -11,7 +11,8 @@ import lombok.Setter;
 @AllArgsConstructor
 public class UserReportDTO {
     private Long id;
-    private Long userId;
+    private Long userReportedId;
+    private Long userReportingId;
     private String reason;
     private Long reservationId;
 }

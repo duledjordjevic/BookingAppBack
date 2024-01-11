@@ -13,12 +13,10 @@ import java.time.LocalDate;
 @AllArgsConstructor
 public class UserBlockDTO {
     private Long id;
-    private Long userId;
     private String reason;
-    private Long reservationId;
-    private String name;
-    private String lastName;
-    private String accomodationTitle;
+    private UserInfoDTO reportedUser;
+    private UserInfoDTO reportingUser;
+    private String accommodationTitle;
     private LocalDate startDate;
     private LocalDate endDate;
 

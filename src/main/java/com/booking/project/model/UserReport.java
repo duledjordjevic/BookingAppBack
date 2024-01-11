@@ -19,7 +19,10 @@ public class UserReport {
     private Long id;
 
     @ManyToOne(fetch = FetchType.EAGER)
-    private User user;
+    private User reportedUser;
+
+    @ManyToOne(fetch = FetchType.EAGER)
+    private User reportingUser;
 
     @Column(nullable = false)
     private String reason;

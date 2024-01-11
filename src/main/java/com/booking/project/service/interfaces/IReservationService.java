@@ -25,7 +25,7 @@ public interface IReservationService {
 
     Reservation create(CreateReservationDTO createReservationDTO, double price, ReservationMethod reservationMethod) throws Exception;
 
-    List<ReservationDTO> filterGuestReservations(String title, LocalDate startDate, LocalDate endDate, ReservationStatus reservationStatus, Integer guestUserId);
+    List<ReservationDTO> filterGuestReservations(String title, LocalDate startDate, LocalDate endDate, ReservationStatus reservationStatus, Long guestUserId);
 
     List<ReservationDTO> filterHostReservations(String title, LocalDate startDate, LocalDate endDate, ReservationStatus reservationStatus, Integer hostUserId);
 
@@ -34,4 +34,6 @@ public interface IReservationService {
     Reservation cancelAcceptedReservation(Long id);
 
     Collection<Reservation> findByHostId(Long id);
+
+    void cancellGuestReservations(Long id);
 }

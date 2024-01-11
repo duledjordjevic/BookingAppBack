@@ -48,8 +48,8 @@ public class ReservationController {
                                                      @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)  @PathParam("startDate") LocalDate startDate,
                                                      @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) @PathParam("endDate") LocalDate endDate,
                                                      @PathParam("status") ReservationStatus status,
-                                                     @IdentityConstraint  @PathParam("guestId") Integer guestUserId){
-        List<ReservationDTO> reservations = reservationService.filterGuestReservations(title, startDate, endDate, status, guestUserId);
+                                                     @IdentityConstraint  @PathParam("guestId") Long guestId){
+        List<ReservationDTO> reservations = reservationService.filterGuestReservations(title, startDate, endDate, status, guestId);
 
         return new ResponseEntity<Collection<ReservationDTO>>(reservations, HttpStatus.OK);
     }
