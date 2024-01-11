@@ -15,4 +15,6 @@ public interface INotificationForHostService {
     void deleteById(Long id);
     Collection<NotificationForHostDTO> findByHost(Long id);
     NotificationForHost create(CreateNotificationForHostDTO createNotificationForHostDTO) throws Exception;
+
+    NotificationForHostDTO markAsRead(Long id);
 }

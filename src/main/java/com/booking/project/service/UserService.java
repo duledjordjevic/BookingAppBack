@@ -3,6 +3,7 @@ package com.booking.project.service;
 import com.booking.project.dto.*;
 import com.booking.project.model.*;
 import com.booking.project.model.enums.ReservationStatus;
+import com.booking.project.repository.inteface.INotificationTypeStatusRepository;
 import com.booking.project.service.interfaces.*;
 import com.booking.project.utils.email.EmailBuilder;
 import com.booking.project.utils.email.IEmailSender;
@@ -38,6 +39,8 @@ public class UserService implements IUserService {
     private IHostService hostService;
     @Autowired
     private IReservationService reservationService;
+    @Autowired
+    private INotificationTypeStatusService notificationTypeStatusService;
     private EmailBuilder emailBuilder = new EmailBuilder();
     @Override
     public Collection<User> findAll() {
@@ -106,8 +109,15 @@ public class UserService implements IUserService {
         }
 
         confirmationTokenService.setConfirmedAt(token);
-        repository.enableAppUser(
-                confirmationToken.getUser().getEmail());
+
+        User user =  confirmationToken.getUser();
+        repository.enableAppUser(user.getEmail());
+
+        if(user.getUserType().equals(UserType.GUEST)){
+            notificationTypeStatusService.initializeGuestNotificationStatus(user);
+        }else if(user.getUserType().equals(UserType.HOST)){
+            notificationTypeStatusService.initializeHostNotificationStatus(user);
+        }
         return "confirmed";
     }
     @Override
