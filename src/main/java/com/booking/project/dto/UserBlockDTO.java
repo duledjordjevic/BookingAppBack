@@ -5,14 +5,19 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.time.LocalDate;
+
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class UserReportDTO {
+public class UserBlockDTO {
     private Long id;
-    private Long userReportedId;
-    private Long userReportingId;
     private String reason;
-    private Long reservationId;
+    private UserInfoDTO reportedUser;
+    private UserInfoDTO reportingUser;
+    private String accommodationTitle;
+    private LocalDate startDate;
+    private LocalDate endDate;
+
 }

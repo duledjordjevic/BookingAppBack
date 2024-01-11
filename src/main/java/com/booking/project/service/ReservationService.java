@@ -9,8 +9,6 @@ import com.booking.project.model.enums.AccommodationStatus;
 import com.booking.project.model.enums.CancellationPolicy;
 import com.booking.project.model.enums.ReservationMethod;
 import com.booking.project.model.enums.ReservationStatus;
-import com.booking.project.model.enums.AccommodationStatus;
-import com.booking.project.repository.inteface.IGuestRepository;
 import com.booking.project.repository.inteface.IReservationRepository;
 import com.booking.project.service.interfaces.IAccommodationService;
 import com.booking.project.service.interfaces.IGuestService;
@@ -18,7 +16,6 @@ import com.booking.project.service.interfaces.IReservationService;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.Query;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.cglib.core.Local;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
@@ -100,10 +97,14 @@ public class ReservationService implements IReservationService {
         return reservationRepository.findByHost(id);
     }
     @Override
-    public List<ReservationDTO> filterGuestReservations(String title, LocalDate startDate, LocalDate endDate, ReservationStatus reservationStatus, Integer guestUserId){
-        Query q = em.createQuery("SELECT r FROM Reservation r JOIN FETCH r.accommodation a JOIN FETCH r.guest WHERE (LOWER(a.title) LIKE LOWER(:pattern) OR :pattern is Null)" +
-                " AND ((r.startDate >= :startDate AND r.endDate <= :endDate) OR cast(:startDate as date) is null) " +
-                "AND (r.status = :reservationStatus OR :reservationStatus is Null) AND (:guestUserId is Null OR r.guest.user.id = :guestUserId)");
+    public List<ReservationDTO> filterGuestReservations(String title, LocalDate startDate, LocalDate endDate, ReservationStatus reservationStatus, Long guestUserId){
+        Query q = em.createQuery("SELECT r " +
+                "FROM Reservation r " +
+                "JOIN FETCH r.accommodation a " +
+                "JOIN FETCH r.guest " +
+                "WHERE (LOWER(a.title) LIKE LOWER(:pattern) OR :pattern is Null) " +
+                "AND ((r.startDate >= :startDate AND r.endDate <= :endDate) OR cast(:startDate as date) is null) " +
+                "AND (r.status = :reservationStatus OR :reservationStatus is Null) AND (r.guest.user.id = :guestUserId)");
         if(title == null){
             q.setParameter("pattern", null);
         }else{
@@ -197,6 +198,10 @@ public class ReservationService implements IReservationService {
         q.setParameter("endDate", endDate);
         q.setParameter("reservationStatus", reservationStatus);
         return q.getResultList();
+    }
+    @Override
+    public void cancellGuestReservations(Long id){
+        reservationRepository.cancellGuestReservation(id,ReservationStatus.CANCELLED);
     }
 
 }
