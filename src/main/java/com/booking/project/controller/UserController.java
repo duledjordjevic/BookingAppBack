@@ -1,13 +1,12 @@
 package com.booking.project.controller;
 
 import com.booking.project.dto.*;
-import com.booking.project.model.Guest;
-import com.booking.project.model.Host;
-import com.booking.project.model.User;
+import com.booking.project.model.*;
 import com.booking.project.model.enums.UserStatus;
 import com.booking.project.model.enums.UserType;
 import com.booking.project.service.interfaces.IGuestService;
 import com.booking.project.service.interfaces.IHostService;
+import com.booking.project.service.interfaces.IUserReportService;
 import com.booking.project.service.interfaces.IUserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -32,6 +31,9 @@ public class UserController {
 
     @Autowired
     private IHostService hostService;
+
+    @Autowired
+    private IUserReportService userReportService;
     
     @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<?> getUsers(){
@@ -132,5 +134,14 @@ public class UserController {
         if(host == null)  return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 
         return new ResponseEntity<Integer>(Math.toIntExact(host.getId()), HttpStatus.OK);
+    }
+    @PostMapping(value ="/report",consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<UserReportDTO> createUserReport
+            (@RequestBody UserReportDTO userReportDTO) throws Exception {
+        UserReportDTO userReportSaved = userReportService.create(userReportDTO);
+        if(userReportSaved == null){
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+        return new ResponseEntity<UserReportDTO>(userReportSaved, HttpStatus.CREATED);
     }
  }

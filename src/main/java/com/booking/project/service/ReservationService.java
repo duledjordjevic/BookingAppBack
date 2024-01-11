@@ -73,6 +73,7 @@ public class ReservationService implements IReservationService {
         reservation.setStartDate(createReservationDTO.getStartDate());
         reservation.setEndDate(createReservationDTO.getEndDate());
         reservation.setNumberOfGuests(createReservationDTO.getNumberOfGuests());
+        reservation.setHostReported(false);
 
         save(reservation);
         return  reservation;
