@@ -43,6 +43,9 @@ public class Reservation {
     @ManyToOne(fetch = FetchType.LAZY)
     private Accommodation accommodation;
 
+    @Column(nullable = false)
+    private boolean isHostReported;
+
     public void copyValues(Reservation reservation){
         this.startDate = reservation.startDate;
         this.endDate = reservation.endDate;
