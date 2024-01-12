@@ -8,6 +8,7 @@ import com.booking.project.repository.inteface.IHostRepository;
 import com.booking.project.repository.inteface.INotificationForHostRepository;
 import com.booking.project.service.interfaces.INotificationForHostService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
@@ -21,6 +22,8 @@ public class NotificationForHostService implements INotificationForHostService {
     private INotificationForHostRepository notificationForHostRepository;
     @Autowired
     private IHostRepository hostRepository;
+    @Autowired
+    private SimpMessagingTemplate simpMessagingTemplate;
 
     @Override
     public Collection<NotificationForHostDTO> findAll() {
@@ -75,6 +78,7 @@ public class NotificationForHostService implements INotificationForHostService {
         notificationForHost.setHost(host.get());
 
         save(notificationForHost);
+        simpMessagingTemplate.convertAndSend("/socket-publisher/" + notificationForHost.getHost().getUser().getId(),notificationForHost);
         return notificationForHost;
     }
     @Override
