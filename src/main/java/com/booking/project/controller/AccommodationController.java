@@ -14,12 +14,15 @@ import com.booking.project.service.interfaces.IAccommodationService;
 import com.booking.project.service.interfaces.IGuestService;
 import com.booking.project.service.interfaces.IHostService;
 import com.booking.project.service.interfaces.IPriceListService;
+import com.booking.project.validation.IdentityConstraint;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
@@ -27,6 +30,7 @@ import java.time.LocalDate;
 import java.util.*;
 
 @RestController
+@Validated
 @RequestMapping("/api/accommodations")
 public class AccommodationController {
 
@@ -50,7 +54,7 @@ public class AccommodationController {
     }
 
     @GetMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<?> getAccommodationDetails(@PathVariable("id") Long id) throws IOException {
+    public ResponseEntity<?> getAccommodationDetails(@IdentityConstraint @PathVariable("id") Long id) throws IOException {
         AccommodationDTO accommodationDTO = accommodationService.findAccommodationsDetails(id);
         if(accommodationDTO == null)    return new ResponseEntity<AccommodationDTO>(HttpStatus.NOT_FOUND);
 
@@ -111,7 +115,7 @@ public class AccommodationController {
 
     @PreAuthorize("hasRole('HOST')")
     @GetMapping(value = "/host/{id_host}", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<?> getHostAccommodations(@PathVariable("id_host") Long id) throws IOException {
+    public ResponseEntity<?> getHostAccommodations(@IdentityConstraint @PathVariable("id_host") Long id) throws IOException {
         Collection<AccommodationCardDTO> accommodations = accommodationService.findAccomodationsByHostId(id);
         return new ResponseEntity<Collection<AccommodationCardDTO>>(accommodations, HttpStatus.OK);
     }
@@ -199,7 +203,7 @@ public class AccommodationController {
 
     @PreAuthorize("hasRole('GUEST')")
     @GetMapping(value = "/guest/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<?> getGuestAccommodations(@PathVariable("id") Long id){
+    public ResponseEntity<?> getGuestAccommodations(@IdentityConstraint @PathVariable("id") Long id){
         List<AccommodationDTO> accommodationDTOS = accommodationService.getGuestAccommodations(id);
         if(accommodationDTOS == null)    return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 
@@ -208,7 +212,7 @@ public class AccommodationController {
 
     @PreAuthorize("hasRole('GUEST')")
     @GetMapping(value = "/guest/comment/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<?> getGuestAccommodationsForComment(@PathVariable("id") Long id) throws IOException {
+    public ResponseEntity<?> getGuestAccommodationsForComment(@IdentityConstraint @PathVariable("id") Long id) throws IOException {
         List<AccommodationDTO> accommodationDTOS = accommodationService.getGuestAccommodationsForComment(id);
         if(accommodationDTOS == null)    return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 

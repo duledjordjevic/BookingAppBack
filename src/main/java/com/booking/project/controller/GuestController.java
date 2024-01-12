@@ -4,6 +4,7 @@ import com.booking.project.dto.AccommodationCardDTO;
 import com.booking.project.model.Guest;
 import com.booking.project.model.User;
 import com.booking.project.service.interfaces.IGuestService;
+import com.booking.project.validation.IdentityConstraint;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -23,7 +24,8 @@ public class GuestController {
     private IGuestService guestService;
     @PreAuthorize("hasRole('GUEST')")
     @GetMapping(value = "/{id}/favourites", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Collection<AccommodationCardDTO>> getFavouritesAccommodations(@PathVariable("id") Long id) throws IOException {
+    public ResponseEntity<Collection<AccommodationCardDTO>> getFavouritesAccommodations(@IdentityConstraint @PathVariable("id") Long id)
+            throws IOException {
         Collection<AccommodationCardDTO> accommodationCardDTOS = guestService.findFavourites(id);
 
         return new ResponseEntity<Collection<AccommodationCardDTO>>(accommodationCardDTOS, HttpStatus.OK);
@@ -32,7 +34,8 @@ public class GuestController {
 
     @PreAuthorize(("hasRole('GUEST')"))
     @PostMapping(value = "/favourites/{guestUserId}/{accId}", consumes = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<?> addFavourite(@PathVariable("guestUserId") Long guestUserId, @PathVariable("accId") Long accId) throws Exception {
+    public ResponseEntity<?> addFavourite(@IdentityConstraint  @PathVariable("guestUserId") Long guestUserId,
+                                          @IdentityConstraint @PathVariable("accId") Long accId) throws Exception {
         boolean result = guestService.addFavourite(accId, guestUserId);
 
         if (!result) return new ResponseEntity<Boolean>(false, HttpStatus.INTERNAL_SERVER_ERROR);
@@ -42,7 +45,8 @@ public class GuestController {
 
     @PreAuthorize(("hasRole('GUEST')"))
     @GetMapping(value = "/isFavourite/{guestUserId}/{accId}")
-    public ResponseEntity<?> isFavourite(@PathVariable("guestUserId") Long guestUserId, @PathVariable("accId") Long accId) throws Exception {
+    public ResponseEntity<?> isFavourite(@IdentityConstraint @PathVariable("guestUserId") Long guestUserId,
+                                         @IdentityConstraint @PathVariable("accId") Long accId) throws Exception {
         boolean result = guestService.isFavourite(accId, guestUserId);
 
         if (!result) return new ResponseEntity<Boolean>(false, HttpStatus.INTERNAL_SERVER_ERROR);
@@ -52,7 +56,8 @@ public class GuestController {
 
     @PreAuthorize(("hasRole('GUEST')"))
     @DeleteMapping(value = "/favourites/{guestUserId}/{accId}")
-    public ResponseEntity<?> removeFavourite(@PathVariable("guestUserId") Long guestUserId, @PathVariable("accId") Long accId) throws Exception {
+    public ResponseEntity<?> removeFavourite(@IdentityConstraint @PathVariable("guestUserId") Long guestUserId,
+                                             @IdentityConstraint @PathVariable("accId") Long accId) throws Exception {
         boolean result = guestService.removeFavourite(accId, guestUserId);
 
         if (!result) return new ResponseEntity<Boolean>(false, HttpStatus.INTERNAL_SERVER_ERROR);
