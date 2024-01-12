@@ -8,6 +8,7 @@ import com.booking.project.repository.inteface.IGuestRepository;
 import com.booking.project.repository.inteface.INotificationForGuestRepository;
 import com.booking.project.service.interfaces.INotificationForGuestService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
@@ -21,6 +22,8 @@ public class NotificationForGuestService implements INotificationForGuestService
     private INotificationForGuestRepository notificationForGuestRepository;
     @Autowired
     private IGuestRepository guestRepository;
+    @Autowired
+    private SimpMessagingTemplate simpMessagingTemplate;
 
     @Override
     public Collection<NotificationForGuestDTO> findAll() {
@@ -73,6 +76,7 @@ public class NotificationForGuestService implements INotificationForGuestService
         notificationForGuest.setRead(false);
 
         save(notificationForGuest);
+        simpMessagingTemplate.convertAndSend("/socket-publisher/" + notificationForGuest.getGuest().getUser().getId(),notificationForGuest);
         return notificationForGuest;
     }
     @Override
