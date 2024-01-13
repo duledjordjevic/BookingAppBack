@@ -76,7 +76,7 @@ public class CommentAboutAccController {
     }
     @PreAuthorize("hasRole('ADMIN')")
     @GetMapping(value = "/reported",produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Collection<CommentAboutAccDTO>> getReported(){
+    public ResponseEntity<Collection<CommentAboutAccDTO>> getReported() throws IOException {
         Collection<CommentAboutAccDTO> comments = commentAboutAccService.findAllReported();
         if (comments == null){
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
