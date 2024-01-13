@@ -26,10 +26,17 @@ public interface ICommentAboutAccRepository extends JpaRepository<CommentAboutAc
 
     @Query("select avg(c.rating) " +
             "from CommentAboutAcc c " +
-            "where c.accommodation.id =:accommodationId")
+            "where c.accommodation.id =:accommodationId " +
+            "and c.isApproved = true " +
+            "and c.isReported = false")
     Double findAvgRateByAccommodation(@Param("accommodationId") Long accommodationId);
     @Query("select c from" +
             " CommentAboutAcc c where" +
             " c.guest.user.id = :id")
     List<CommentAboutAcc> findByGuestUser(Long id);
+
+    @Query("SELECT c FROM CommentAboutAcc c " +
+            "WHERE c.accommodation.id = :accommodationId " +
+            "AND c.isApproved = true")
+    Collection<CommentAboutAcc> findAllForDisplay(@Param("accommodationId") Long accommodationId);
 }
