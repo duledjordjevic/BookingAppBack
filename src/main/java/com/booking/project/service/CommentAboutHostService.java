@@ -76,8 +76,7 @@ public class CommentAboutHostService implements ICommentAboutHostService {
 
     @Override
     public Collection<CommentAboutHostDTO> findByHost(Long id){
-        Host host = hostRepository.findByUserId(id);
-        Collection<CommentAboutHost> commentsAboutHost = commentAboutHostRepository.findAllByHost(host);
+        Collection<CommentAboutHost> commentsAboutHost = commentAboutHostRepository.findAllForDisplay(id);
         return mapToDto(commentsAboutHost);
     }
 

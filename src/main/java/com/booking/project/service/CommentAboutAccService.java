@@ -57,7 +57,7 @@ public class CommentAboutAccService implements ICommentAboutAccService {
         CommentAboutAcc commentAboutAcc = new CommentAboutAcc();
         commentAboutAcc.setRating(createCommentAboutAccDTO.getRating());
         commentAboutAcc.setContent(createCommentAboutAccDTO.getContent());
-        commentAboutAcc.setApproved(true);
+        commentAboutAcc.setApproved(false);
         commentAboutAcc.setReported(false);
         commentAboutAcc.setDate(LocalDate.now());
 
@@ -75,8 +75,7 @@ public class CommentAboutAccService implements ICommentAboutAccService {
 
     @Override
     public Collection<CommentAboutAccDTO> findByAcc(Long id) {
-        Optional<Accommodation> accommodation = accommodationRepository.findById(id);
-        Collection<CommentAboutAcc> commentsAboutAcc = commentAboutAccRepository.findAllByAccommodation(accommodation);
+        Collection<CommentAboutAcc> commentsAboutAcc = commentAboutAccRepository.findAllForDisplay(id);
         return mapToDto(commentsAboutAcc);
     }
 
