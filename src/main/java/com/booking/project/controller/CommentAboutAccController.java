@@ -93,4 +93,14 @@ public class CommentAboutAccController {
         }
         return new ResponseEntity<Collection<CommentAboutAccDTO>>(comments, HttpStatus.OK);
     }
+
+    @PreAuthorize("hasRole('ADMIN')")
+    @GetMapping(value = "/approving",produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<Collection<CommentAboutAccDTO>> getCommentsForApproving() throws IOException {
+        Collection<CommentAboutAccDTO> comments = commentAboutAccService.findAllForApprove();
+        if (comments == null){
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+        return new ResponseEntity<Collection<CommentAboutAccDTO>>(comments, HttpStatus.OK);
+    }
 }
