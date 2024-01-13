@@ -52,8 +52,8 @@ public class CommentAboutAccController {
         commentAboutAccService.deleteById(id);
         return new ResponseEntity<CommentAboutAcc>(HttpStatus.NO_CONTENT);
     }
-    @PreAuthorize("hasRole('GUEST') OR hasRole('HOST')")
-    @PutMapping(value = "/{id}/report/{isReported}", produces = MediaType.APPLICATION_JSON_VALUE)
+    @PreAuthorize("hasRole('HOST')")
+    @PutMapping(value = "/{id}/report/{isReported}")
     public ResponseEntity<?> reportCommentAboutAcc(@PathVariable Long id, @PathVariable boolean isReported) throws Exception{
         CommentAboutAcc commentAboutAcc = commentAboutAccService.report(id, isReported);
 

@@ -38,9 +38,9 @@ public class CommentAboutHostController {
         return new ResponseEntity<Collection<CommentAboutHostDTO>>(comments, HttpStatus.OK);
     }
 
-    @GetMapping(value = "/host/{id}",produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Collection<CommentAboutHostDTO>> getCommentsAboutHost(@PathVariable Long id){
-        Collection<CommentAboutHostDTO> comments = commentAboutHostService.findByHost(id);
+    @GetMapping(value = "/host/{hostUserId}",produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<Collection<CommentAboutHostDTO>> getCommentsAboutHost(@PathVariable Long hostUserId){
+        Collection<CommentAboutHostDTO> comments = commentAboutHostService.findByHost(hostUserId);
         if (comments == null){
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
