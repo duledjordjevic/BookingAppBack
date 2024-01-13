@@ -131,4 +131,15 @@ public class CommentAboutAccService implements ICommentAboutAccService {
         }
         return commentAboutAccDTOS;
     }
+
+    @Override
+    public Collection<CommentAboutAccDTO> findAllForApprove() throws IOException {
+        Collection<CommentAboutAcc> commentsAboutAcc = commentAboutAccRepository.findAllForApproving();
+        Collection<CommentAboutAccDTO> commentAboutAccDTOS = mapToDto(commentsAboutAcc);
+        for (CommentAboutAccDTO commentAboutAccDTO: commentAboutAccDTOS){
+            commentAboutAccDTO.setCoverImage(imageService.getCoverImage(commentAboutAccDTO.getAccommodation().getImages().split(",")[0]));
+        }
+        return commentAboutAccDTOS;
+    }
+
 }
