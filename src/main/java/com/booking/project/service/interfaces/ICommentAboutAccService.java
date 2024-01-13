@@ -22,7 +22,7 @@ public interface ICommentAboutAccService {
     void deleteById(Long id);
     CommentAboutAcc create(CreateCommentAboutAccDTO createCommentAboutAccDTO) throws Exception;
     Collection<CommentAboutAccDTO> findByAcc(Long id);
-    Collection<CommentAboutAccDTO> findAllReported();
+    Collection<CommentAboutAccDTO> findAllReported() throws IOException;
     CommentAboutAcc approve(Long id, boolean approved) throws  Exception;
     CommentAboutAcc report(Long id, boolean reported) throws  Exception;
     Collection<Object[]> findAccommodationsByRating();

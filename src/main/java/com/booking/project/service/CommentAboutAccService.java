@@ -100,9 +100,13 @@ public class CommentAboutAccService implements ICommentAboutAccService {
     }
 
     @Override
-    public Collection<CommentAboutAccDTO> findAllReported() {
+    public Collection<CommentAboutAccDTO> findAllReported() throws IOException {
         Collection<CommentAboutAcc> commentsAboutAcc = commentAboutAccRepository.findByReportedTrue();
-        return mapToDto(commentsAboutAcc);
+        Collection<CommentAboutAccDTO> commentAboutAccDTOS = mapToDto(commentsAboutAcc);
+        for (CommentAboutAccDTO commentAboutAccDTO: commentAboutAccDTOS){
+            commentAboutAccDTO.setCoverImage(imageService.getCoverImage(commentAboutAccDTO.getAccommodation().getImages().split(",")[0]));
+        }
+        return commentAboutAccDTOS;
     }
 
     public Collection<CommentAboutAccDTO> mapToDto(Collection<CommentAboutAcc> commentsAboutAcc){
