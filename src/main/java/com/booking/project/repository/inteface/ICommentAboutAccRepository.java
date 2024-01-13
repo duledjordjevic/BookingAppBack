@@ -39,4 +39,8 @@ public interface ICommentAboutAccRepository extends JpaRepository<CommentAboutAc
             "WHERE c.accommodation.id = :accommodationId " +
             "AND c.isApproved = true")
     Collection<CommentAboutAcc> findAllForDisplay(@Param("accommodationId") Long accommodationId);
+
+    @Query("SELECT c FROM CommentAboutAcc c " +
+            "WHERE c.isApproved = false" )
+    Collection<CommentAboutAcc> findAllForApproving();
 }
