@@ -103,4 +103,16 @@ public class CommentAboutAccController {
         }
         return new ResponseEntity<Collection<CommentAboutAccDTO>>(comments, HttpStatus.OK);
     }
+
+    @PreAuthorize("hasRole('HOST')")
+    @PutMapping(value = "/reportMessage/{id}")
+    public ResponseEntity<?> setReportMessage(@PathVariable Long id, @RequestBody String message) throws Exception{
+        CommentAboutAcc commentAboutAcc = commentAboutAccService.setReportMessage(id, message);
+
+        if (commentAboutAcc == null){
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+
+        return new ResponseEntity<CommentAboutAccDTO>(new CommentAboutAccDTO(commentAboutAcc), HttpStatus.CREATED);
+    }
 }
