@@ -62,6 +62,7 @@ public class CommentAboutHostService implements ICommentAboutHostService {
         commentAboutHost.setApproved(true);
         commentAboutHost.setReported(false);
         commentAboutHost.setDate(LocalDate.now());
+        commentAboutHost.setReportMessage("");
 
         Optional<Guest> guest = guestRepository.findByUserId(createCommentAboutHostDTO.getGuestId());
         if (guest.isEmpty()) return null;
@@ -76,8 +77,7 @@ public class CommentAboutHostService implements ICommentAboutHostService {
 
     @Override
     public Collection<CommentAboutHostDTO> findByHost(Long id){
-        Host host = hostRepository.findByUserId(id);
-        Collection<CommentAboutHost> commentsAboutHost = commentAboutHostRepository.findAllByHost(host);
+        Collection<CommentAboutHost> commentsAboutHost = commentAboutHostRepository.findAllForDisplay(id);
         return mapToDto(commentsAboutHost);
     }
 
@@ -122,5 +122,15 @@ public class CommentAboutHostService implements ICommentAboutHostService {
     public Collection<CommentAboutHostDTO> findByGuest(Long id){
         Collection<CommentAboutHost> commentsAboutHost = commentAboutHostRepository.findByGuestUser(id);
         return mapToDto(commentsAboutHost);
+    }
+
+    @Override
+    public CommentAboutHost setReportMessage(Long id, String message) throws Exception {
+        Optional<CommentAboutHost> commentAboutHost = commentAboutHostRepository.findById(id);
+        if (commentAboutHost.isEmpty()) return null;
+
+        commentAboutHost.get().setReportMessage(message);
+        save(commentAboutHost.get());
+        return commentAboutHost.get();
     }
 }

@@ -1,8 +1,10 @@
 package com.booking.project.controller;
 
+import com.booking.project.dto.CommentAboutAccDTO;
 import com.booking.project.dto.CommentAboutHostDTO;
 import com.booking.project.dto.CreateCommentAboutHostDTO;
 import com.booking.project.dto.CreateNotificationForGuestDTO;
+import com.booking.project.model.CommentAboutAcc;
 import com.booking.project.model.CommentAboutHost;
 import com.booking.project.model.NotificationForGuest;
 import com.booking.project.service.interfaces.ICommentAboutHostService;
@@ -38,9 +40,9 @@ public class CommentAboutHostController {
         return new ResponseEntity<Collection<CommentAboutHostDTO>>(comments, HttpStatus.OK);
     }
 
-    @GetMapping(value = "/host/{id}",produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Collection<CommentAboutHostDTO>> getCommentsAboutHost(@PathVariable Long id){
-        Collection<CommentAboutHostDTO> comments = commentAboutHostService.findByHost(id);
+    @GetMapping(value = "/host/{hostUserId}",produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<Collection<CommentAboutHostDTO>> getCommentsAboutHost(@PathVariable Long hostUserId){
+        Collection<CommentAboutHostDTO> comments = commentAboutHostService.findByHost(hostUserId);
         if (comments == null){
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
@@ -92,5 +94,17 @@ public class CommentAboutHostController {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
         return new ResponseEntity<Collection<CommentAboutHostDTO>>(comments, HttpStatus.OK);
+    }
+
+    @PreAuthorize("hasRole('HOST')")
+    @PutMapping(value = "/reportMessage/{id}")
+    public ResponseEntity<?> setReportMessage(@PathVariable Long id, @RequestBody String message) throws Exception{
+        CommentAboutHost commentAboutHost = commentAboutHostService.setReportMessage(id, message);
+
+        if (commentAboutHost == null){
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+
+        return new ResponseEntity<CommentAboutHostDTO>(new CommentAboutHostDTO(commentAboutHost), HttpStatus.CREATED);
     }
 }

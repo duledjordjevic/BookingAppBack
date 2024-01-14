@@ -38,4 +38,7 @@ public class CommentAboutAcc  {
     @Column(nullable = false)
     private LocalDate date;
 
+    @Column(nullable = false)
+    private String reportMessage;
+
 }

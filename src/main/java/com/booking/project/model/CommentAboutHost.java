@@ -37,4 +37,7 @@ public class CommentAboutHost {
 
     @Column(nullable = false)
     private LocalDate date;
+
+    @Column(nullable = false)
+    private String reportMessage;
 }

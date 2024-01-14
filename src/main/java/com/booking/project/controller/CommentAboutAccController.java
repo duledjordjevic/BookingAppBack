@@ -52,8 +52,8 @@ public class CommentAboutAccController {
         commentAboutAccService.deleteById(id);
         return new ResponseEntity<CommentAboutAcc>(HttpStatus.NO_CONTENT);
     }
-    @PreAuthorize("hasRole('GUEST') OR hasRole('HOST')")
-    @PutMapping(value = "/{id}/report/{isReported}", produces = MediaType.APPLICATION_JSON_VALUE)
+    @PreAuthorize("hasRole('HOST')")
+    @PutMapping(value = "/{id}/report/{isReported}")
     public ResponseEntity<?> reportCommentAboutAcc(@PathVariable Long id, @PathVariable boolean isReported) throws Exception{
         CommentAboutAcc commentAboutAcc = commentAboutAccService.report(id, isReported);
 
@@ -76,7 +76,7 @@ public class CommentAboutAccController {
     }
     @PreAuthorize("hasRole('ADMIN')")
     @GetMapping(value = "/reported",produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Collection<CommentAboutAccDTO>> getReported(){
+    public ResponseEntity<Collection<CommentAboutAccDTO>> getReported() throws IOException {
         Collection<CommentAboutAccDTO> comments = commentAboutAccService.findAllReported();
         if (comments == null){
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
@@ -92,5 +92,27 @@ public class CommentAboutAccController {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
         return new ResponseEntity<Collection<CommentAboutAccDTO>>(comments, HttpStatus.OK);
+    }
+
+    @PreAuthorize("hasRole('ADMIN')")
+    @GetMapping(value = "/approving",produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<Collection<CommentAboutAccDTO>> getCommentsForApproving() throws IOException {
+        Collection<CommentAboutAccDTO> comments = commentAboutAccService.findAllForApprove();
+        if (comments == null){
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+        return new ResponseEntity<Collection<CommentAboutAccDTO>>(comments, HttpStatus.OK);
+    }
+
+    @PreAuthorize("hasRole('HOST')")
+    @PutMapping(value = "/reportMessage/{id}")
+    public ResponseEntity<?> setReportMessage(@PathVariable Long id, @RequestBody String message) throws Exception{
+        CommentAboutAcc commentAboutAcc = commentAboutAccService.setReportMessage(id, message);
+
+        if (commentAboutAcc == null){
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+
+        return new ResponseEntity<CommentAboutAccDTO>(new CommentAboutAccDTO(commentAboutAcc), HttpStatus.CREATED);
     }
 }
