@@ -191,7 +191,7 @@ public class ReservationService implements IReservationService {
     }
 
     private List<Reservation> getOverlaps(LocalDate startDate, LocalDate endDate, ReservationStatus reservationStatus){
-        Query q = em.createQuery("SELECT r FROM Reservation  r WHERE (:startDate < r.endDate AND :endDate > r.startDate) AND r.status = :reservationStatus");
+        Query q = em.createQuery("SELECT r FROM Reservation  r WHERE (:startDate <= r.endDate AND :endDate >= r.startDate) AND r.status = :reservationStatus");
         q.setParameter("startDate", startDate);
         q.setParameter("endDate", endDate);
         q.setParameter("reservationStatus", reservationStatus);
