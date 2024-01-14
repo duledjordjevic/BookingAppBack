@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -15,6 +16,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @RestController
+@Validated
 @RequestMapping("/api/images")
 public class ImageController {
 
@@ -26,7 +28,8 @@ public class ImageController {
 
 //    @PreAuthorize("hasRole('HOST')")
     @PostMapping("/{accommodationId}")
-    public ResponseEntity<?> createAccommodationImages (@RequestParam("image") MultipartFile[] accImages, @IdentityConstraint @PathVariable Long accommodationId) throws Exception {
+    public ResponseEntity<?> createAccommodationImages (@RequestParam("image") MultipartFile[] accImages,
+                                                        @IdentityConstraint @PathVariable Long accommodationId) throws Exception {
         String uploadDirectory = "src/main/resources/static/images/accommodations";
         StringBuilder accImagesString = new StringBuilder();
 

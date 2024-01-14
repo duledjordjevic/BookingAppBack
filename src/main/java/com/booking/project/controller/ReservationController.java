@@ -21,6 +21,7 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.util.MultiValueMap;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
@@ -30,6 +31,7 @@ import java.util.List;
 import java.util.Optional;
 
 @RestController
+@Validated
 @RequestMapping("/api/reservations")
 public class ReservationController {
 
@@ -59,9 +61,9 @@ public class ReservationController {
     public ResponseEntity<?> filterHostReservations(@PathParam("title") String title,
                                                     @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) @PathParam("startDate") LocalDate startDate,
                                                     @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) @PathParam("endDate") LocalDate endDate,
-                                                     @PathParam("status") ReservationStatus status,
-                                                    @IdentityConstraint @PathParam("hostId") Integer hostUserId){
-        List<ReservationDTO> reservations = reservationService.filterHostReservations(title, startDate, endDate, status, hostUserId);
+                                                    @PathParam("status") ReservationStatus status,
+                                                    @IdentityConstraint @PathParam("hostId") Long hostId){
+        List<ReservationDTO> reservations = reservationService.filterHostReservations(title, startDate, endDate, status, hostId);
 
         return new ResponseEntity<Collection<ReservationDTO>>(reservations, HttpStatus.OK);
     }
@@ -91,7 +93,7 @@ public class ReservationController {
 
     @PreAuthorize("hasRole('HOST')")
     @PutMapping(value = "/{id}/{reservationStatus}", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<?> updateReservationStatus(@IdentityConstraint @PathVariable Long id, @PathVariable ReservationStatus reservationStatus) throws Exception{
+    public ResponseEntity<?> updateReservationStatus(@PathVariable Long id, @PathVariable ReservationStatus reservationStatus) throws Exception{
         Reservation reservation = reservationService.updateStatus(id, reservationStatus);
 
         if (reservation == null){
