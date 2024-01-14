@@ -29,4 +29,5 @@ public interface ICommentAboutAccService {
     Double findAvgRateById(Long accommodationId);
     Collection<CommentAboutAccDTO> findByGuest(Long id) throws IOException;
     Collection<CommentAboutAccDTO> findAllForApprove() throws IOException;
+    CommentAboutAcc setReportMessage(Long id, String message) throws Exception;
 }

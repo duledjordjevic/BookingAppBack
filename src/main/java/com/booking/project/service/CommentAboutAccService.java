@@ -60,6 +60,7 @@ public class CommentAboutAccService implements ICommentAboutAccService {
         commentAboutAcc.setApproved(false);
         commentAboutAcc.setReported(false);
         commentAboutAcc.setDate(LocalDate.now());
+        commentAboutAcc.setReportMessage("");
 
         Optional<Guest> guest = guestRepository.findByUserId(createCommentAboutAccDTO.getGuestId());
         if (guest.isEmpty()) return null;
@@ -146,4 +147,13 @@ public class CommentAboutAccService implements ICommentAboutAccService {
         return commentAboutAccDTOS;
     }
 
+    @Override
+    public CommentAboutAcc setReportMessage(Long id, String message) throws Exception {
+        Optional<CommentAboutAcc> commentAboutAcc = commentAboutAccRepository.findById(id);
+        if (commentAboutAcc.isEmpty()) return null;
+
+        commentAboutAcc.get().setReportMessage(message);
+        save(commentAboutAcc.get());
+        return commentAboutAcc.get();
+    }
 }
