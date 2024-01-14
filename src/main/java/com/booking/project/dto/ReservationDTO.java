@@ -26,6 +26,8 @@ public class ReservationDTO {
     private ReservationStatus status;
     private Guest guest;
     private AccommodationDTO accommodation;
+    private boolean isHostReported;
+    private boolean isGuestReported;
 
     public ReservationDTO(Reservation reservation){
         this.id = reservation.getId();
@@ -37,5 +39,7 @@ public class ReservationDTO {
         this.accommodation = new AccommodationDTO(reservation.getAccommodation());
         this.guest = reservation.getGuest();
         this.accommodation.setHost(reservation.getAccommodation().getHost());
+        this.isHostReported = reservation.isHostReported();
+        this.isGuestReported = reservation.isGuestReported();
     }
 }

@@ -14,6 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
+import java.time.Duration;
 import java.time.LocalDate;
 import java.time.Period;
 import java.util.ArrayList;
@@ -374,6 +375,33 @@ public class AccommodationService implements IAccommodationService {
         List<Accommodation> accommodations = q.getResultList();
         for(Accommodation accommodation : accommodations){
             accommodationDTOS.add(new AccommodationDTO(accommodation));
+        }
+
+        return accommodationDTOS;
+    }
+
+    @Override
+    public List<AccommodationDTO> getGuestAccommodationsForComment(Long guestUserId) throws IOException {
+
+        Query q = em.createQuery("SELECT r.accommodation FROM Reservation r " +
+                "JOIN r.accommodation a " +
+                "WHERE r.guest.user.id = :guestUserId " +
+                "AND r.status = 'ACCEPTED' " +
+                "AND current_timestamp() >= r.endDate " +
+                "AND current_timestamp() - r.endDate <= :daysInterval");
+        q.setParameter("daysInterval", Duration.ofDays(7));
+        q.setParameter("guestUserId", guestUserId);
+
+
+        List<AccommodationDTO> accommodationDTOS = new ArrayList<AccommodationDTO>();
+        List<Accommodation> accommodations = q.getResultList();
+
+        for(Accommodation accommodation : accommodations){
+            AccommodationDTO accommodationDTO = new AccommodationDTO(accommodation);
+            List<byte[]> images = new ArrayList<>();
+            images.add(imageService.getCoverImage(accommodation.getImages().split(",")[0]));
+            accommodationDTO.setImages(images);
+            accommodationDTOS.add(accommodationDTO);
         }
 
         return accommodationDTOS;

@@ -23,5 +23,6 @@ public interface ICommentAboutHostService {
     CommentAboutHost report(Long id, boolean reported) throws  Exception;
 
     Collection<CommentAboutHostDTO> findByGuest(Long id);
+    CommentAboutHost setReportMessage(Long id, String message) throws Exception;
 
 }

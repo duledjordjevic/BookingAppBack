@@ -2,6 +2,7 @@ package com.booking.project.service;
 
 import com.booking.project.dto.AccommodationDTO;
 import com.booking.project.dto.CommentAboutAccDTO;
+import com.booking.project.dto.CommentAboutHostDTO;
 import com.booking.project.dto.CreateCommentAboutAccDTO;
 import com.booking.project.model.*;
 import com.booking.project.model.enums.AccommodationApprovalStatus;
@@ -12,9 +13,9 @@ import com.booking.project.service.interfaces.ICommentAboutAccService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Optional;
+import java.io.IOException;
+import java.time.LocalDate;
+import java.util.*;
 
 @Service
 public class CommentAboutAccService implements ICommentAboutAccService {
@@ -25,6 +26,8 @@ public class CommentAboutAccService implements ICommentAboutAccService {
     private IGuestRepository guestRepository;
     @Autowired
     private IAccommodationRepository accommodationRepository;
+    @Autowired
+    private ImageService imageService;
     @Override
     public Collection<CommentAboutAccDTO> findAll() {
         Collection<CommentAboutAcc> commentsAboutAcc = commentAboutAccRepository.findAll();
@@ -54,10 +57,12 @@ public class CommentAboutAccService implements ICommentAboutAccService {
         CommentAboutAcc commentAboutAcc = new CommentAboutAcc();
         commentAboutAcc.setRating(createCommentAboutAccDTO.getRating());
         commentAboutAcc.setContent(createCommentAboutAccDTO.getContent());
-        commentAboutAcc.setApproved(true);
+        commentAboutAcc.setApproved(false);
         commentAboutAcc.setReported(false);
+        commentAboutAcc.setDate(LocalDate.now());
+        commentAboutAcc.setReportMessage("");
 
-        Optional<Guest> guest = guestRepository.findById(createCommentAboutAccDTO.getGuestId());
+        Optional<Guest> guest = guestRepository.findByUserId(createCommentAboutAccDTO.getGuestId());
         if (guest.isEmpty()) return null;
         commentAboutAcc.setGuest(guest.get());
 
@@ -71,8 +76,7 @@ public class CommentAboutAccService implements ICommentAboutAccService {
 
     @Override
     public Collection<CommentAboutAccDTO> findByAcc(Long id) {
-        Optional<Accommodation> accommodation = accommodationRepository.findById(id);
-        Collection<CommentAboutAcc> commentsAboutAcc = commentAboutAccRepository.findAllByAccommodation(accommodation);
+        Collection<CommentAboutAcc> commentsAboutAcc = commentAboutAccRepository.findAllForDisplay(id);
         return mapToDto(commentsAboutAcc);
     }
 
@@ -97,9 +101,13 @@ public class CommentAboutAccService implements ICommentAboutAccService {
     }
 
     @Override
-    public Collection<CommentAboutAccDTO> findAllReported() {
+    public Collection<CommentAboutAccDTO> findAllReported() throws IOException {
         Collection<CommentAboutAcc> commentsAboutAcc = commentAboutAccRepository.findByReportedTrue();
-        return mapToDto(commentsAboutAcc);
+        Collection<CommentAboutAccDTO> commentAboutAccDTOS = mapToDto(commentsAboutAcc);
+        for (CommentAboutAccDTO commentAboutAccDTO: commentAboutAccDTOS){
+            commentAboutAccDTO.setCoverImage(imageService.getCoverImage(commentAboutAccDTO.getAccommodation().getImages().split(",")[0]));
+        }
+        return commentAboutAccDTOS;
     }
 
     public Collection<CommentAboutAccDTO> mapToDto(Collection<CommentAboutAcc> commentsAboutAcc){
@@ -117,5 +125,35 @@ public class CommentAboutAccService implements ICommentAboutAccService {
     @Override
     public Double findAvgRateById(Long accommodationId){
         return commentAboutAccRepository.findAvgRateByAccommodation(accommodationId);
+    }
+
+    @Override
+    public Collection<CommentAboutAccDTO> findByGuest(Long id) throws IOException {
+        Collection<CommentAboutAcc> commentsAboutAcc = commentAboutAccRepository.findByGuestUser(id);
+        Collection<CommentAboutAccDTO> commentAboutAccDTOS = mapToDto(commentsAboutAcc);
+        for (CommentAboutAccDTO commentAboutAccDTO: commentAboutAccDTOS){
+            commentAboutAccDTO.setCoverImage(imageService.getCoverImage(commentAboutAccDTO.getAccommodation().getImages().split(",")[0]));
+        }
+        return commentAboutAccDTOS;
+    }
+
+    @Override
+    public Collection<CommentAboutAccDTO> findAllForApprove() throws IOException {
+        Collection<CommentAboutAcc> commentsAboutAcc = commentAboutAccRepository.findAllForApproving();
+        Collection<CommentAboutAccDTO> commentAboutAccDTOS = mapToDto(commentsAboutAcc);
+        for (CommentAboutAccDTO commentAboutAccDTO: commentAboutAccDTOS){
+            commentAboutAccDTO.setCoverImage(imageService.getCoverImage(commentAboutAccDTO.getAccommodation().getImages().split(",")[0]));
+        }
+        return commentAboutAccDTOS;
+    }
+
+    @Override
+    public CommentAboutAcc setReportMessage(Long id, String message) throws Exception {
+        Optional<CommentAboutAcc> commentAboutAcc = commentAboutAccRepository.findById(id);
+        if (commentAboutAcc.isEmpty()) return null;
+
+        commentAboutAcc.get().setReportMessage(message);
+        save(commentAboutAcc.get());
+        return commentAboutAcc.get();
     }
 }

@@ -47,4 +47,5 @@ public interface IAccommodationService {
 
     List<PriceList> findPriceList(Long id);
     List<AccommodationDTO> getGuestAccommodations(Long guestUserId);
+    List<AccommodationDTO> getGuestAccommodationsForComment(Long guestUserId) throws IOException;
 }

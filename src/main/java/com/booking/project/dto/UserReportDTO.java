@@ -1,7 +1,6 @@
 package com.booking.project.dto;
 
-import com.booking.project.model.User;
-import com.booking.project.model.enums.NotificationType;
+import com.booking.project.validation.IdentityConstraint;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
@@ -13,15 +12,16 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class NotificationTypeStatusDTO {
+public class UserReportDTO {
     private Long id;
 
-    @NotNull
-    private Long userId;
+    @IdentityConstraint
+    private Long userReportedId;
+
+    @IdentityConstraint
+    private Long userReportingId;
 
     @NotEmpty
-    private NotificationType type;
-
-    @NotNull
-    private Boolean isTurned;
+    private String reason;
+    private Long reservationId;
 }

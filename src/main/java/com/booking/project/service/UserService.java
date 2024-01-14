@@ -2,8 +2,6 @@ package com.booking.project.service;
 
 import com.booking.project.dto.*;
 import com.booking.project.model.*;
-import com.booking.project.model.enums.ReservationStatus;
-import com.booking.project.repository.inteface.INotificationTypeStatusRepository;
 import com.booking.project.service.interfaces.*;
 import com.booking.project.utils.email.EmailBuilder;
 import com.booking.project.utils.email.IEmailSender;
@@ -12,12 +10,10 @@ import com.booking.project.model.enums.UserType;
 import com.booking.project.repository.inteface.IUserRepository;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.cglib.core.Local;
 import org.springframework.security.crypto.bcrypt.BCrypt;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -213,8 +209,8 @@ public class UserService implements IUserService {
         save(user.get());
         UserDTO userDTO = new UserDTO(user.get());
         return userDTO;
-
     }
+
     @Override
     public UserDTO report(Long id) throws Exception {
         Optional<User> user = findById(id);

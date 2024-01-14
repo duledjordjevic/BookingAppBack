@@ -1,19 +1,22 @@
 package com.booking.project.controller;
 
 import com.booking.project.dto.*;
-import com.booking.project.model.Guest;
-import com.booking.project.model.Host;
-import com.booking.project.model.User;
+import com.booking.project.model.*;
 import com.booking.project.model.enums.UserStatus;
 import com.booking.project.model.enums.UserType;
 import com.booking.project.service.interfaces.IGuestService;
 import com.booking.project.service.interfaces.IHostService;
+import com.booking.project.service.interfaces.IUserReportService;
 import com.booking.project.service.interfaces.IUserService;
+import com.booking.project.validation.IdentityConstraint;
+import jakarta.persistence.Id;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
@@ -21,6 +24,7 @@ import java.util.Collection;
 import java.util.Optional;
 
 @RestController
+@Validated
 @RequestMapping("/api/users")
 public class UserController {
 
@@ -32,6 +36,9 @@ public class UserController {
 
     @Autowired
     private IHostService hostService;
+
+    @Autowired
+    private IUserReportService userReportService;
     
     @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<?> getUsers(){
@@ -40,7 +47,7 @@ public class UserController {
     }
 
     @GetMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<?> getUser(@PathVariable("id") Long id){
+    public ResponseEntity<?> getUser(@IdentityConstraint @PathVariable("id") Long id){
         Optional<User> user = userService.findById(id);
 
         if(user.isEmpty()){
@@ -63,7 +70,8 @@ public class UserController {
     }
     @PreAuthorize("hasRole('HOST') OR hasRole('GUEST')")
     @PutMapping (value = "/delete/{id}")
-    public ResponseEntity<?> deleteUser(@RequestBody UserDeleteDTO userDeleteDTO,@PathVariable("id") Long id) throws Exception {
+    public ResponseEntity<?> deleteUser(@Valid @RequestBody UserDeleteDTO userDeleteDTO,
+                                        @IdentityConstraint @PathVariable("id") Long id) throws Exception {
         Boolean isUserDeleted = userService.deleteUserById(userDeleteDTO,id);
 
         if(isUserDeleted.equals(false)){
@@ -74,7 +82,8 @@ public class UserController {
     }
     @PreAuthorize("hasRole('ADMIN')")
     @PutMapping(value = "/admin/{id}", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<?> updateAdmin(@RequestBody UserAdminUpdateDTO userAdminDTO, @PathVariable Long id) throws Exception{
+    public ResponseEntity<?> updateAdmin(@Valid @RequestBody UserAdminUpdateDTO userAdminDTO,
+                                         @IdentityConstraint @PathVariable Long id) throws Exception{
         User userForUpdate = userService.updateAdmin(userAdminDTO, id);
 
         if(userForUpdate == null) return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
@@ -83,7 +92,8 @@ public class UserController {
     }
     @PreAuthorize("hasRole('GUEST') OR hasRole('HOST')")
     @PutMapping(value = "/{id}", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<?> updateUser(@RequestBody UserUpdateDTO userUpdateDTO, @PathVariable Long id) throws Exception{
+    public ResponseEntity<?> updateUser(@Valid @RequestBody UserUpdateDTO userUpdateDTO,
+                                        @IdentityConstraint @PathVariable Long id) throws Exception{
         User userForUpdate = userService.update(userUpdateDTO, id);
 
         if(userForUpdate == null) return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
@@ -108,9 +118,18 @@ public class UserController {
 
         return new ResponseEntity<UserDTO>(userDTO, HttpStatus.OK);
     }
+    @PreAuthorize("hasRole('ADMIN')")
+    @PutMapping(value = "/block/{id}", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<?> blockUser(@IdentityConstraint @PathVariable Long id) throws Exception {
+        UserDTO userDTO = userReportService.blockUser(id);
+
+        if(userDTO == null) return new ResponseEntity<UserDTO>(userDTO,HttpStatus.INTERNAL_SERVER_ERROR);
+
+        return new ResponseEntity<UserDTO>(userDTO, HttpStatus.OK);
+    }
     @PreAuthorize("hasRole('GUEST') OR hasRole('HOST')")
     @PutMapping(value = "/report/{id}", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<?> reportUser(@PathVariable Long id) throws Exception {
+    public ResponseEntity<?> reportUser(@IdentityConstraint @PathVariable Long id) throws Exception {
         UserDTO userDTO = userService.report(id);
 
         if(userDTO == null) return new ResponseEntity<>(null,HttpStatus.INTERNAL_SERVER_ERROR);
@@ -118,19 +137,28 @@ public class UserController {
         return new ResponseEntity<UserDTO>(userDTO, HttpStatus.OK);
     }
     @PreAuthorize("hasRole('ADMIN')")
-    @GetMapping(value = "/reported", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    @GetMapping(value = "/reported",produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<?> getReportedUsers() throws Exception{
-        Collection<UserDTO> reportedUsersDTOs = userService.findReportedUsers();
+        Collection<UserBlockDTO> reportedUsersDTOs = userReportService.findAll();
 
-        return new ResponseEntity<Collection<UserDTO>>(reportedUsersDTOs, HttpStatus.OK);
+        return new ResponseEntity<Collection<UserBlockDTO>>(reportedUsersDTOs, HttpStatus.OK);
     }
 
     @GetMapping(value = "/host/{user_id}")
-    public ResponseEntity<?> getHostId(@PathVariable Long user_id) throws Exception{
+    public ResponseEntity<?> getHostId(@IdentityConstraint @PathVariable Long user_id) throws Exception{
         Host host = hostService.findByUser(user_id);
 
         if(host == null)  return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 
         return new ResponseEntity<Integer>(Math.toIntExact(host.getId()), HttpStatus.OK);
+    }
+    @PostMapping(value ="/report",consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<UserReportDTO> createUserReport
+            (@Valid @RequestBody UserReportDTO userReportDTO) throws Exception {
+        UserReportDTO userReportSaved = userReportService.create(userReportDTO);
+        if(userReportSaved == null){
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+        return new ResponseEntity<UserReportDTO>(userReportSaved, HttpStatus.CREATED);
     }
  }

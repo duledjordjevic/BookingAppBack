@@ -25,6 +25,7 @@ public interface IUserService {
     User update(UserUpdateDTO userUpdateDTO, Long id) throws Exception;
 
     UserDTO changeStatus(Long id, UserStatus status, UserType userType) throws Exception;
+
     UserDTO report(Long id) throws Exception;
 
     Collection<UserDTO> findReportedUsers();
