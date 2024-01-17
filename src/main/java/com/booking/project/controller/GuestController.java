@@ -64,4 +64,11 @@ public class GuestController {
 
         return new ResponseEntity<Boolean>(true, HttpStatus.OK);
     }
+//    @PreAuthorize(("hasRole('GUEST')"))
+    @GetMapping(value = "/favourites/{id}")
+    public ResponseEntity<?> getAllAccommodations(@PathVariable("id") Long id) throws IOException {
+        Collection<AccommodationCardDTO> allAccommodations = guestService.findAllAccommodationsWithFavourites(id);
+
+        return new ResponseEntity<Collection<AccommodationCardDTO>>(allAccommodations,HttpStatus.OK);
+    }
 }

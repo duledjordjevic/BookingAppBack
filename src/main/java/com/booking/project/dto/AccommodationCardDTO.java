@@ -21,6 +21,7 @@ public class AccommodationCardDTO {
     private Double pricePerNight;
     private Double totalPrice;
     private byte[] image;
+    private Boolean isFavourite;
 
     public AccommodationCardDTO(Accommodation accommodation){
         this.id = accommodation.getId();

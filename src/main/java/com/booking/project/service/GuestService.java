@@ -4,8 +4,8 @@ import com.booking.project.dto.AccommodationCardDTO;
 import com.booking.project.dto.GuestDTO;
 import com.booking.project.model.Accommodation;
 import com.booking.project.model.Guest;
-import com.booking.project.repository.inteface.IAccommodationRepository;
 import com.booking.project.repository.inteface.IGuestRepository;
+import com.booking.project.service.interfaces.IAccommodationService;
 import com.booking.project.service.interfaces.IGuestService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -20,7 +20,7 @@ public class GuestService implements IGuestService {
     @Autowired
     private IGuestRepository repository;
     @Autowired
-    private IAccommodationRepository accommodationRepository;
+    private IAccommodationService accommodationService;
     @Autowired
     private ImageService imageService;
     @Override
@@ -103,7 +103,7 @@ public class GuestService implements IGuestService {
 
         if(guest.isEmpty()) return false;
 
-        Optional<Accommodation> accommodation = accommodationRepository.findById(accommodationId);
+        Optional<Accommodation> accommodation = accommodationService.findById(accommodationId);
 
         if(accommodation.isEmpty()) return false;
 
@@ -121,7 +121,7 @@ public class GuestService implements IGuestService {
 
         if(guest.isEmpty()) return false;
 
-        Optional<Accommodation> accommodation = accommodationRepository.findById(accommodationId);
+        Optional<Accommodation> accommodation = accommodationService.findById(accommodationId);
 
         return accommodation.filter(value -> guest.get().getFavourites().contains(value)).isPresent();
 
@@ -133,7 +133,7 @@ public class GuestService implements IGuestService {
 
         if(guest.isEmpty()) return false;
 
-        Optional<Accommodation> accommodation = accommodationRepository.findById(accommodationId);
+        Optional<Accommodation> accommodation = accommodationService.findById(accommodationId);
 
         if(accommodation.isEmpty()) return false;
 
@@ -141,5 +141,18 @@ public class GuestService implements IGuestService {
 
         save(guest.get());
         return true;
+    }
+    @Override
+    public Collection<AccommodationCardDTO> findAllAccommodationsWithFavourites(Long id) throws IOException {
+        Collection<AccommodationCardDTO> allAccommodations = accommodationService.findAllCards();
+        Collection<AccommodationCardDTO> guestFavourites = findFavourites(id);
+        for(AccommodationCardDTO accommodation: allAccommodations){
+            if(guestFavourites.stream().anyMatch(card -> card.getId().equals(accommodation.getId()))){
+                accommodation.setIsFavourite(true);
+            }else{
+                accommodation.setIsFavourite(false);
+            }
+        }
+        return allAccommodations;
     }
 }
