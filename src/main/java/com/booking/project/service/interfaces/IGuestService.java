@@ -29,4 +29,6 @@ public interface IGuestService {
     boolean isFavourite(Long accommodationId, Long guestUserId) throws Exception;
 
     boolean removeFavourite(Long accommodationId, Long guestUserId) throws Exception;
+
+    Collection<AccommodationCardDTO> findAllAccommodationsWithFavourites(Long id) throws IOException;
 }
