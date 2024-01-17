@@ -27,6 +27,7 @@ public class CommentAboutHostDTO {
     private LocalDate date;
     private Host host;
     private String reportMessage;
+    private String hostNameSurname;
 
     public CommentAboutHostDTO(CommentAboutHost commentAboutHost){
         this.id = commentAboutHost.getId();
@@ -40,5 +41,6 @@ public class CommentAboutHostDTO {
         this.date = commentAboutHost.getDate();
         this.host = commentAboutHost.getHost();
         this.reportMessage = commentAboutHost.getReportMessage();
+        this.hostNameSurname = commentAboutHost.getHost().getName() + " " + commentAboutHost.getHost().getLastName();
     }
 }
