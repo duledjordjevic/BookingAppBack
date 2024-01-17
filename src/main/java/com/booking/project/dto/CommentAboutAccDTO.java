@@ -26,6 +26,7 @@ public class CommentAboutAccDTO {
     private Long accommodationId;
     private byte[] coverImage;
     private String reportMessage;
+    private String accommodationTitle;
 
     public CommentAboutAccDTO(CommentAboutAcc commentAboutAcc){
         this.id = commentAboutAcc.getId();
@@ -38,5 +39,6 @@ public class CommentAboutAccDTO {
         this.accommodation = commentAboutAcc.getAccommodation();
         this.accommodationId = commentAboutAcc.getAccommodation().getId();
         this.reportMessage = commentAboutAcc.getReportMessage();
+        this.accommodationTitle = commentAboutAcc.getAccommodation().getTitle();
     }
 }
