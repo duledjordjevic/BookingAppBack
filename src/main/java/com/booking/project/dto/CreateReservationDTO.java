@@ -9,7 +9,6 @@ import lombok.*;
 import java.time.LocalDate;
 
 @Data
-@DateRangeConstraint
 public class CreateReservationDTO {
 
     private LocalDate startDate;
