@@ -28,7 +28,7 @@ public class CommentAboutHostController {
     public ResponseEntity<?> createCommentAboutHost
             (@RequestBody CreateCommentAboutHostDTO createCommentAboutHostDTO) throws Exception {
         CommentAboutHost savedCommentAboutHost = commentAboutHostService.create(createCommentAboutHostDTO);
-        return new ResponseEntity<>( HttpStatus.CREATED);
+        return new ResponseEntity<>(savedCommentAboutHost, HttpStatus.CREATED);
     }
 
     @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
