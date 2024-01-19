@@ -19,7 +19,7 @@ public class NotificationTypeStatusDTO {
     @NotNull
     private Long userId;
 
-    @NotEmpty
+    @NotNull
     private NotificationType type;
 
     @NotNull

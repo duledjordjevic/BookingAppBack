@@ -1,18 +1,16 @@
 package com.booking.project.service;
 
+import com.booking.project.dto.CreateNotificationForGuestDTO;
+import com.booking.project.dto.CreateNotificationForHostDTO;
 import com.booking.project.dto.CreateReservationDTO;
 import com.booking.project.dto.ReservationDTO;
 import com.booking.project.model.Accommodation;
 import com.booking.project.model.Guest;
+import com.booking.project.model.NotificationTypeStatus;
 import com.booking.project.model.Reservation;
-import com.booking.project.model.enums.AccommodationStatus;
-import com.booking.project.model.enums.CancellationPolicy;
-import com.booking.project.model.enums.ReservationMethod;
-import com.booking.project.model.enums.ReservationStatus;
+import com.booking.project.model.enums.*;
 import com.booking.project.repository.inteface.IReservationRepository;
-import com.booking.project.service.interfaces.IAccommodationService;
-import com.booking.project.service.interfaces.IGuestService;
-import com.booking.project.service.interfaces.IReservationService;
+import com.booking.project.service.interfaces.*;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.Query;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,6 +33,12 @@ public class ReservationService implements IReservationService {
 
     @Autowired
     EntityManager em;
+    @Autowired
+    private INotificationForHostService notificationForHostService;
+    @Autowired
+    private INotificationForGuestService notificationForGuestService;
+    @Autowired
+    private INotificationTypeStatusService notificationTypeStatusService;
     @Override
     public Collection<Reservation> findAll() {
         return reservationRepository.findAll();
@@ -61,12 +65,33 @@ public class ReservationService implements IReservationService {
         if (guest.isEmpty()) return null;
         reservation.setGuest(guest.get());
 
+        CreateNotificationForHostDTO notificationForHostDTO = new CreateNotificationForHostDTO();
+        notificationForHostDTO.setHostId(accommodation.get().getHost().getId());
+        Boolean notificationStatus;
+
         reservation.setPrice(price);
         if(reservationMethod == ReservationMethod.AUTOMATIC){
             reservation.setStatus(ReservationStatus.ACCEPTED);
+
+            notificationForHostDTO.setType(NotificationType.CREATED_RESERVATION);
+            notificationForHostDTO.setDescription(guest.get().getName() + " " + guest.get().getLastName() +
+                    " create a reservation for accommodation " + accommodation.get().getTitle());
+            notificationStatus = notificationTypeStatusService.findStatusByUserAndType(accommodation.get().getHost().getUser().getId(),
+                    NotificationType.CREATED_RESERVATION);
         }else{
             reservation.setStatus(ReservationStatus.PENDING);
+
+            notificationForHostDTO.setType(NotificationType.RESERVATION_REQUEST);
+            notificationForHostDTO.setDescription(guest.get().getName() + " " + guest.get().getLastName() +
+                    " sent a reservation request for accommodation " + accommodation.get().getTitle());
+            notificationStatus = notificationTypeStatusService.findStatusByUserAndType(accommodation.get().getHost().getUser().getId(),
+                    NotificationType.RESERVATION_REQUEST);
         }
+        if(notificationStatus){
+            notificationForHostService.create(notificationForHostDTO);
+        }
+
+
         reservation.setStartDate(createReservationDTO.getStartDate());
         reservation.setEndDate(createReservationDTO.getEndDate());
         reservation.setNumberOfGuests(createReservationDTO.getNumberOfGuests());
@@ -155,6 +180,9 @@ public class ReservationService implements IReservationService {
         Optional<Reservation> reservation = reservationRepository.findById(id);
 
         if(reservation.isEmpty()) return null;
+        Boolean notificationTurnedStatus = notificationTypeStatusService.findStatusByUserAndType(reservation.get().getGuest().getUser().getId(),
+                NotificationType.RESERVATION_REQUEST_RESPOND);
+        String notificationDescripiton = "";
 
         if(reservationStatus.equals(ReservationStatus.ACCEPTED)){
             List<Reservation> overlapsReservations = getOverlaps(reservation.get().getStartDate(), reservation.get().getEndDate(), ReservationStatus.PENDING);
@@ -162,7 +190,21 @@ public class ReservationService implements IReservationService {
                 reservationToDecline.setStatus(ReservationStatus.DECLINED);
                 reservationRepository.save(reservationToDecline);
             }
+            notificationDescripiton = reservation.get().getAccommodation().getHost().getName() + " " + reservation.get().getAccommodation().getHost().getLastName() +
+                    " accepted your reservation request for accommodation: " + reservation.get().getAccommodation().getTitle();
+
             accommodationService.changePriceList(reservation.get().getStartDate(),reservation.get().getEndDate(), reservation.get().getAccommodation().getId(), AccommodationStatus.RESERVED);
+        }else if(reservationStatus.equals(ReservationStatus.DECLINED)){
+            notificationDescripiton = reservation.get().getAccommodation().getHost().getName() + " " + reservation.get().getAccommodation().getHost().getLastName() +
+                    " declined your reservation request for accommodation: " + reservation.get().getAccommodation().getTitle();
+        }
+
+        //Notifications for guest, reservation is accepted or declined
+        Boolean acceptedOrDeclined = reservationStatus.equals(ReservationStatus.ACCEPTED) || reservationStatus.equals(ReservationStatus.DECLINED);
+        if(notificationTurnedStatus && acceptedOrDeclined){
+            CreateNotificationForGuestDTO notificationForGuestDTO = new  CreateNotificationForGuestDTO(notificationDescripiton,
+                    reservation.get().getGuest().getId());
+            notificationForGuestService.create(notificationForGuestDTO);
         }
 
         reservation.get().setStatus(reservationStatus);
@@ -172,24 +214,44 @@ public class ReservationService implements IReservationService {
     }
 
     @Override
-    public Reservation cancelAcceptedReservation(Long id){
+    public Reservation cancelAcceptedReservation(Long id) throws Exception {
         Optional<Reservation> reservation = reservationRepository.findById(id);
 
         if(reservation.isEmpty()) return null;
 
+        String notificationDescription = reservation.get().getGuest().getName() + " " + reservation.get().getGuest().getLastName() +
+                " cancelled a reservation for accommodation " + reservation.get().getAccommodation().getTitle();
+        Boolean notificationTurnedStatus = notificationTypeStatusService.findStatusByUserAndType(reservation.get().getAccommodation().getHost().getUser().getId(),
+                NotificationType.CANCELLED_RESERVATION);
+
         if(reservation.get().getAccommodation().getCancellationPolicy().equals(CancellationPolicy.HOURS24)){
             if (!reservation.get().getStartDate().minusDays(1).isEqual(LocalDate.now())){
                 reservation.get().setStatus(ReservationStatus.CANCELLED);
+                if(notificationTurnedStatus){
+                    CreateNotificationForHostDTO notificationForHostDTO = new CreateNotificationForHostDTO(NotificationType.CANCELLED_RESERVATION,
+                            notificationDescription,reservation.get().getAccommodation().getHost().getId());
+                    notificationForHostService.create(notificationForHostDTO);
+                }
                 return reservation.get();
             }
         }else if(reservation.get().getAccommodation().getCancellationPolicy().equals(CancellationPolicy.HOURS48)){
             if (!reservation.get().getStartDate().minusDays(2).isEqual(LocalDate.now())){
                 reservation.get().setStatus(ReservationStatus.CANCELLED);
+                if(notificationTurnedStatus){
+                    CreateNotificationForHostDTO notificationForHostDTO = new CreateNotificationForHostDTO(NotificationType.CANCELLED_RESERVATION,
+                            notificationDescription,reservation.get().getAccommodation().getHost().getId());
+                    notificationForHostService.create(notificationForHostDTO);
+                }
                 return reservation.get();
             }
         }else if(reservation.get().getAccommodation().getCancellationPolicy().equals(CancellationPolicy.HOURS72)){
             if (!reservation.get().getStartDate().minusDays(3).isEqual(LocalDate.now())){
                 reservation.get().setStatus(ReservationStatus.CANCELLED);
+                if(notificationTurnedStatus){
+                    CreateNotificationForHostDTO notificationForHostDTO = new CreateNotificationForHostDTO(NotificationType.CANCELLED_RESERVATION,
+                            notificationDescription,reservation.get().getAccommodation().getHost().getId());
+                    notificationForHostService.create(notificationForHostDTO);
+                }
                 return reservation.get();
             }
         }

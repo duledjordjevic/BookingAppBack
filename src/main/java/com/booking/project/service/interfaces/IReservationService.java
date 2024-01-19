@@ -31,7 +31,7 @@ public interface IReservationService {
 
     Reservation updateStatus(Long id, ReservationStatus reservationStatus) throws Exception;
 
-    Reservation cancelAcceptedReservation(Long id);
+    Reservation cancelAcceptedReservation(Long id) throws Exception;
 
     Collection<Reservation> findByHostId(Long id);
 

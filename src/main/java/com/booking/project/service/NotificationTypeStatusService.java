@@ -46,4 +46,8 @@ public class NotificationTypeStatusService implements INotificationTypeStatusSer
                 NotificationType.RESERVATION_REQUEST_RESPOND,true);
         notificationTypeStatusRepository.save(notificationTypeStatus);
     }
+    @Override
+    public boolean findStatusByUserAndType(Long id, NotificationType type){
+        return notificationTypeStatusRepository.findAllByUserAndType(id,type).getIsTurned();
+    }
 }

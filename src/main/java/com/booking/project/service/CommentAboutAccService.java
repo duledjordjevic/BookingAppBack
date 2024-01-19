@@ -1,15 +1,15 @@
 package com.booking.project.service;
 
-import com.booking.project.dto.AccommodationDTO;
-import com.booking.project.dto.CommentAboutAccDTO;
-import com.booking.project.dto.CommentAboutHostDTO;
-import com.booking.project.dto.CreateCommentAboutAccDTO;
+import com.booking.project.dto.*;
 import com.booking.project.model.*;
 import com.booking.project.model.enums.AccommodationApprovalStatus;
+import com.booking.project.model.enums.NotificationType;
 import com.booking.project.repository.inteface.IAccommodationRepository;
 import com.booking.project.repository.inteface.ICommentAboutAccRepository;
 import com.booking.project.repository.inteface.IGuestRepository;
 import com.booking.project.service.interfaces.ICommentAboutAccService;
+import com.booking.project.service.interfaces.INotificationForHostService;
+import com.booking.project.service.interfaces.INotificationTypeStatusService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -28,6 +28,10 @@ public class CommentAboutAccService implements ICommentAboutAccService {
     private IAccommodationRepository accommodationRepository;
     @Autowired
     private ImageService imageService;
+    @Autowired
+    private INotificationForHostService notificationForHostService;
+    @Autowired
+    INotificationTypeStatusService notificationTypeStatusService;
     @Override
     public Collection<CommentAboutAccDTO> findAll() {
         Collection<CommentAboutAcc> commentsAboutAcc = commentAboutAccRepository.findAll();
@@ -69,6 +73,18 @@ public class CommentAboutAccService implements ICommentAboutAccService {
         Optional<Accommodation> accommodation = accommodationRepository.findById(createCommentAboutAccDTO.getAccommodationId());
         if (accommodation.isEmpty()) return null;
         commentAboutAcc.setAccommodation(accommodation.get());
+
+        boolean notificationTurnedStatus = notificationTypeStatusService.findStatusByUserAndType(accommodation.get().getHost().getUser().getId(),
+                NotificationType.NEW_REVIEW);
+
+        if(notificationTurnedStatus){
+            CreateNotificationForHostDTO notificationForHostDTO = new CreateNotificationForHostDTO(NotificationType.NEW_REVIEW,
+                    guest.get().getName() + " " + guest.get().getLastName() +  " rated your accommodation "
+                            + accommodation.get().getTitle(),
+                    accommodation.get().getHost().getId());
+            notificationForHostService.create(notificationForHostDTO);
+        }
+
 
         save(commentAboutAcc);
         return commentAboutAcc;

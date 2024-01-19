@@ -19,7 +19,7 @@ public class UserCredentialsDTO {
     private Long id;
 
     @NotEmpty
-    @Email(regexp = "^[\\w-\\.]+@([\\w-]+\\.)+[\\w-]{2,4}$")
+//    @Email(regexp = "^[\\w-\\.]+@([\\w-]+\\.)+[\\w-]{2,4}$")
     private String email;
 
     @NotEmpty

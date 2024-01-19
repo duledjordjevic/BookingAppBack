@@ -3,14 +3,18 @@ package com.booking.project.service;
 import com.booking.project.dto.CommentAboutAccDTO;
 import com.booking.project.dto.CommentAboutHostDTO;
 import com.booking.project.dto.CreateCommentAboutHostDTO;
+import com.booking.project.dto.CreateNotificationForHostDTO;
 import com.booking.project.model.CommentAboutAcc;
 import com.booking.project.model.CommentAboutHost;
 import com.booking.project.model.Guest;
 import com.booking.project.model.Host;
+import com.booking.project.model.enums.NotificationType;
 import com.booking.project.repository.inteface.ICommentAboutHostRepository;
 import com.booking.project.repository.inteface.IGuestRepository;
 import com.booking.project.repository.inteface.IHostRepository;
 import com.booking.project.service.interfaces.ICommentAboutHostService;
+import com.booking.project.service.interfaces.INotificationForHostService;
+import com.booking.project.service.interfaces.INotificationTypeStatusService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -28,6 +32,10 @@ public class CommentAboutHostService implements ICommentAboutHostService {
     private IGuestRepository guestRepository;
     @Autowired
     private IHostRepository hostRepository;
+    @Autowired
+    private INotificationForHostService notificationForHostService;
+    @Autowired
+    private INotificationTypeStatusService notificationTypeStatusService;
 
     @Override
     public Collection<CommentAboutHostDTO> findAll() {
@@ -70,6 +78,13 @@ public class CommentAboutHostService implements ICommentAboutHostService {
 
         Host host = hostRepository.findByUserId(createCommentAboutHostDTO.getHostId());
         commentAboutHost.setHost(host);
+
+        boolean notificationTurnedStatus = notificationTypeStatusService.findStatusByUserAndType(host.getUser().getId(), NotificationType.NEW_REVIEW);
+        if(notificationTurnedStatus){
+            CreateNotificationForHostDTO notificationForHostDTO = new CreateNotificationForHostDTO(NotificationType.NEW_REVIEW,
+                    guest.get().getName() + " " + guest.get().getLastName() +  " rated you", host.getId());
+            notificationForHostService.create(notificationForHostDTO);
+        }
 
         save(commentAboutHost);
         return commentAboutHost;
