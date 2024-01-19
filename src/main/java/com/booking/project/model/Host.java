@@ -3,6 +3,7 @@ package com.booking.project.model;
 import com.booking.project.dto.HostDTO;
 import com.booking.project.dto.UserInfoDTO;
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;

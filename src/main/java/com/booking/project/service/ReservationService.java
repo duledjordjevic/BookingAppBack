@@ -182,27 +182,26 @@ public class ReservationService implements IReservationService {
         if(reservation.isEmpty()) return null;
         Boolean notificationTurnedStatus = notificationTypeStatusService.findStatusByUserAndType(reservation.get().getGuest().getUser().getId(),
                 NotificationType.RESERVATION_REQUEST_RESPOND);
-        String notificationDescripiton = "";
+        String notificationDescription = "";
 
         if(reservationStatus.equals(ReservationStatus.ACCEPTED)){
-            List<Reservation> overlapsReservations = getOverlaps(reservation.get().getStartDate(), reservation.get().getEndDate(), ReservationStatus.PENDING);
+            List<Reservation> overlapsReservations = reservationRepository.getOverlaps(reservation.get().getStartDate(), reservation.get().getEndDate(), ReservationStatus.PENDING);
             for(Reservation reservationToDecline : overlapsReservations){
                 reservationToDecline.setStatus(ReservationStatus.DECLINED);
                 reservationRepository.save(reservationToDecline);
             }
-            notificationDescripiton = reservation.get().getAccommodation().getHost().getName() + " " + reservation.get().getAccommodation().getHost().getLastName() +
+            notificationDescription = reservation.get().getAccommodation().getHost().getName() + " " + reservation.get().getAccommodation().getHost().getLastName() +
                     " accepted your reservation request for accommodation: " + reservation.get().getAccommodation().getTitle();
 
             accommodationService.changePriceList(reservation.get().getStartDate(),reservation.get().getEndDate(), reservation.get().getAccommodation().getId(), AccommodationStatus.RESERVED);
         }else if(reservationStatus.equals(ReservationStatus.DECLINED)){
-            notificationDescripiton = reservation.get().getAccommodation().getHost().getName() + " " + reservation.get().getAccommodation().getHost().getLastName() +
+            notificationDescription = reservation.get().getAccommodation().getHost().getName() + " " + reservation.get().getAccommodation().getHost().getLastName() +
                     " declined your reservation request for accommodation: " + reservation.get().getAccommodation().getTitle();
         }
 
-        //Notifications for guest, reservation is accepted or declined
-        Boolean acceptedOrDeclined = reservationStatus.equals(ReservationStatus.ACCEPTED) || reservationStatus.equals(ReservationStatus.DECLINED);
-        if(notificationTurnedStatus && acceptedOrDeclined){
-            CreateNotificationForGuestDTO notificationForGuestDTO = new  CreateNotificationForGuestDTO(notificationDescripiton,
+
+        if(notificationTurnedStatus){
+            CreateNotificationForGuestDTO notificationForGuestDTO = new  CreateNotificationForGuestDTO(notificationDescription,
                     reservation.get().getGuest().getId());
             notificationForGuestService.create(notificationForGuestDTO);
         }
@@ -258,13 +257,13 @@ public class ReservationService implements IReservationService {
         return null;
     }
 
-    private List<Reservation> getOverlaps(LocalDate startDate, LocalDate endDate, ReservationStatus reservationStatus){
-        Query q = em.createQuery("SELECT r FROM Reservation  r WHERE (:startDate <= r.endDate AND :endDate >= r.startDate) AND r.status = :reservationStatus");
-        q.setParameter("startDate", startDate);
-        q.setParameter("endDate", endDate);
-        q.setParameter("reservationStatus", reservationStatus);
-        return q.getResultList();
-    }
+//    private List<Reservation> getOverlaps(LocalDate startDate, LocalDate endDate, ReservationStatus reservationStatus){
+//        Query q = em.createQuery("SELECT r FROM Reservation  r WHERE (:startDate <= r.endDate AND :endDate >= r.startDate) AND r.status = :reservationStatus");
+//        q.setParameter("startDate", startDate);
+//        q.setParameter("endDate", endDate);
+//        q.setParameter("reservationStatus", reservationStatus);
+//        return q.getResultList();
+//    }
     @Override
     public void cancellGuestReservations(Long id){
         reservationRepository.cancellGuestReservation(id,ReservationStatus.CANCELLED);
