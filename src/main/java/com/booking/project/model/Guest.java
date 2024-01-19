@@ -22,7 +22,7 @@ public class Guest extends Person {
     @Column(nullable = false)
     private int numberOfCancellation;
 
-    @ManyToMany(fetch = FetchType.LAZY)
+    @ManyToMany(fetch = FetchType.EAGER)
     private Set<Accommodation> favourites = new HashSet<>();
 
     public Guest(GuestDTO guestDTO){

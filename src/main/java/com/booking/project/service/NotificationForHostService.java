@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.*;
 
 @Service
@@ -92,14 +93,18 @@ public class NotificationForHostService implements INotificationForHostService {
         notificationForHostRepository.save(notificationForHost.get());
 
         NotificationForHostDTO notificationForHostDTO = new NotificationForHostDTO(notificationForHost.get());
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss");
+        notificationForHostDTO.setDateTime(LocalDateTime.parse(formatter.format(notificationForHostDTO.getDateTime())));
         return notificationForHostDTO;
 
     }
 
     public Collection<NotificationForHostDTO> mapToDto(Collection<NotificationForHost> notificationsForHost){
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss");
         Collection<NotificationForHostDTO> notificationsForHostDTOS = new ArrayList<>();
         for(NotificationForHost notification: notificationsForHost){
             NotificationForHostDTO notificationDTO = new NotificationForHostDTO(notification);
+            notificationDTO.setDateTime(LocalDateTime.parse(formatter.format(notificationDTO.getDateTime())));
             notificationsForHostDTOS.add(notificationDTO);
         }
         return notificationsForHostDTOS;
