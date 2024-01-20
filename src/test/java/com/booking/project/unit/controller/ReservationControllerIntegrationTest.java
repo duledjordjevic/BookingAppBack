@@ -1,4 +1,4 @@
-package com.booking.project.controller;
+package com.booking.project.unit.controller;
 
 import com.booking.project.dto.*;
 import com.booking.project.model.Reservation;

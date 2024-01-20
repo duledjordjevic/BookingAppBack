@@ -1,4 +1,4 @@
-package com.booking.project.repository;
+package com.booking.project.unit.repository;
 
 import com.booking.project.model.User;
 import com.booking.project.model.enums.UserStatus;

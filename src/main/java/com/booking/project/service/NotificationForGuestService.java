@@ -76,7 +76,7 @@ public class NotificationForGuestService implements INotificationForGuestService
         notificationForGuest.setDateTime(LocalDateTime.now());
         notificationForGuest.setRead(false);
 
-        save(notificationForGuest);
+        notificationForGuestRepository.save(notificationForGuest);
         simpMessagingTemplate.convertAndSend("/socket-publisher/" + notificationForGuest.getGuest().getUser().getId(),notificationForGuest);
         return notificationForGuest;
     }
