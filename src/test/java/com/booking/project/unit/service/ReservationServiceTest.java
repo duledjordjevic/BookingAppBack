@@ -1,10 +1,11 @@
-package com.booking.project.service;
+package com.booking.project.unit.service;
 
 import com.booking.project.dto.CreateReservationDTO;
 import com.booking.project.dto.CreateNotificationForHostDTO;
 import com.booking.project.model.*;
 import com.booking.project.model.enums.*;
 import com.booking.project.repository.inteface.IReservationRepository;
+import com.booking.project.service.*;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;

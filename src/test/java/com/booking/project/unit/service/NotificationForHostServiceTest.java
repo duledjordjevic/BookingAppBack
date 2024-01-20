@@ -1,4 +1,4 @@
-package com.booking.project.service;
+package com.booking.project.unit.service;
 
 import com.booking.project.dto.CreateNotificationForHostDTO;
 import com.booking.project.model.Host;
@@ -7,6 +7,7 @@ import com.booking.project.model.User;
 import com.booking.project.model.enums.NotificationType;
 import com.booking.project.repository.inteface.IHostRepository;
 import com.booking.project.repository.inteface.INotificationForHostRepository;
+import com.booking.project.service.NotificationForHostService;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;

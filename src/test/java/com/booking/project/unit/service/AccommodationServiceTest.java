@@ -1,8 +1,9 @@
-package com.booking.project.service;
+package com.booking.project.unit.service;
 
 import com.booking.project.model.*;
 import com.booking.project.model.enums.*;
 import com.booking.project.repository.inteface.IAccommodationRepository;
+import com.booking.project.service.AccommodationService;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
