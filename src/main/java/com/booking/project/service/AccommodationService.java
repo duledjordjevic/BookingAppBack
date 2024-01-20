@@ -172,7 +172,7 @@ public class AccommodationService implements IAccommodationService {
         if(accommodation.isEmpty()) return false;
 
         changeAccommodationStatus(accommodation.get(), startDate, endDate, accommodationStatus);
-        save(accommodation.get());
+        accommodationRepository.save(accommodation.get());
 
         return true;
     }
