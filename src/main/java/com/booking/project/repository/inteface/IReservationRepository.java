@@ -36,9 +36,12 @@ public interface IReservationRepository extends JpaRepository<Reservation, Long>
 
     @Query("SELECT r " +
             "FROM Reservation  r " +
-            "WHERE (:startDate <= r.endDate AND :endDate >= r.startDate)" +
+            "JOIN FETCH r.accommodation a " +
+            "WHERE (:startDate <= r.endDate AND :endDate >= r.startDate) " +
+            "AND a.id = :accommodationId " +
             " AND r.status = :reservationStatus")
     List<Reservation> getOverlaps(@Param("startDate") LocalDate startDate,
                                   @Param("endDate")  LocalDate endDate,
+                                  @Param("accommodationId") Long accommodationId,
                                   @Param("reservationStatus") ReservationStatus reservationStatus);
 }

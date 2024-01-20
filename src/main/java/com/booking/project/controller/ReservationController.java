@@ -29,6 +29,8 @@ import java.util.Collection;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 @RestController
 @Validated
@@ -92,10 +94,9 @@ public class ReservationController {
     }
 
     @PreAuthorize("hasRole('HOST')")
-    @PutMapping(value = "/{id}/{reservationStatus}", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    @PutMapping(value = "/{id}/{reservationStatus}",  produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<?> updateReservationStatus(@PathVariable Long id, @PathVariable ReservationStatus reservationStatus) throws Exception{
         Reservation reservation = reservationService.updateStatus(id, reservationStatus);
-
         if (reservation == null){
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }

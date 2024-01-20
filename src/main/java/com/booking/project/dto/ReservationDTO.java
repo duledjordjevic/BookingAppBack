@@ -4,12 +4,18 @@ import com.booking.project.model.Accommodation;
 import com.booking.project.model.Guest;
 import com.booking.project.model.Reservation;
 import com.booking.project.model.enums.ReservationStatus;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.core.JsonParser;
+import com.fasterxml.jackson.databind.DeserializationContext;
+import com.fasterxml.jackson.databind.JsonDeserializer;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.io.IOException;
 import java.time.LocalDate;
 
 @Getter
@@ -35,11 +41,24 @@ public class ReservationDTO {
         this.endDate = reservation.getEndDate();
         this.price = reservation.getPrice();
         this.numberOfGuests = reservation.getNumberOfGuests();
-        this.status = reservation.getStatus();
+        this.status = ReservationStatus.valueOf(reservation.getStatus().toString());
         this.accommodation = new AccommodationDTO(reservation.getAccommodation());
         this.guest = reservation.getGuest();
         this.accommodation.setHost(reservation.getAccommodation().getHost());
         this.isHostReported = reservation.isHostReported();
         this.isGuestReported = reservation.isGuestReported();
+    }
+
+    public class ReservationStatusDeserializer extends JsonDeserializer<ReservationStatus> {
+        @Override
+        public ReservationStatus deserialize(JsonParser jsonParser, DeserializationContext deserializationContext) throws IOException {
+            String value = jsonParser.getValueAsString();
+            System.out.println("STATUS: " +   value);
+            try {
+                return ReservationStatus.valueOf(value);
+            } catch (IllegalArgumentException e) {
+                throw new IOException("Invalid ReservationStatus value: " + value, e);
+            }
+        }
     }
 }

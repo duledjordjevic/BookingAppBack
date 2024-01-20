@@ -65,7 +65,7 @@ public class ReservationServiceTest {
         Host host = new Host();
         host.setName("Dusan");
         host.setLastName("Djordjevic");
-        Accommodation accommodation = new Accommodation(10L,"Accommodation",null,null,null,1,10,
+        Accommodation accommodation = new Accommodation(1L,"Accommodation",null,null,null,1,10,
                 AccommodationType.HOTEL, CancellationPolicy.HOURS72, AccommodationApprovalStatus.APPROVED,ReservationMethod.MANUAL,
                 true,null,host,null);
         Reservation pendingReservation = new Reservation(1L, LocalDate.now(), LocalDate.now(), 100, 1,
@@ -79,14 +79,14 @@ public class ReservationServiceTest {
         List<Reservation> overlapsReservations = new ArrayList<>();
         overlapsReservations.add(reservationToDecline);
         overlapsReservations.add(reservationToDecline2);
-        when(reservationRepository.getOverlaps(any(), any(), eq(ReservationStatus.PENDING))).thenReturn(overlapsReservations);
+        when(reservationRepository.getOverlaps(any(), any(), any(), eq(ReservationStatus.PENDING))).thenReturn(overlapsReservations);
 
         Reservation result = reservationService.updateStatus(1L, ReservationStatus.ACCEPTED);
 
 
         assertEquals(ReservationStatus.ACCEPTED, result.getStatus());
         verify(reservationRepository).findById(1L);
-        verify(reservationRepository).getOverlaps(any(), any(), eq(ReservationStatus.PENDING));
+        verify(reservationRepository).getOverlaps(any(), any(), any(), eq(ReservationStatus.PENDING));
         assertEquals(ReservationStatus.DECLINED, reservationToDecline.getStatus());
         assertEquals(ReservationStatus.DECLINED, reservationToDecline2.getStatus());
         verify(reservationRepository).save(reservationToDecline);

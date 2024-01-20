@@ -185,7 +185,7 @@ public class ReservationService implements IReservationService {
         String notificationDescription = "";
 
         if(reservationStatus.equals(ReservationStatus.ACCEPTED)){
-            List<Reservation> overlapsReservations = reservationRepository.getOverlaps(reservation.get().getStartDate(), reservation.get().getEndDate(), ReservationStatus.PENDING);
+            List<Reservation> overlapsReservations = reservationRepository.getOverlaps(reservation.get().getStartDate(), reservation.get().getEndDate(), reservation.get().getAccommodation().getId(), ReservationStatus.PENDING);
             for(Reservation reservationToDecline : overlapsReservations){
                 reservationToDecline.setStatus(ReservationStatus.DECLINED);
                 reservationRepository.save(reservationToDecline);
