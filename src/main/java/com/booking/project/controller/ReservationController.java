@@ -92,7 +92,7 @@ public class ReservationController {
     }
 
     @PreAuthorize("hasRole('HOST')")
-    @PutMapping(value = "/{id}/{reservationStatus}", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    @PutMapping(value = "/{id}/{reservationStatus}", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<?> updateReservationStatus(@PathVariable Long id, @PathVariable ReservationStatus reservationStatus) throws Exception{
         Reservation reservation = reservationService.updateStatus(id, reservationStatus);
 
