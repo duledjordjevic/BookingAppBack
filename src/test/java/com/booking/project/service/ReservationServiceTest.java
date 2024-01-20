@@ -37,8 +37,10 @@ public class ReservationServiceTest {
 
     @MockBean
     private AccommodationService accommodationService;
+
     @MockBean
     private GuestService guestService;
+
     @MockBean
     private NotificationForHostService notificationForHostService;
 

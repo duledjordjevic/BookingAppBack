@@ -2,13 +2,17 @@ package com.booking.project.dto;
 
 import com.booking.project.validation.DateRangeConstraint;
 import com.booking.project.validation.IdentityConstraint;
+import jakarta.persistence.Entity;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
 import lombok.*;
 
 import java.time.LocalDate;
 
-@Data
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
 public class CreateReservationDTO {
 
     private LocalDate startDate;

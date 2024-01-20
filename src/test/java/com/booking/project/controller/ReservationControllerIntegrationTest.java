@@ -1,11 +1,9 @@
 package com.booking.project.controller;
 
-import com.booking.project.dto.JwtDTO;
-import com.booking.project.dto.ReservationDTO;
-import com.booking.project.dto.UserCredentialsDTO;
-import com.booking.project.dto.UserInfoDTO;
+import com.booking.project.dto.*;
 import com.booking.project.model.Reservation;
 import com.booking.project.model.User;
+import com.booking.project.model.enums.ReservationMethod;
 import com.booking.project.model.enums.ReservationStatus;
 import jakarta.transaction.Transactional;
 import org.junit.jupiter.api.BeforeEach;
@@ -23,6 +21,7 @@ import org.springframework.test.context.jdbc.Sql;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+import java.time.LocalDate;
 import java.util.Collection;
 import java.util.List;
 
@@ -41,11 +40,29 @@ public class ReservationControllerIntegrationTest {
     private TestRestTemplate restTemplate;
 
     private String jwt;
+    private String guestMail = "nmaric1912@gmail.com";
 
-    @BeforeEach
-    public void login() {
+    private String hostMail = "n.maric1912@gmail.com";
+
+//    @BeforeEach
+//    public void login() {
+//        UserCredentialsDTO user = new UserCredentialsDTO();
+//        user.setEmail("nmaric1912@gmail.com");
+//        user.setPassword("123");
+//        ResponseEntity<JwtDTO> responseEntity = restTemplate.exchange("/api/auth/login",
+//                HttpMethod.POST,
+//                new HttpEntity<>(user),
+//                new ParameterizedTypeReference<JwtDTO>() {
+//                });
+//        this.jwt = "Bearer " + responseEntity.getBody().getJwt();
+//    }
+    private HttpHeaders getHttpHeaders(String role){
         UserCredentialsDTO user = new UserCredentialsDTO();
-        user.setEmail("n.maric1912@gmail.com");
+        if(role.equals("GUEST")){
+            user.setEmail(guestMail);
+        }else {
+            user.setEmail(hostMail);
+        }
         user.setPassword("123");
         ResponseEntity<JwtDTO> responseEntity = restTemplate.exchange("/api/auth/login",
                 HttpMethod.POST,
@@ -53,8 +70,7 @@ public class ReservationControllerIntegrationTest {
                 new ParameterizedTypeReference<JwtDTO>() {
                 });
         this.jwt = "Bearer " + responseEntity.getBody().getJwt();
-    }
-    private HttpHeaders getHttpHeaders(){
+
         HttpHeaders headers = new HttpHeaders();
         headers.add("Authorization", jwt);
         return headers;
@@ -66,7 +82,7 @@ public class ReservationControllerIntegrationTest {
     public void shouldAcceptedReservationStatus() {
         ResponseEntity<ReservationDTO> responseEntity = restTemplate.exchange("/api/reservations/1/ACCEPTED",
                 HttpMethod.PUT,
-                new HttpEntity<>( getHttpHeaders()),
+                new HttpEntity<>( getHttpHeaders("HOST")),
                 new ParameterizedTypeReference<ReservationDTO>() {
                 });
 
@@ -80,7 +96,7 @@ public class ReservationControllerIntegrationTest {
     public void shouldDeclinedReservationStatus() {
         ResponseEntity<ReservationDTO> responseEntity = restTemplate.exchange("/api/reservations/2/DECLINED",
                 HttpMethod.PUT,
-                new HttpEntity<>( getHttpHeaders()),
+                new HttpEntity<>( getHttpHeaders("HOST")),
                 new ParameterizedTypeReference<ReservationDTO>() {
                 });
 
@@ -91,11 +107,41 @@ public class ReservationControllerIntegrationTest {
     @Test
     @Rollback
     @DisplayName("Should accepted reservation status When making PUT request to endpoint - /api/reservations/{id}/{reservationStatus}")
-    public void shouldReturnInternalServerError() {
+    public void shouldReturnInternalServerErrorForUpdateReservationStatus() {
         ResponseEntity<ReservationDTO> responseEntity = restTemplate.exchange("/api/reservations/10/ACCEPTED",
                 HttpMethod.PUT,
-                new HttpEntity<>( getHttpHeaders()),
+                new HttpEntity<>( getHttpHeaders("HOST")),
                 new ParameterizedTypeReference<ReservationDTO>() {
+                });
+
+        assertEquals(HttpStatus.INTERNAL_SERVER_ERROR, responseEntity.getStatusCode());
+    }
+    @Test
+    @Rollback
+    @DisplayName("Should create reservation When making POST request to endpoint - /api/reservations")
+    public void shouldCreateReservation(){
+        CreateReservationDTO createReservationDTO = new CreateReservationDTO(LocalDate.of(2024,1,21),
+                LocalDate.of(2024,1,22),4,1L,1L);
+
+        ResponseEntity<ReservationMethod> responseEntity = restTemplate.exchange("/api/reservations",
+                HttpMethod.POST,
+                new HttpEntity<>(createReservationDTO,getHttpHeaders("GUEST")),
+                new ParameterizedTypeReference<ReservationMethod>() {
+                });
+
+        assertEquals(HttpStatus.CREATED, responseEntity.getStatusCode());
+    }
+    @Test
+    @Rollback
+    @DisplayName("Should create reservation When making POST request to endpoint - /api/reservations")
+    public void shouldReturnInternalServerErrorForCreateReservation(){
+        CreateReservationDTO createReservationDTO = new CreateReservationDTO(LocalDate.of(2024,1,21),
+                LocalDate.of(2024,1,22),7,1L,1L);
+
+        ResponseEntity<?> responseEntity = restTemplate.exchange("/api/reservations",
+                HttpMethod.POST,
+                new HttpEntity<>(createReservationDTO,getHttpHeaders("GUEST")),
+                new ParameterizedTypeReference<>() {
                 });
 
         assertEquals(HttpStatus.INTERNAL_SERVER_ERROR, responseEntity.getStatusCode());
