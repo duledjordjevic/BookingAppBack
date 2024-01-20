@@ -33,4 +33,15 @@ public interface IReservationRepository extends JpaRepository<Reservation, Long>
             "where r.guest.user.id = :id and r.startDate > CURRENT_DATE ")
     void cancellGuestReservation(@Param("id") Long id,
                                  @Param("status")ReservationStatus status);
+
+    @Query("SELECT r " +
+            "FROM Reservation  r " +
+            "JOIN FETCH r.accommodation a " +
+            "WHERE (:startDate <= r.endDate AND :endDate >= r.startDate) " +
+            "AND a.id = :accommodationId " +
+            " AND r.status = :reservationStatus")
+    List<Reservation> getOverlaps(@Param("startDate") LocalDate startDate,
+                                  @Param("endDate")  LocalDate endDate,
+                                  @Param("accommodationId") Long accommodationId,
+                                  @Param("reservationStatus") ReservationStatus reservationStatus);
 }

@@ -25,9 +25,6 @@ public interface INotificationTypeStatusRepository extends JpaRepository<Notific
     void updateNotificationType(@Param("status") Boolean status,
                                 @Param("id") Long id,
                                 @Param("notificationType") NotificationType notificationType);
-    @Query("Select n " +
-            "from NotificationTypeStatus  n " +
-            "where n.user.id = :id " +
-            "and n.type = :type ")
-    NotificationTypeStatus findAllByUserAndType(@Param("id") Long id, @Param("type") NotificationType type);
+    NotificationTypeStatus findByUser_IdAndType(Long id, NotificationType type);
+
 }

@@ -78,7 +78,7 @@ public class NotificationForHostService implements INotificationForHostService {
         if (host.isEmpty()) return null;
         notificationForHost.setHost(host.get());
 
-        save(notificationForHost);
+        notificationForHostRepository.save(notificationForHost);
         simpMessagingTemplate.convertAndSend("/socket-publisher/" + notificationForHost.getHost().getUser().getId(),notificationForHost);
         return notificationForHost;
     }

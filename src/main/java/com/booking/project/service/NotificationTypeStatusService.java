@@ -48,6 +48,6 @@ public class NotificationTypeStatusService implements INotificationTypeStatusSer
     }
     @Override
     public boolean findStatusByUserAndType(Long id, NotificationType type){
-        return notificationTypeStatusRepository.findAllByUserAndType(id,type).getIsTurned();
+        return notificationTypeStatusRepository.findByUser_IdAndType(id,type).getIsTurned();
     }
 }
