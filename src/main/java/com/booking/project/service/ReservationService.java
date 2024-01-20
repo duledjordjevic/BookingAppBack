@@ -97,7 +97,7 @@ public class ReservationService implements IReservationService {
         reservation.setNumberOfGuests(createReservationDTO.getNumberOfGuests());
         reservation.setHostReported(false);
 
-        save(reservation);
+        reservationRepository.save(reservation);
         return  reservation;
     }
     @Override
