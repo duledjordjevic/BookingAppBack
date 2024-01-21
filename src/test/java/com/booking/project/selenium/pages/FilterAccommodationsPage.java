@@ -126,9 +126,9 @@ public class FilterAccommodationsPage {
     }
 
     public boolean checkSearchByAddress(String citySearch){
-        Wait<WebDriver> wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+        Wait<WebDriver> wait = new WebDriverWait(driver, Duration.ofSeconds(20));
 
-        wait.until(ExpectedConditions.visibilityOf(firstAccommodationTitle));
+        wait.until(ExpectedConditions.visibilityOf(addressesLabels.get(0)));
 
         for(WebElement addressLabel: addressesLabels){
             String address = addressLabel.getText();
