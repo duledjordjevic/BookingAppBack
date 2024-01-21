@@ -6,6 +6,7 @@ import com.booking.project.dto.AccommodationDTO;
 import com.booking.project.dto.IntervalPriceDTO;
 import com.booking.project.model.Accommodation;
 import com.booking.project.model.Host;
+import com.booking.project.model.User;
 import com.booking.project.model.enums.AccommodationApprovalStatus;
 import com.booking.project.model.enums.AccommodationType;
 import com.booking.project.model.enums.Amenities;
@@ -160,15 +161,14 @@ public class AccommodationController {
     }
     @PreAuthorize("hasRole('HOST')")
     @PostMapping(value = "/priceList/{accommodationId}", consumes = "application/json")
-    public ResponseEntity<Integer> addPriceList(@PathVariable Long accommodationId, @RequestBody List<IntervalPriceDTO> dtos) {
+    public ResponseEntity<Integer> addPriceList(@PathVariable Long accommodationId, @RequestBody List<IntervalPriceDTO> dtos) throws Exception {
 
         Optional<Accommodation> accommodation = accommodationService.findById(accommodationId);
-        accommodation.get().setPrices(priceListService.getPriceList(dtos));
-        try {
-            accommodationService.save(accommodation.get());
-        } catch (Exception e) {
-            throw new RuntimeException(e);
+        if(accommodation.isEmpty()){
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
+        accommodation.get().setPrices(priceListService.getPriceList(dtos));
+        accommodationService.save(accommodation.get());
 
         return new ResponseEntity<>(accommodation.get().getPrices().size(), HttpStatus.OK);
     }
@@ -197,7 +197,10 @@ public class AccommodationController {
     @PreAuthorize("hasRole('HOST')")
     @GetMapping(value = "intervalPrices/{id}")
     public ResponseEntity<List<IntervalPriceDTO>> getIntervalPrices(@PathVariable Long id) {
-
+        Optional<Accommodation> accommodation = accommodationService.findById(id);
+        if(accommodation.isEmpty()){
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
         return new ResponseEntity<>(priceListService.getIntervalPrices(id), HttpStatus.OK);
     }
 
