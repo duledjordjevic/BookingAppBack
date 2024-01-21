@@ -1,19 +1,17 @@
 package com.booking.project.selenium.pages;
 
-
-import org.openqa.selenium.By;
 import org.openqa.selenium.Keys;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
-import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.PageFactory;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.Wait;
 import org.openqa.selenium.support.ui.WebDriverWait;
-
 import java.time.Duration;
 import java.util.List;
+
+import static org.openqa.selenium.support.ui.ExpectedConditions.or;
 
 public class FilterAccommodationsPage {
     private WebDriver driver;
@@ -45,6 +43,10 @@ public class FilterAccommodationsPage {
     private WebElement maxPriceInput;
     @FindBy(css = ".cards > div > div > p")
     private List<WebElement> addressesLabels;
+    @FindBy(css = ".cards > div:first-child")
+    private WebElement firstCard;
+    @FindBy(xpath = "//h3[text()='There are no accommodations matching your search criteria']")
+    private WebElement noSearchResultTitle;
 
 
     public boolean isPageOpened(){
@@ -69,8 +71,7 @@ public class FilterAccommodationsPage {
         numOfGuestsInput.sendKeys(numOfGuests);
     }
 
-    public void putDataInSideFilter(List<String> amenities, String accommodationType,
-                                    String minPrice, String maxPrice){
+    public void putDataInSideFilter(List<String> amenities, String accommodationType){
         for(WebElement amenitie: amenitiesLabels){
             if(amenities.contains(amenitie.getText())){
                 amenitie.click();
@@ -82,20 +83,9 @@ public class FilterAccommodationsPage {
                 accommodationTypeLabel.click();
             }
         }
-        minPriceInput.sendKeys(minPrice);
-        maxPriceInput.sendKeys(maxPrice);
     }
 
     public void moveDualSlider(int leftValue, int rightValue) {
-//        Actions actions = new Actions(driver);
-//
-//        actions.clickAndHold(maxPriceInput)
-//                .moveByOffset(calculateOffset(rightValue), 0)
-//                .release().perform();
-//        // Pomerite levu ručku
-//        actions.clickAndHold(minPriceInput)
-//                .moveByOffset(calculateOffset(leftValue), 0)
-//                .release().perform();
         int sliderMaxValue = Integer.parseInt(priceSlider.getAttribute("ng-reflect-max"));
         int sliderMinValue = Integer.parseInt(priceSlider.getAttribute("ng-reflect-min"));
 
@@ -110,25 +100,20 @@ public class FilterAccommodationsPage {
         }
 
     }
-
-    private int calculateOffset(int targetValue) {
-        int sliderWidth = priceSlider.getSize().getWidth();
-        int sliderMaxValue = Integer.parseInt(priceSlider.getAttribute("ng-reflect-max"));
-        int sliderMinValue = Integer.parseInt(priceSlider.getAttribute("ng-reflect-min"));
-
-        // Izračunajte razdaljinu koja treba da se pomeri
-        double percent = (double) (targetValue - sliderMinValue) / (sliderMaxValue - sliderMinValue);
-        return (int) (percent * sliderWidth);
-    }
-
     public void clickSearch(){
         searchButton.click();
     }
 
-    public boolean checkSearchByAddress(String citySearch){
+    public boolean isSearchResultLoad(){
         Wait<WebDriver> wait = new WebDriverWait(driver, Duration.ofSeconds(20));
 
-        wait.until(ExpectedConditions.visibilityOf(addressesLabels.get(0)));
+        wait.until(or(ExpectedConditions.elementToBeClickable(firstCard),
+                ExpectedConditions.textToBePresentInElement(noSearchResultTitle,"There are no accommodations matching your search criteria")));
+
+        return true;
+    }
+    public boolean checkSearchByAddress(String citySearch) throws InterruptedException {
+        Wait<WebDriver> wait = new WebDriverWait(driver, Duration.ofSeconds(20));
 
         for(WebElement addressLabel: addressesLabels){
             String address = addressLabel.getText();

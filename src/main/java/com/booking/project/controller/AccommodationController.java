@@ -90,13 +90,14 @@ public class AccommodationController {
     }
     @PreAuthorize("hasRole('HOST')")
     @DeleteMapping(value = "/{id}")
-    public ResponseEntity<Accommodation> deleteAccommodation(@PathVariable("id") Long id){
+    public ResponseEntity<Accommodation> deleteAccommodation(@IdentityConstraint @PathVariable("id") Long id){
         accommodationService.deleteById(id);
         return new ResponseEntity<Accommodation>(HttpStatus.NO_CONTENT);
     }
     @PreAuthorize("hasRole('ADMIN')")
     @PutMapping(value ="/{id}/approvalStatus", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<?> changeAccommodationAvailableStatus(@PathVariable Long id, @RequestBody AccommodationApprovalStatusDTO approvalStatus) throws Exception {
+    public ResponseEntity<?> changeAccommodationAvailableStatus(@IdentityConstraint @PathVariable Long id,
+                                                                @RequestBody AccommodationApprovalStatusDTO approvalStatus) throws Exception {
         AccommodationDTO accommodationDTO = accommodationService.changeAvailableStatus(id, approvalStatus.getApprovalStatus());
 
         if(accommodationDTO == null) return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
@@ -106,7 +107,7 @@ public class AccommodationController {
 
     @PreAuthorize("hasRole('GUEST')")
     @GetMapping(value = "/{id}/availableDates", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<?> getAvailableDates(@PathVariable("id") Long id) throws IOException {
+    public ResponseEntity<?> getAvailableDates(@IdentityConstraint @PathVariable("id") Long id) throws IOException {
         List<LocalDate> availableDates = accommodationService.getAvailableDates(id);
 
         return new ResponseEntity<List<LocalDate>>(availableDates, HttpStatus.OK);
@@ -121,7 +122,8 @@ public class AccommodationController {
     }
     @PreAuthorize("hasRole('HOST')")
     @PutMapping(value = "/{id}", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<?> updateAccommodation(@RequestBody AccommodationDTO accommodationDTO, @PathVariable Long id) throws Exception{
+    public ResponseEntity<?> updateAccommodation(@RequestBody AccommodationDTO accommodationDTO,
+                                                 @IdentityConstraint @PathVariable Long id) throws Exception{
         Optional<AccommodationDTO> accommodation = accommodationService.changeAccommodations(accommodationDTO,id);
 
         if (accommodation.get() == null) return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
@@ -146,7 +148,7 @@ public class AccommodationController {
     }
     @PreAuthorize("hasRole('HOST')")
     @PutMapping(value ="/{id}/reservationMethod/{reservationMethod}", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<?> changeAccommodationReservationMethod(@PathVariable Long id, @PathVariable ReservationMethod reservationMethod) throws Exception {
+    public ResponseEntity<?> changeAccommodationReservationMethod(@IdentityConstraint @PathVariable Long id, @PathVariable ReservationMethod reservationMethod) throws Exception {
         AccommodationDTO accommodationDTO = accommodationService.changeAccommodationReservationMethod(id,reservationMethod);
 
         if(accommodationDTO == null) return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
@@ -160,7 +162,8 @@ public class AccommodationController {
     }
     @PreAuthorize("hasRole('HOST')")
     @PostMapping(value = "/priceList/{accommodationId}", consumes = "application/json")
-    public ResponseEntity<Integer> addPriceList(@PathVariable Long accommodationId, @RequestBody List<IntervalPriceDTO> dtos) {
+    public ResponseEntity<Integer> addPriceList(@IdentityConstraint @PathVariable Long accommodationId,
+                                                @RequestBody List<IntervalPriceDTO> dtos) {
 
         Optional<Accommodation> accommodation = accommodationService.findById(accommodationId);
         accommodation.get().setPrices(priceListService.getPriceList(dtos));
@@ -174,7 +177,7 @@ public class AccommodationController {
     }
     @PreAuthorize("hasRole('HOST')")
     @PutMapping(value = "/priceList/{accommodationId}", consumes = "application/json")
-    public ResponseEntity<Integer> updatePriceList(@PathVariable Long accommodationId,
+    public ResponseEntity<Integer> updatePriceList(@IdentityConstraint @PathVariable Long accommodationId,
                                                    @RequestBody List<IntervalPriceDTO> dtos) {
 
         int length = 0;
@@ -188,7 +191,7 @@ public class AccommodationController {
     }
     @PreAuthorize("hasRole('HOST')")
     @GetMapping(value = "priceList/{id}")
-    public ResponseEntity<?> getPriceList(@PathVariable Long id) {
+    public ResponseEntity<?> getPriceList(@IdentityConstraint @PathVariable Long id) {
 
         Accommodation accommodation = accommodationService.findById(id).get();
         return new ResponseEntity<>(accommodation.getPrices(), HttpStatus.OK);
@@ -196,7 +199,7 @@ public class AccommodationController {
 
     @PreAuthorize("hasRole('HOST')")
     @GetMapping(value = "intervalPrices/{id}")
-    public ResponseEntity<List<IntervalPriceDTO>> getIntervalPrices(@PathVariable Long id) {
+    public ResponseEntity<List<IntervalPriceDTO>> getIntervalPrices(@IdentityConstraint @PathVariable Long id) {
 
         return new ResponseEntity<>(priceListService.getIntervalPrices(id), HttpStatus.OK);
     }

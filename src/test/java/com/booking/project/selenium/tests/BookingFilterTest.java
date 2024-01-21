@@ -19,11 +19,11 @@ public class BookingFilterTest extends TestBase {
     private String startDate = "1/25/2024";
     private String endDate = "1/27/2024";
     private String numOfGuests = "6";
-    private String minPrice = "50";
-    private String maxPrice = "800";
+    private int minPrice = 100;
+    private int maxPrice = 600;
 
     @Test
-    public void test(){
+    public void test() throws InterruptedException {
         LoginPage loginPage = new LoginPage(driver);
 
         loginPage.login(emailGuest,passwordGuest);
@@ -33,9 +33,10 @@ public class BookingFilterTest extends TestBase {
         assertTrue(filterPage.isPageOpened());
 
         filterPage.putDataInHeaderFilter(city,startDate,endDate,numOfGuests);
-        filterPage.putDataInSideFilter(amenities,accommodationType,minPrice,maxPrice);
-        filterPage.moveDualSlider(100,900);
+        filterPage.putDataInSideFilter(amenities,accommodationType);
+        filterPage.moveDualSlider(minPrice,maxPrice);
         filterPage.clickSearch();
+        assertTrue(filterPage.isSearchResultLoad());
         assertTrue(filterPage.checkSearchByAddress(city));
     }
 }

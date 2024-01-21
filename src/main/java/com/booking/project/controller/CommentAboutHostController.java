@@ -8,6 +8,7 @@ import com.booking.project.model.CommentAboutAcc;
 import com.booking.project.model.CommentAboutHost;
 import com.booking.project.model.NotificationForGuest;
 import com.booking.project.service.interfaces.ICommentAboutHostService;
+import com.booking.project.validation.IdentityConstraint;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -41,7 +42,7 @@ public class CommentAboutHostController {
     }
 
     @GetMapping(value = "/host/{hostUserId}",produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Collection<CommentAboutHostDTO>> getCommentsAboutHost(@PathVariable Long hostUserId){
+    public ResponseEntity<Collection<CommentAboutHostDTO>> getCommentsAboutHost(@IdentityConstraint @PathVariable Long hostUserId){
         Collection<CommentAboutHostDTO> comments = commentAboutHostService.findByHost(hostUserId);
         if (comments == null){
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
@@ -50,13 +51,14 @@ public class CommentAboutHostController {
     }
     @PreAuthorize("hasRole('ADMIN') OR hasRole('GUEST')")
     @DeleteMapping(value = "/{id}")
-    public ResponseEntity<CommentAboutHost> deleteCommentAboutHost(@PathVariable("id") Long id){
+    public ResponseEntity<CommentAboutHost> deleteCommentAboutHost(@IdentityConstraint @PathVariable("id") Long id){
         commentAboutHostService.deleteById(id);
         return new ResponseEntity<CommentAboutHost>(HttpStatus.NO_CONTENT);
     }
     @PreAuthorize("hasRole('HOST')")
     @PutMapping(value = "/{id}/report/{isReported}", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<?> reportCommentAboutHost(@PathVariable Long id, @PathVariable boolean isReported) throws Exception{
+    public ResponseEntity<?> reportCommentAboutHost(@IdentityConstraint @PathVariable Long id,
+                                                    @PathVariable boolean isReported) throws Exception{
         CommentAboutHost commentAboutHost = commentAboutHostService.report(id, isReported);
 
         if (commentAboutHost == null){
@@ -67,7 +69,8 @@ public class CommentAboutHostController {
     }
     @PreAuthorize("hasRole('ADMIN')")
     @PutMapping(value = "/{id}/approve/{isApproved}", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<?> approveCommentAboutHost(@PathVariable Long id, @PathVariable boolean isApproved) throws Exception{
+    public ResponseEntity<?> approveCommentAboutHost(@IdentityConstraint @PathVariable Long id,
+                                                     @PathVariable boolean isApproved) throws Exception{
         CommentAboutHost commentAboutHost = commentAboutHostService.approve(id, isApproved);
 
         if (commentAboutHost == null){
@@ -88,7 +91,7 @@ public class CommentAboutHostController {
 
     @PreAuthorize("hasRole('GUEST')")
     @GetMapping(value = "/guest/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Collection<CommentAboutHostDTO>> getCommentsAboutHostForGuest(@PathVariable Long id){
+    public ResponseEntity<Collection<CommentAboutHostDTO>> getCommentsAboutHostForGuest(@IdentityConstraint @PathVariable Long id){
         Collection<CommentAboutHostDTO> comments = commentAboutHostService.findByGuest(id);
         if (comments == null){
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
@@ -98,7 +101,7 @@ public class CommentAboutHostController {
 
     @PreAuthorize("hasRole('HOST')")
     @PutMapping(value = "/reportMessage/{id}")
-    public ResponseEntity<?> setReportMessage(@PathVariable Long id, @RequestBody String message) throws Exception{
+    public ResponseEntity<?> setReportMessage(@IdentityConstraint @PathVariable Long id, @RequestBody String message) throws Exception{
         CommentAboutHost commentAboutHost = commentAboutHostService.setReportMessage(id, message);
 
         if (commentAboutHost == null){
