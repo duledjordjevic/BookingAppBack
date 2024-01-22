@@ -45,6 +45,8 @@ public class FilterAccommodationsPage {
     private WebElement firstCard;
     @FindBy(xpath = "//h3[text()='There are no accommodations matching your search criteria']")
     private WebElement noSearchResultTitle;
+    @FindBy(css = "a[href='/accommodation-create']")
+    private WebElement createAccommodationLabel;
 
     @FindBy(css = "[ng-reflect-router-link='/guest-reservations']")
     private WebElement guestReservations;
@@ -139,12 +141,13 @@ public class FilterAccommodationsPage {
         }
         return true;
     }
-
+    public void clickCreteAccommodation(){
+        createAccommodationLabel.click();
+    }
     public void goToGuestReservations(){
         guestReservations.click();
     }
     public void goToHostReservations(){
         hostReservations.click();
     }
-
 }
