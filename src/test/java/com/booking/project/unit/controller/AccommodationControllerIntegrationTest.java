@@ -7,6 +7,7 @@ import com.booking.project.model.enums.ReservationStatus;
 import jakarta.transaction.Transactional;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestInstance;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.client.TestRestTemplate;
@@ -21,6 +22,7 @@ import java.util.List;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT,
         properties = "spring.autoconfigure.exclude=org.springframework.boot.autoconfigure.h2.H2ConsoleAutoConfiguration")
@@ -73,7 +75,10 @@ public class AccommodationControllerIntegrationTest {
                 new ParameterizedTypeReference<Integer>() {
                 });
 
+        Integer result = responseEntity.getBody();
         assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
+        assertNotNull(result);
+        assertEquals(9, result);
     }
 
     @Test
@@ -105,6 +110,7 @@ public class AccommodationControllerIntegrationTest {
                 new ParameterizedTypeReference<List<IntervalPriceDTO>>() {
                 });
 
+        List<IntervalPriceDTO> intervalPriceDTOS = responseEntity.getBody();
         assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
     }
 
