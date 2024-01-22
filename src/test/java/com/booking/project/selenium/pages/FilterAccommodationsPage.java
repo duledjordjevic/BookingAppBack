@@ -48,6 +48,11 @@ public class FilterAccommodationsPage {
     @FindBy(xpath = "//h3[text()='There are no accommodations matching your search criteria']")
     private WebElement noSearchResultTitle;
 
+    @FindBy(css = "[ng-reflect-router-link='/guest-reservations']")
+    private WebElement guestReservations;
+
+    @FindBy(css = "[ng-reflect-router-link='/host-reservations']")
+    private WebElement hostReservations;
 
     public boolean isPageOpened(){
         Wait<WebDriver> wait = new WebDriverWait(driver, Duration.ofSeconds(10));
@@ -124,4 +129,12 @@ public class FilterAccommodationsPage {
         }
         return true;
     }
+
+    public void goToGuestReservations(){
+        guestReservations.click();
+    }
+    public void goToHostReservations(){
+        hostReservations.click();
+    }
+
 }
