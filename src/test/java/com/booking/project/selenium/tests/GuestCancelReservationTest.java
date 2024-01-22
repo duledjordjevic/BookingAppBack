@@ -8,7 +8,7 @@ import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class GuestCancelReservationTest extends  TestBase{
-    private String emailGuest= "djordjevicdusan24@gmail.com";
+    private String emailGuest= "n.m.aric1912@gmail.com";
     private String passwordGuest= "123";
 
     @Test
