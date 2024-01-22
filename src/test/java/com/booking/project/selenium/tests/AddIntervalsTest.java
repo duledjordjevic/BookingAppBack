@@ -8,7 +8,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class AddIntervalsTest extends TestBase{
 
-    private String hostEmail = "djordjevic.dusan24@gmail.com";
+    private String hostEmail = "n.m.a.ric1912@gmail.com";
     private String hostPassword = "123";
     private static final String TITLE = "Accommodation title";
     private static final String STATE = "Srbija";
@@ -25,7 +25,7 @@ public class AddIntervalsTest extends TestBase{
     private static final String SECONDSTARTDATE = "02/15/2024";
     private static final String SECONDENDDATE = "02/25/2024";
     private static final String SECONDPRICE = "100";
-    private static final String IMAGE_FILE = "";
+    private static final String IMAGE_FILE = "C:\\Users\\nmari\\OneDrive\\Desktop\\pictures apartment\\apart1.jpg";
 
     @Test
     public void test() throws InterruptedException {
@@ -56,6 +56,7 @@ public class AddIntervalsTest extends TestBase{
         // Find update button
         AccommodationInfoPage accommodationInfoPage = new AccommodationInfoPage(driver);
         assertTrue(accommodationInfoPage.isPageOpened(TITLE));
+        accommodationInfoPage.scrollToUpdate();
         accommodationInfoPage.clickUpdate();
 
         // Add and delete row from table
@@ -80,6 +81,7 @@ public class AddIntervalsTest extends TestBase{
         // Find update button
         AccommodationInfoPage accommodationInfoPageSecond = new AccommodationInfoPage(driver);
         assertTrue(accommodationInfoPageSecond.isPageOpened(TITLE));
+        accommodationInfoPage.scrollToUpdate();
         accommodationInfoPageSecond.clickUpdate();
 
         // Check if ordered

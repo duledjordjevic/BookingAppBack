@@ -94,7 +94,7 @@ public class CreateAccommodationPage {
         WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(15));
         JavascriptExecutor js = (JavascriptExecutor) driver;
 
-        js.executeScript("window.scrollTo(0, document.body.scrollHeight-1500)");
+        js.executeScript("window.scrollTo(0, document.body.scrollHeight-1300)");
         AtomicBoolean status = new AtomicBoolean(false);
         wait.until(webDriver -> {
             Number innerHeight = (Number) js.executeScript("return window.innerHeight;");

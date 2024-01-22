@@ -1,8 +1,7 @@
 package com.booking.project.selenium.pages;
 
-import org.openqa.selenium.Keys;
-import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.WebElement;
+import org.openqa.selenium.*;
+import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.PageFactory;
 import org.openqa.selenium.support.ui.ExpectedConditions;
@@ -10,7 +9,6 @@ import org.openqa.selenium.support.ui.Wait;
 import org.openqa.selenium.support.ui.WebDriverWait;
 import java.time.Duration;
 import java.util.List;
-
 import static org.openqa.selenium.support.ui.ExpectedConditions.or;
 
 public class FilterAccommodationsPage {
@@ -84,10 +82,10 @@ public class FilterAccommodationsPage {
                 amenitie.click();
             }
         }
-
+        Actions actions = new Actions(driver);
         for(WebElement accommodationTypeLabel: accommodationTypeRadioButtons){
             if(accommodationType.equals(accommodationTypeLabel.getText())){
-                accommodationTypeLabel.click();
+                actions.moveToElement(accommodationTypeLabel).click();
             }
         }
     }
@@ -107,7 +105,19 @@ public class FilterAccommodationsPage {
         }
 
     }
-    public void clickSearch(){
+    public void clickSearch() throws InterruptedException {
+//        Actions actions = new Actions(driver);
+//        actions.moveToElement(searchButton).build().perform();
+
+        JavascriptExecutor js = (JavascriptExecutor) driver;
+        js.executeScript("window.scrollBy(0,-500)", "");
+
+//        Wait<WebDriver> wait = new WebDriverWait(driver, Duration.ofSeconds(20));
+//        wait.until(ExpectedConditions.visibilityOf(searchButton));
+//        driver.manage().timeouts().implicitlyWait(2, TimeUnit.SECONDS);
+
+        Thread.sleep(2000);
+
         searchButton.click();
     }
 
