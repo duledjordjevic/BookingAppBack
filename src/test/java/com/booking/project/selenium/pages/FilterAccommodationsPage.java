@@ -47,7 +47,8 @@ public class FilterAccommodationsPage {
     private WebElement firstCard;
     @FindBy(xpath = "//h3[text()='There are no accommodations matching your search criteria']")
     private WebElement noSearchResultTitle;
-
+    @FindBy(css = "a[href='/accommodation-create']")
+    private WebElement createAccommodationLabel;
 
     public boolean isPageOpened(){
         Wait<WebDriver> wait = new WebDriverWait(driver, Duration.ofSeconds(10));
@@ -123,5 +124,9 @@ public class FilterAccommodationsPage {
             }
         }
         return true;
+    }
+
+    public void clickCreteAccommodation(){
+        createAccommodationLabel.click();
     }
 }
