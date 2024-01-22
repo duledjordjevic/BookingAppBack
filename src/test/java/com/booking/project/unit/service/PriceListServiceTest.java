@@ -21,8 +21,7 @@ import java.time.LocalDate;
 import java.util.*;
 import java.util.stream.Stream;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.junit.jupiter.params.provider.Arguments.arguments;
 import static org.mockito.Mockito.*;
 
@@ -50,13 +49,17 @@ public class PriceListServiceTest {
 
         // Assert
         assertNotNull(priceLists);
+        boolean entered = false;
         for (PriceList priceList : priceLists) {
             if(priceList.getDate().equals(date)){
                 assertEquals(price, priceList.getPrice());
+                entered = true;
+                break;
             }
         }
+        assertTrue(entered);
         assertEquals(32, priceLists.size());
-
+        verifyNoInteractions(accommodationService);
 
     }
 
@@ -76,12 +79,17 @@ public class PriceListServiceTest {
 
         // Assert
         assertNotNull(priceLists);
+        boolean entered = false;
         for (PriceList priceList : priceLists) {
             if(priceList.getDate().equals(date)){
                 assertEquals(price, priceList.getPrice());
+                entered = true;
+                break;
             }
         }
+        assertTrue(entered);
         assertEquals(64, priceLists.size());
+        verifyNoInteractions(accommodationService);
     }
 
     @ParameterizedTest
@@ -100,12 +108,17 @@ public class PriceListServiceTest {
 
         // Assert
         assertNotNull(priceLists);
+        boolean entered = false;
         for (PriceList priceList : priceLists) {
             if(priceList.getDate().equals(date)){
                 assertEquals(price, priceList.getPrice());
+                entered = true;
+                break;
             }
         }
+        assertTrue(entered);
         assertEquals(10, priceLists.size());
+        verifyNoInteractions(accommodationService);
 
 
     }
@@ -132,13 +145,17 @@ public class PriceListServiceTest {
 
         // Assert
         assertNotNull(priceLists);
+        boolean entered = false;
         for (PriceList priceList : priceLists) {
             if(priceList.getDate().equals(date)){
                 assertEquals(price, priceList.getPrice());
+                entered = true;
+                break;
             }
         }
-
+        assertTrue(entered);
         assertEquals(15, priceLists.size());
+        verifyNoInteractions(accommodationService);
     }
 
     @Test
@@ -239,40 +256,41 @@ public class PriceListServiceTest {
         verifyNoMoreInteractions(accommodationService);
     }
 
+    // All edge cases are days + 1 because that is how it saves in base
     static Stream<Arguments> source_dates_prices_nothing_to_order_one_interval() {
         return Stream.of(
-                arguments(LocalDate.of(2024, 1, 1), 1000.0),
-                arguments(LocalDate.of(2024, 2, 1), 1000.0),
-                arguments(LocalDate.of(2024, 1, 5), 1000.0)
+                arguments(LocalDate.of(2024, 1, 2), 1000.0),
+                arguments(LocalDate.of(2024, 2, 2), 1000.0),
+                arguments(LocalDate.of(2024, 1, 6), 1000.0)
         );
     }
     static Stream<Arguments> source_dates_prices_nothing_to_order_more_intervals() {
         return Stream.of(
-                arguments(LocalDate.of(2024, 1, 1), 1000.0),
-                arguments(LocalDate.of(2024, 2, 1), 1000.0),
-                arguments(LocalDate.of(2024, 3, 1), 2000.0),
-                arguments(LocalDate.of(2024, 4, 1), 2000.0),
-                arguments(LocalDate.of(2024, 3, 5), 2000.0),
-                arguments(LocalDate.of(2024, 1, 5), 1000.0)
+                arguments(LocalDate.of(2024, 1, 2), 1000.0),
+                arguments(LocalDate.of(2024, 2, 2), 1000.0),
+                arguments(LocalDate.of(2024, 3, 2), 2000.0),
+                arguments(LocalDate.of(2024, 4, 2), 2000.0),
+                arguments(LocalDate.of(2024, 3, 6), 2000.0),
+                arguments(LocalDate.of(2024, 1, 6), 1000.0)
         );
     }
     static Stream<Arguments> source_dates_prices_order_one_interval() {
         return Stream.of(
-                arguments(LocalDate.of(2024, 1, 1), 1000.0),
-                arguments(LocalDate.of(2024, 1, 5), 2000.0),
-                arguments(LocalDate.of(2024, 1, 10), 2000.0),
-                arguments(LocalDate.of(2024, 1, 4), 2000.0),    // did not set 3 because on front rendered day+1, so 4 is edge case
-                arguments(LocalDate.of(2024, 1, 7), 2000.0)
+                arguments(LocalDate.of(2024, 1, 2), 1000.0),
+                arguments(LocalDate.of(2024, 1, 6), 2000.0),
+                arguments(LocalDate.of(2024, 1, 11), 2000.0),
+                arguments(LocalDate.of(2024, 1, 4), 2000.0),
+                arguments(LocalDate.of(2024, 1, 8), 2000.0)
         );
     }
     static Stream<Arguments> source_dates_prices_order_more_intervals() {
         return Stream.of(
-                arguments(LocalDate.of(2024, 1, 1), 1000.0),
                 arguments(LocalDate.of(2024, 1, 2), 1000.0),
-                arguments(LocalDate.of(2024, 1, 4), 3000.0),    // did not set 3 because on front rendered day+1, so 4 is edge case
-                arguments(LocalDate.of(2024, 1, 6), 3000.0),
-                arguments(LocalDate.of(2024, 1, 8), 4000.0),    // did not set 7 because on front rendered day+1, so 8 is edge case
-                arguments(LocalDate.of(2024, 1, 15), 4000.0)
+                arguments(LocalDate.of(2024, 1, 3), 3000.0),
+                arguments(LocalDate.of(2024, 1, 5), 3000.0),
+                arguments(LocalDate.of(2024, 1, 7), 3000.0),
+                arguments(LocalDate.of(2024, 1, 9), 4000.0),
+                arguments(LocalDate.of(2024, 1, 16), 4000.0)
         );
     }
 }
