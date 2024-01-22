@@ -70,7 +70,7 @@ public class CreateAccommodationPage {
                 .until(ExpectedConditions.textToBePresentInElement(title, "Tell us a little about your property?"));
     }
 
-    public void setTextToForm(String title, String state, String city, String postalCode, String street, String description){
+    public void setTextToForm(String title, String state, String city, String postalCode, String street, String description, String image){
         propertyName.sendKeys(title);
         propertyState.sendKeys(state);
         propertyCity.sendKeys(city);
@@ -83,12 +83,11 @@ public class CreateAccommodationPage {
         min.sendKeys("2");
         max.clear();
         max.sendKeys("7");
-        pictures.sendKeys("C:\\Users\\Stefan\\Documents\\FTN\\Peti semestar\\ISS\\Backend\\src\\test\\resources\\e2e\\picture.jpeg");
-        pictures.sendKeys("C:\\Users\\Stefan\\Documents\\FTN\\Peti semestar\\ISS\\Backend\\src\\test\\resources\\e2e\\picture.jpeg");
-        pictures.sendKeys("C:\\Users\\Stefan\\Documents\\FTN\\Peti semestar\\ISS\\Backend\\src\\test\\resources\\e2e\\picture.jpeg");
-        pictures.sendKeys("C:\\Users\\Stefan\\Documents\\FTN\\Peti semestar\\ISS\\Backend\\src\\test\\resources\\e2e\\picture.jpeg");
-        pictures.sendKeys("C:\\Users\\Stefan\\Documents\\FTN\\Peti semestar\\ISS\\Backend\\src\\test\\resources\\e2e\\picture.jpeg");
-
+        pictures.sendKeys(image);
+        pictures.sendKeys(image);
+        pictures.sendKeys(image);
+        pictures.sendKeys(image);
+        pictures.sendKeys(image);
     }
 
     public boolean scrollToBottom() {

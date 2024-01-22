@@ -8,7 +8,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class AddIntervalsTest extends TestBase{
 
-    private String hostEmail = "cao@gmail.com";
+    private String hostEmail = "djordjevic.dusan24@gmail.com";
     private String hostPassword = "123";
     private static final String TITLE = "Accommodation title";
     private static final String STATE = "Srbija";
@@ -25,6 +25,7 @@ public class AddIntervalsTest extends TestBase{
     private static final String SECONDSTARTDATE = "02/15/2024";
     private static final String SECONDENDDATE = "02/25/2024";
     private static final String SECONDPRICE = "100";
+    private static final String IMAGE_FILE = "";
 
     @Test
     public void test() throws InterruptedException {
@@ -41,7 +42,7 @@ public class AddIntervalsTest extends TestBase{
         // Set text to form
         CreateAccommodationPage createAccommodationPage = new CreateAccommodationPage(driver);
         assertTrue(createAccommodationPage.isPageOpened());
-        createAccommodationPage.setTextToForm(TITLE, STATE, CITY, POSTALCODE, STREET, DESCRIPTION);
+        createAccommodationPage.setTextToForm(TITLE, STATE, CITY, POSTALCODE, STREET, DESCRIPTION, IMAGE_FILE);
         createAccommodationPage.scrollToBottom();
         createAccommodationPage.setDate(FIRSTSTARTDATE,FIRSTENDDATE, FIRSTPRICE);
         createAccommodationPage.submit();
