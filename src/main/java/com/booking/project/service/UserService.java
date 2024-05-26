@@ -3,8 +3,6 @@ package com.booking.project.service;
 import com.booking.project.dto.*;
 import com.booking.project.model.*;
 import com.booking.project.service.interfaces.*;
-import com.booking.project.utils.email.EmailBuilder;
-import com.booking.project.utils.email.IEmailSender;
 import com.booking.project.model.enums.UserStatus;
 import com.booking.project.model.enums.UserType;
 import com.booking.project.repository.inteface.IUserRepository;
@@ -24,8 +22,7 @@ import java.util.UUID;
 public class UserService implements IUserService {
     @Autowired
     private IUserRepository repository;
-    @Autowired
-    private IEmailSender emailSender;
+
     private BCryptPasswordEncoder bCryptPasswordEncoder = new BCryptPasswordEncoder();
     @Autowired
     private IConfirmationTokenService confirmationTokenService;
@@ -37,7 +34,6 @@ public class UserService implements IUserService {
     private IReservationService reservationService;
     @Autowired
     private INotificationTypeStatusService notificationTypeStatusService;
-    private EmailBuilder emailBuilder = new EmailBuilder();
     @Override
     public Collection<User> findAll() {
         return repository.findAll();
@@ -83,7 +79,6 @@ public class UserService implements IUserService {
 
         String link = "http://localhost:8080/api/register/confirm?token=" + token;
 
-        emailSender.send(user.getEmail(),emailBuilder.buildEmail(userInfoDTO.getName(),link));
 
         return user;
     }
