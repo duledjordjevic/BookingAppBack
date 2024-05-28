@@ -68,7 +68,9 @@ public class UserController {
 
         return new ResponseEntity<Optional<User>>(user, HttpStatus.OK);
     }
-    @PreAuthorize("hasRole('HOST') OR hasRole('GUEST')")
+
+//    @PreAuthorize("hasRole('HOST') OR hasRole('GUEST')")
+    @PreAuthorize("hasRole('USER_DELETE')")
     @PutMapping (value = "/delete/{id}")
     public ResponseEntity<?> deleteUser(@Valid @RequestBody UserDeleteDTO userDeleteDTO,
                                         @IdentityConstraint @PathVariable("id") Long id) throws Exception {
@@ -80,7 +82,9 @@ public class UserController {
 
         return new ResponseEntity<Boolean>(true, HttpStatus.OK);
     }
-    @PreAuthorize("hasRole('ADMIN')")
+
+//    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasRole('ADMIN_UPDATE')")
     @PutMapping(value = "/admin/{id}", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<?> updateAdmin(@Valid @RequestBody UserAdminUpdateDTO userAdminDTO,
                                          @IdentityConstraint @PathVariable Long id) throws Exception{
@@ -90,7 +94,9 @@ public class UserController {
 
         return new ResponseEntity<User>(userForUpdate, HttpStatus.CREATED);
     }
-    @PreAuthorize("hasRole('GUEST') OR hasRole('HOST')")
+
+//    @PreAuthorize("hasRole('GUEST') OR hasRole('HOST')")
+    @PreAuthorize("hasRole('USER_UPDATE')")
     @PutMapping(value = "/{id}", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<?> updateUser(@Valid @RequestBody UserUpdateDTO userUpdateDTO,
                                         @IdentityConstraint @PathVariable Long id) throws Exception{
@@ -100,7 +106,9 @@ public class UserController {
 
         return new ResponseEntity<User>(userForUpdate, HttpStatus.OK);
     }
-    @PreAuthorize("hasRole('HOST')")
+
+//    @PreAuthorize("hasRole('HOST')")
+    @PreAuthorize("hasRole('USER_STATUS_UPDATE')")
     @PutMapping(value = "/host/{id}/userStatus/{status}", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<?> changeHostStatus(@PathVariable Long id,@PathVariable UserStatus status) throws Exception {
         UserDTO userDTO = userService.changeStatus(id,status, UserType.HOST);
@@ -109,7 +117,9 @@ public class UserController {
 
         return new ResponseEntity<UserDTO>(userDTO, HttpStatus.OK);
     }
-    @PreAuthorize("hasRole('GUEST')")
+
+//    @PreAuthorize("hasRole('GUEST')")
+    @PreAuthorize("hasRole('USER_STATUS_UPDATE')")
     @PutMapping(value = "/guest/{id}/userStatus/{status}", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<?> changeGuestStatus(@PathVariable Long id,@PathVariable UserStatus status) throws Exception {
         UserDTO userDTO = userService.changeStatus(id,status,UserType.GUEST);
@@ -118,7 +128,9 @@ public class UserController {
 
         return new ResponseEntity<UserDTO>(userDTO, HttpStatus.OK);
     }
-    @PreAuthorize("hasRole('ADMIN')")
+
+//    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasRole('BLOCK_USER')")
     @PutMapping(value = "/block/{id}", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<?> blockUser(@IdentityConstraint @PathVariable Long id) throws Exception {
         UserDTO userDTO = userReportService.blockUser(id);
@@ -127,7 +139,9 @@ public class UserController {
 
         return new ResponseEntity<UserDTO>(userDTO, HttpStatus.OK);
     }
-    @PreAuthorize("hasRole('GUEST') OR hasRole('HOST')")
+
+//    @PreAuthorize("hasRole('GUEST') OR hasRole('HOST')")
+    @PreAuthorize("hasRole('USER_REPORT_WRITE')")
     @PutMapping(value = "/report/{id}", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<?> reportUser(@IdentityConstraint @PathVariable Long id) throws Exception {
         UserDTO userDTO = userService.report(id);
@@ -136,7 +150,9 @@ public class UserController {
 
         return new ResponseEntity<UserDTO>(userDTO, HttpStatus.OK);
     }
-    @PreAuthorize("hasRole('ADMIN')")
+
+//    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasRole('REPORTED_USER_READ')")
     @GetMapping(value = "/reported",produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<?> getReportedUsers() throws Exception{
         Collection<UserBlockDTO> reportedUsersDTOs = userReportService.findAll();
@@ -152,6 +168,7 @@ public class UserController {
 
         return new ResponseEntity<Integer>(Math.toIntExact(host.getId()), HttpStatus.OK);
     }
+
     @PostMapping(value ="/report",consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<UserReportDTO> createUserReport
             (@Valid @RequestBody UserReportDTO userReportDTO) throws Exception {
