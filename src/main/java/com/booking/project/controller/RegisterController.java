@@ -12,19 +12,20 @@ import com.booking.project.service.UserService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
 
+import java.util.Optional;
+
 @RestController
 @RequestMapping("/api/register")
 @Validated
 public class RegisterController {
 
-    @Autowired
-    private UserDetailsService userDetailsService;
     @Autowired
     private UserService userService;
     @Autowired
@@ -33,7 +34,7 @@ public class RegisterController {
     private HostService hostService;
 
     @PostMapping()
-    public ResponseEntity<User> addUser(@Valid  @RequestBody UserInfoDTO userInfoDTO) throws Exception {
+    public ResponseEntity<User> addUser(@RequestBody UserInfoDTO userInfoDTO) throws Exception {
         User savedUser = userService.registerUser(userInfoDTO);
 
         if(savedUser == null){
@@ -50,13 +51,20 @@ public class RegisterController {
             hostService.save(host);
         }
 
-
-
         return new ResponseEntity<>(savedUser, HttpStatus.CREATED);
     }
 
-    @GetMapping(path = "confirm")
-    public String confirm(@RequestParam("token") String token){
-        return userService.confirmToken(token);
+    @GetMapping(value = "/{email}", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<User> isUserRegistered(@PathVariable String email){
+
+        Optional<User> user = userService.findByEmail(email);
+
+        if(user.isEmpty()){
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+
+        return new ResponseEntity<>(user.get(), HttpStatus.OK);
+
     }
+
 }

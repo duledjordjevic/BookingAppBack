@@ -3,8 +3,6 @@ package com.booking.project.service;
 import com.booking.project.dto.*;
 import com.booking.project.model.*;
 import com.booking.project.service.interfaces.*;
-import com.booking.project.utils.email.EmailBuilder;
-import com.booking.project.utils.email.IEmailSender;
 import com.booking.project.model.enums.UserStatus;
 import com.booking.project.model.enums.UserType;
 import com.booking.project.repository.inteface.IUserRepository;
@@ -24,8 +22,7 @@ import java.util.UUID;
 public class UserService implements IUserService {
     @Autowired
     private IUserRepository repository;
-    @Autowired
-    private IEmailSender emailSender;
+
     private BCryptPasswordEncoder bCryptPasswordEncoder = new BCryptPasswordEncoder();
     @Autowired
     private IConfirmationTokenService confirmationTokenService;
@@ -37,7 +34,6 @@ public class UserService implements IUserService {
     private IReservationService reservationService;
     @Autowired
     private INotificationTypeStatusService notificationTypeStatusService;
-    private EmailBuilder emailBuilder = new EmailBuilder();
     @Override
     public Collection<User> findAll() {
         return repository.findAll();
@@ -51,39 +47,38 @@ public class UserService implements IUserService {
     public Optional<User> findByEmail(String email){
         return repository.findByEmail(email);
     }
+
     public User registerUser(UserInfoDTO userInfoDTO){
         Optional<User> userExist = repository.findByEmail(userInfoDTO.getEmail());
 
-
-        if(!userExist.isEmpty()){
-            ConfirmationToken token = confirmationTokenService.findTokenByUser(userExist.get().getId());
-
-            if(token.getExpiresAt().isAfter(LocalDateTime.now())) return null;
-
-            confirmationTokenService.deleteById(token.getId());
-
-            if(userExist.get().getUserType().equals(UserType.GUEST)){
-                Optional<Guest> guest = guestService.findByUser(userExist.get().getId());
-                guestService.deleteById(guest.get().getId());
-            }else if(userExist.get().getUserType().equals(UserType.HOST)){
-                Host host = hostService.findByUser(userExist.get().getId());
-                hostService.deleteById(host.getId());
-            }
-            repository.deleteById(userExist.get().getId());
-        }
+//        if(userExist.isPresent()){
+////            ConfirmationToken token = confirmationTokenService.findTokenByUser(userExist.get().getId());
+//
+////            if(token.getExpiresAt().isAfter(LocalDateTime.now())) return null;
+//
+////            confirmationTokenService.deleteById(token.getId());
+//
+//            if(userExist.get().getUserType().equals(UserType.GUEST)){
+//                Optional<Guest> guest = guestService.findByUser(userExist.get().getId());
+//                guestService.deleteById(guest.get().getId());
+//            }else if(userExist.get().getUserType().equals(UserType.HOST)){
+//                Host host = hostService.findByUser(userExist.get().getId());
+//                hostService.deleteById(host.getId());
+//            }
+//            repository.deleteById(userExist.get().getId());
+//        }
 
         String passwordEncoded = bCryptPasswordEncoder.encode(userInfoDTO.getPassword());
         User user = new User(userInfoDTO);
         user.setPassword(passwordEncoded);
-        repository.save(user);
+        user = repository.save(user);
 
-        String token = UUID.randomUUID().toString();
-        ConfirmationToken confirmationToken = new ConfirmationToken(token,LocalDateTime.now(),LocalDateTime.now().plusHours(24),user);
-        confirmationTokenService.saveConfirmationToken(confirmationToken);
+//        String token = UUID.randomUUID().toString();
+//        ConfirmationToken confirmationToken = new ConfirmationToken(token,LocalDateTime.now(),LocalDateTime.now().plusHours(24),user);
+//        confirmationTokenService.saveConfirmationToken(confirmationToken);
+//
+//        String link = "http://localhost:8080/api/register/confirm?token=" + token;
 
-        String link = "http://localhost:8080/api/register/confirm?token=" + token;
-
-        emailSender.send(user.getEmail(),emailBuilder.buildEmail(userInfoDTO.getName(),link));
 
         return user;
     }

@@ -8,6 +8,7 @@ import com.booking.project.model.Reservation;
 import com.booking.project.model.enums.AccommodationStatus;
 import com.booking.project.model.enums.ReservationMethod;
 import com.booking.project.model.enums.ReservationStatus;
+import com.booking.project.service.UserService;
 import com.booking.project.service.interfaces.IAccommodationService;
 import com.booking.project.service.interfaces.IGuestService;
 import com.booking.project.service.interfaces.IReservationService;
