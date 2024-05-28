@@ -1,5 +1,9 @@
 package com.booking.project.config.security;
 
+import com.booking.project.model.enums.AdminPermissions;
+import com.booking.project.model.enums.GuestPermissions;
+import com.booking.project.model.enums.HostPermissions;
+import com.booking.project.model.enums.UserType;
 import org.springframework.lang.NonNull;
 import org.springframework.security.authentication.AbstractAuthenticationToken;
 import org.springframework.security.core.GrantedAuthority;
@@ -9,10 +13,7 @@ import org.springframework.core.convert.converter.Converter;
 import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationToken;
 import org.springframework.security.oauth2.server.resource.authentication.JwtGrantedAuthoritiesConverter;
 
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Stream;
 
 import static java.util.stream.Collectors.toSet;
@@ -31,16 +32,52 @@ public class KeycloakJwtAuthenticationConverter implements Converter<Jwt, Abstra
     }
 
     private Collection<? extends GrantedAuthority> extractResourceRoles(Jwt jwt){
-        var resourceAccess = new HashMap<>(jwt.getClaim("resource_access"));
+//        var resourceAccess = new HashMap<>(jwt.getClaim("realm_access"));
+//
+//        var eternal = (Map<String, List<String>>) resourceAccess.get("account");
+//
+//        var roles = eternal.get("roles");
+        Map<String, Object> jwtClaims = jwt.getClaims();
 
-        var eternal = (Map<String, List<String>>) resourceAccess.get("account");
+        // Extracting roles from realm_access
+        var realmAccess = (Map<String, List<String>>) jwtClaims.get("realm_access");
+        var roles = realmAccess.get("roles");
 
-        var roles = eternal.get("roles");
+        var rolePermissions = getPermissions(roles);
 
-        return roles.stream()
+        var grantedAuthorities = roles.stream()
                 .map(role-> new SimpleGrantedAuthority("ROLE_" + role.replace("-", "_")))
                 .collect(toSet());
+//        grantedAuthorities.forEach(System.out::println);
+        return grantedAuthorities;
     }
 
+
+    private List<String> getPermissions(List<String> roles){
+        List<String> rolePermissions = new ArrayList<String>();
+
+        for (var role : roles) {
+            switch (UserType.valueOf(role)) {
+                case GUEST:
+                    for (var permission : GuestPermissions.values()) {
+                        Collections.addAll(rolePermissions, permission.toString());
+                    }
+                    break;
+                case ADMIN:
+                    for (var permission : AdminPermissions.values()) {
+                        Collections.addAll(rolePermissions, permission.toString());
+                    }
+                    break;
+                case HOST:
+                    for (var permission : HostPermissions.values()) {
+                        Collections.addAll(rolePermissions, permission.toString());
+                    }
+                    break;
+                default:
+                    break;
+            }
+        }
+        return rolePermissions;
+    }
 
 }
