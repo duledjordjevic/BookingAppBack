@@ -12,4 +12,6 @@ public enum HostPermissions {
     PRICE_LIST_UPDATE,
     PRICE_LIST_READ,
 
+    ANALYTICS_READ,
+
 }
