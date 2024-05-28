@@ -24,7 +24,7 @@ public class CommentAboutAccController {
     private ICommentAboutAccService commentAboutAccService;
 
 //    @PreAuthorize("hasRole('GUEST')")
-    @PreAuthorize("hasRole('ACCOMMODATION_COMMENT_WRITE')")
+    @PreAuthorize("hasRole('COMMENT_WRITE')")
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<CommentAboutAcc> createCommentAboutAcc
             (@RequestBody CreateCommentAboutAccDTO createCommentAboutAccDTO) throws Exception {
@@ -33,7 +33,7 @@ public class CommentAboutAccController {
     }
 
 //    @PreAuthorize("hasRole('GUEST')")
-    @PreAuthorize("hasRole('ACCOMMODATION_COMMENT_READ')")
+    @PreAuthorize("hasRole('COMMENT_READ')")
     @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Collection<CommentAboutAccDTO>> getAll(){
         Collection<CommentAboutAccDTO> comments = commentAboutAccService.findAll();
@@ -53,7 +53,7 @@ public class CommentAboutAccController {
     }
 
 //    @PreAuthorize("hasRole('ADMIN') OR hasRole('GUEST')")
-    @PreAuthorize("hasRole('ACCOMMODATION_COMMENT_DELETE')")
+    @PreAuthorize("hasRole('COMMENT_DELETE')")
     @DeleteMapping(value = "/{id}")
     public ResponseEntity<CommentAboutAcc> deleteCommentAboutAcc(@IdentityConstraint @PathVariable("id") Long id){
         commentAboutAccService.deleteById(id);
@@ -61,7 +61,7 @@ public class CommentAboutAccController {
     }
 
 //    @PreAuthorize("hasRole('HOST')")
-    @PreAuthorize("hasRole('ACCOMMODATION_COMMENT_REPORT')")
+    @PreAuthorize("hasRole('COMMENT_REPORT')")
     @PutMapping(value = "/{id}/report/{isReported}")
     public ResponseEntity<?> reportCommentAboutAcc(@IdentityConstraint @PathVariable Long id,
                                                    @PathVariable boolean isReported) throws Exception{
@@ -75,7 +75,7 @@ public class CommentAboutAccController {
     }
 
 //    @PreAuthorize("hasRole('ADMIN')")
-    @PreAuthorize("hasRole('ACCOMMODATION_COMMENT_STATUS_UPDATE')")
+    @PreAuthorize("hasRole('COMMENT_STATUS_UPDATE')")
     @PutMapping(value = "/{id}/approve/{isApproved}", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<?> approveCommentAboutAcc(@IdentityConstraint @PathVariable Long id,
                                                     @PathVariable boolean isApproved) throws Exception{
@@ -89,7 +89,7 @@ public class CommentAboutAccController {
     }
 
 //    @PreAuthorize("hasRole('ADMIN')")
-    @PreAuthorize("hasRole('REPORTED_ACCOMMODATION_COMMENT_READ')")
+    @PreAuthorize("hasRole('REPORTED_COMMENT_READ')")
     @GetMapping(value = "/reported",produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Collection<CommentAboutAccDTO>> getReported() throws IOException {
         Collection<CommentAboutAccDTO> comments = commentAboutAccService.findAllReported();
@@ -100,7 +100,7 @@ public class CommentAboutAccController {
     }
 
 //    @PreAuthorize("hasRole('GUEST')")
-    @PreAuthorize("hasRole('MY_ACCOMMODATION_COMMENT_READ')")
+    @PreAuthorize("hasRole('MY_COMMENT_READ')")
     @GetMapping(value = "/guest/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Collection<CommentAboutAccDTO>> getCommentsAboutAccForGuest(@IdentityConstraint @PathVariable Long id) throws IOException {
         Collection<CommentAboutAccDTO> comments = commentAboutAccService.findByGuest(id);
@@ -111,7 +111,7 @@ public class CommentAboutAccController {
     }
 
 //    @PreAuthorize("hasRole('ADMIN')")
-    @PreAuthorize("hasRole('PENDING_ACCOMMODATION_COMMENT_READ')")
+    @PreAuthorize("hasRole('PENDING_COMMENT_READ')")
     @GetMapping(value = "/approving",produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Collection<CommentAboutAccDTO>> getCommentsForApproving() throws IOException {
         Collection<CommentAboutAccDTO> comments = commentAboutAccService.findAllForApprove();
