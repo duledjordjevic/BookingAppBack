@@ -14,4 +14,7 @@ public enum HostPermissions {
 
     ANALYTICS_READ,
 
+    ACCOMMODATION_COMMENT_REPORT,
+    REPORT_MESSAGE_WRITE
+
 }
