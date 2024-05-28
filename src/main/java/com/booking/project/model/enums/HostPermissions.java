@@ -19,4 +19,8 @@ public enum HostPermissions {
 
     IMAGE_WRITE,
 
+    NOTIFICATION_READ,
+    NOTIFICATION_STATUS_UPDATE,
+    NOTIFICATION_STATUS_READ,
+
 }

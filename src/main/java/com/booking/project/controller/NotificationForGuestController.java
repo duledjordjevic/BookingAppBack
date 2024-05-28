@@ -27,6 +27,7 @@ public class NotificationForGuestController {
 
     @Autowired
     private INotificationForGuestService notificationForGuestService;
+
     @Autowired
     private INotificationTypeStatusService notificationTypeStatusService;
 
@@ -36,25 +37,33 @@ public class NotificationForGuestController {
         NotificationForGuest savedNotificationForGuest = notificationForGuestService.create(createNotificationForGuestDTO);
         return new ResponseEntity<NotificationForGuest>(savedNotificationForGuest, HttpStatus.CREATED);
     }
-    @PreAuthorize("hasRole('GUEST')")
+
+//    @PreAuthorize("hasRole('GUEST')")
+    @PreAuthorize("hasRole('NOTIFICATION_READ')")
     @GetMapping(value="/guest/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Collection<NotificationForGuestDTO>> getNotificationsForGuest(@IdentityConstraint  @PathVariable Long id){
         Collection<NotificationForGuestDTO> notificationsForGuests = notificationForGuestService.findByGuest(id);
         return new ResponseEntity<Collection<NotificationForGuestDTO>>(notificationsForGuests, HttpStatus.OK);
     }
-    @PreAuthorize("hasRole('GUEST')")
+
+//    @PreAuthorize("hasRole('GUEST')")
+    @PreAuthorize("hasRole('NOTIFICATION_STATUS_UPDATE')")
     @GetMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<?> markNotificationAsRead(@IdentityConstraint @PathVariable("id") Long id){
         NotificationForGuestDTO notificationForGuestDTO = notificationForGuestService.markAsRead(id);
         return new ResponseEntity<NotificationForGuestDTO>(notificationForGuestDTO,HttpStatus.OK);
     }
-    @PreAuthorize("hasRole('GUEST')")
+
+//    @PreAuthorize("hasRole('GUEST')")
+    @PreAuthorize("hasRole('NOTIFICATION_STATUS_READ')")
     @GetMapping(value="/guestNotificationStatus/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<?> getGuestNotificationsStatus(@IdentityConstraint @PathVariable Long id){
         Collection<NotificationTypeStatus> notificationsTypeStatus = notificationTypeStatusService.findByUser(id);
         return new ResponseEntity<Collection<NotificationTypeStatus>>(notificationsTypeStatus, HttpStatus.OK);
     }
-    @PreAuthorize("hasRole('GUEST')")
+
+//    @PreAuthorize("hasRole('GUEST')")
+    @PreAuthorize("hasRole('NOTIFICATION_STATUS_UPDATE')")
     @PutMapping(value="/changeNotificationStatus", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<?> changeGuestNotificationStatus(@Valid @RequestBody NotificationTypeStatusDTO notificationTypeStatusDTO){
         notificationTypeStatusService.changeNotificationStatus(notificationTypeStatusDTO);
