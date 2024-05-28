@@ -28,8 +28,10 @@ public class RegisterController {
 
     @Autowired
     private UserService userService;
+
     @Autowired
     private GuestService guestService;
+
     @Autowired
     private HostService hostService;
 
@@ -64,7 +66,6 @@ public class RegisterController {
         }
 
         return new ResponseEntity<>(user.get(), HttpStatus.OK);
-
     }
 
 }
