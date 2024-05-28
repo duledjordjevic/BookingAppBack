@@ -17,4 +17,6 @@ public enum HostPermissions {
     COMMENT_REPORT,
     REPORT_MESSAGE_WRITE,
 
+    IMAGE_WRITE,
+
 }

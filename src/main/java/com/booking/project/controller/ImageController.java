@@ -27,6 +27,7 @@ public class ImageController {
     private IAccommodationService accommodationService;
 
 //    @PreAuthorize("hasRole('HOST')")
+    @PreAuthorize("hasRole('IMAGE_WRITE')")
     @PostMapping("/{accommodationId}")
     public ResponseEntity<?> createAccommodationImages (@RequestParam("image") MultipartFile[] accImages,
                                                         @IdentityConstraint @PathVariable Long accommodationId) throws Exception {
