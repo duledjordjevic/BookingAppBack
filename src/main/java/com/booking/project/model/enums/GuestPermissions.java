@@ -12,4 +12,8 @@ public enum GuestPermissions {
 
     MY_COMMENT_READ,
 
+    FAVOURITE_READ,
+    FAVOURITE_WRITE,
+    FAVOURITE_DELETE,
+
 }
