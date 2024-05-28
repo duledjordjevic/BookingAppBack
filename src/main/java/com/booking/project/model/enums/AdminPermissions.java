@@ -10,4 +10,8 @@ public enum AdminPermissions {
     REPORTED_COMMENT_READ,
     PENDING_COMMENT_READ,
 
+    ADMIN_UPDATE,
+    BLOCK_USER,
+    REPORTED_USER_READ,
+
 }
